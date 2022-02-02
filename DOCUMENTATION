@@ -1,0 +1,25 @@
+Backend:
+	RECOMMENDATIONS:
+		.env was excluded, add your own DATABASE MONGO ATLAS
+		[IF TEACHER].then ( I CAN SHARE IT THROUGH SLACK )
+		
+		By default: It runs on PORT 3030
+
+	To start the server:
+		% npm run start
+
+	Endpoints:
+		GET 	 /users/ 	GET ALL DOCUMENTS [USERS]
+		POST 	 /users/ 	CREATE A NEW USER
+		DELETE /users/id	DELETE USER BY ID
+	
+Frontend:
+	RECOMMENDATIONS:
+		By default: It runs on PORT 3000
+
+	To start the frontend server:
+		% npm run start
+
+	Routes:
+		/ - main page.
+
