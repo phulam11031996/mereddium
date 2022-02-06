@@ -9,8 +9,10 @@ const uniqueID = () => {
 
 // GET /user/
 exports.getAllUsers = catchAsync(async (req, res) => {
+	const allUsers = await User.find();
 	res.status(200).json({
 	  status: 'success',
+	  data: allUsers
 	});
 });
 
@@ -54,24 +56,29 @@ exports.createUser = catchAsync(async (req, res) => {
 
 // GET /user/{id}
 exports.getUserById = catchAsync(async (req, res) => {
-	const allUsers = await User.find();
+	const id = req.params.id;
+	const user = await User.findById({'_id': id});
   
 	res.status(200).json({
 	  status: 'success',
 	  data: {
-		allUsers,
+		user,
 	  },
 	});
 });
 
 // UPDATE /user/{id}
 exports.updateUserById = catchAsync(async (req, res) => {
-	const allUsers = await User.find();
+	const id = req.params.id;
+	
+	const user = await User.updateOne({'_id': id}, {
+		$set: req.body,
+	});
   
 	res.status(200).json({
 	  status: 'success',
 	  data: {
-		allUsers,
+		user,
 	  },
 	});
 });

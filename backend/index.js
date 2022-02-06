@@ -2,7 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
+
 const userRouter = require('./routes/userRoutes');
+const postRouter = require('./routes/postRoutes');
+const commentRouter = require('./routes/commentRoutes');
 // Initializing
 const app = express();
 app.use(express.json());
@@ -27,6 +30,8 @@ mongoose.connect(database, {
 
 // Routers
 app.use('/user', userRouter);
+app.use('/post', postRouter);
+app.use('/comment', postRouter);
 
 // PORT NUMBER 3030
 const PORT = 3030;
