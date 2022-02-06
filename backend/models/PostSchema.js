@@ -10,10 +10,6 @@ const postSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	lastName: {
-		type: String,
-		required: [true, 'A person should have Last Name'],
-	  },
 	createdAt: {
 		type: Date,
 		default: Date.now(),

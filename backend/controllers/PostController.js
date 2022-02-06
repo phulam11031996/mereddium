@@ -7,15 +7,37 @@ const uniqueID = () => {
 	return uuidv4();
 }
 
-exports.addUser = catchAsync(async (req, res) => {
-	const result = req.body;
-	result._id = uniqueID().slice(0,6);
-	console.log(`Creating new USER ${result.id} ${result.name} ${result.job} `);
+// GET /post/
+exports.getAllPosts = catchAsync(async (req, res) => {
+	const allPosts = await Post.find();
+	res.status(200).json({
+	  status: 'success',
+	  data: allPosts
+	});
+});
 
-	const newUser = 
-		new User({ _id: result._id, name: req.body.name, job: req.body.job});
+// POST /post/
+exports.createPost = catchAsync(async (req, res) => {
+	const result = req.body;
+	const postId = uniqueID().slice(0,6);
 	
-	newUser.save(function (err) {
+	const newPost = 
+		new Post(
+			{ 
+				_id: req.body.postId, 
+				userId: req.body.userId, 
+				title: req.body.title, 
+				message: req.body.message,
+				comments: req.body.comments, 
+				turnOnComments: true,
+				published: true, 
+				stringify: req.body.stringify,
+				tags: req.body.tags, 
+				upVote: req.body.upVote
+			}
+		);
+	
+	newPost.save(function (err) {
 		if(err) {
 			console.log(err);
 		}
@@ -27,26 +49,46 @@ exports.addUser = catchAsync(async (req, res) => {
 
 });
 
-exports.deleteUser = catchAsync(async (req, res) => {
-	const id = req.params.id;
-	User.deleteOne({ _id: id}, function (err) {
-		if(err) {
-			console.log("Failed to delete");
-		} else {
-			console.log(`Deleted user: ${id}`);
-			res.status(200).send(id).end();
-		}
-	})
-	
-});
 
-exports.getAllUsers = catchAsync(async (req, res) => {
-	const allUsers = await User.find();
+// GET /post/{id}
+exports.getPostById = catchAsync(async (req, res) => {
+	const id = req.params.id;
+	const post = await Post.findById({'_id': id});
   
 	res.status(200).json({
 	  status: 'success',
 	  data: {
-		allUsers,
+		post,
 	  },
 	});
-  });
+});
+
+// UPDATE /post/{id}
+exports.updatePostById = catchAsync(async (req, res) => {
+	const id = req.params.id;
+	
+	const post = await Post.updateOne({'_id': id}, {
+		$set: req.body,
+	});
+  
+	res.status(200).json({
+	  status: 'success',
+	  data: {
+		post,
+	  },
+	});
+});
+
+// DELETE /post/{id}
+exports.deletePostById = catchAsync(async (req, res) => {
+	const id = req.params.id;
+	Post.deleteOne({ _id: id}, function (err) {
+		if(err) {
+			console.log("Failed to delete");
+		} else {
+			console.log(`Deleted post: ${id}`);
+			res.status(200).send(id).end();
+		}
+	})
+});
+
