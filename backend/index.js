@@ -26,7 +26,7 @@ mongoose.connect(database, {
 });
 
 // Routers
-app.use('/users', userRouter);
+app.use('/user', userRouter);
 
 // PORT NUMBER 3030
 const PORT = 3030;
