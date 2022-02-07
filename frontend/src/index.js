@@ -5,17 +5,7 @@ import Table from './Table';
 import Form from './form';
 import './index.css';
 
-var timeStamp;
-
-function requestUpdate() {
-  timeStamp = Date.now();
-  window.localStorage.setItem('LastUpdated', timeStamp);
-}
-
 function MyApp() {
-
-  var firstRun = 1;
-
   const [characters, setCharacters] = useState([]);
 
     async function fetchAll() {
@@ -31,23 +21,13 @@ function MyApp() {
     }
   }
   useEffect(() => {
-    if(firstRun === 1) {
-      fetchAll().then( result => {
-        if(result) {
-          setCharacters(result);
-        }
-      });
-      firstRun++;
-    }
-    window.addEventListener('storage', () => {
-      fetchAll().then( result => {
-        if(result) {
-          setCharacters(result);
-        }
-      });
+    fetchAll().then( result => {
+      if(result) {
+        setCharacters(result);
+      }
     });
-   
-  }, [firstRun]);
+
+  }, []);
 
   async function makePostCall(person) {
     try {
@@ -67,8 +47,6 @@ function MyApp() {
         setCharacters([...characters, result.data.result]);
       }
     });
-    
-    requestUpdate();
   }
 
   function deleteById(id) {
@@ -84,8 +62,6 @@ function MyApp() {
         setCharacters(updated);
       }
     });
-
-    requestUpdate();
   }
 
 
@@ -95,14 +71,14 @@ function MyApp() {
       const response = await axios.delete('http://localhost:3030/users/'+id);
       console.log("IN waiting: " + response);
       return response;
-    } 
+    }
     catch(error) {
       console.log(error);
       return false;
     }
   }
 
-  
+
   return (
     <div className="container">
       <Table characterData={characters} removeCharacter={deleteById} />
