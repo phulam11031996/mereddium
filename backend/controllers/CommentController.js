@@ -7,15 +7,33 @@ const uniqueID = () => {
 	return uuidv4();
 }
 
-exports.addUser = catchAsync(async (req, res) => {
-	const result = req.body;
-	result._id = uniqueID().slice(0,6);
-	console.log(`Creating new USER ${result.id} ${result.name} ${result.job} `);
+// GET /comment/
+exports.getAllComments = catchAsync(async (req, res) => {
+	const allComments = await Comment.find();
+	res.status(200).json({
+	  status: 'success',
+	  data: allComments
+	});
+});
 
-	const newUser = 
-		new User({ _id: result._id, name: req.body.name, job: req.body.job});
+// POST /comment/
+exports.createComment = catchAsync(async (req, res) => {
+	const result = req.body;
+	var token = uniqueID();
+	result._id = uniqueID().slice(0,6);
 	
-	newUser.save(function (err) {
+	const newComment = 
+		new Comment(
+			{ 
+				_id: result._id, 
+				userId: req.body.userId, 
+				postId: req.body.postId,
+				message: req.body.message, 
+				upVote: req.body.upVote,
+			}
+		);
+	
+	newComment.save(function (err) {
 		if(err) {
 			console.log(err);
 		}
@@ -27,26 +45,46 @@ exports.addUser = catchAsync(async (req, res) => {
 
 });
 
-exports.deleteUser = catchAsync(async (req, res) => {
-	const id = req.params.id;
-	User.deleteOne({ _id: id}, function (err) {
-		if(err) {
-			console.log("Failed to delete");
-		} else {
-			console.log(`Deleted user: ${id}`);
-			res.status(200).send(id).end();
-		}
-	})
-	
-});
 
-exports.getAllUsers = catchAsync(async (req, res) => {
-	const allUsers = await User.find();
+// GET /comment/{id}
+exports.getCommentById = catchAsync(async (req, res) => {
+	const id = req.params.id;
+	const comment = await Comment.findById({'_id': id});
   
 	res.status(200).json({
 	  status: 'success',
 	  data: {
-		allUsers,
+		comment,
 	  },
 	});
-  });
+});
+
+// UPDATE /comment/{id}
+exports.updateCommentById = catchAsync(async (req, res) => {
+	const id = req.params.id;
+	
+	const comment = await Comment.updateOne({'_id': id}, {
+		$set: req.body,
+	});
+  
+	res.status(200).json({
+	  status: 'success',
+	  data: {
+		comment,
+	  },
+	});
+});
+
+// DELETE /comment/{id}
+exports.deleteCommentById = catchAsync(async (req, res) => {
+	const id = req.params.id;
+	Comment.deleteOne({ _id: id}, function (err) {
+		if(err) {
+			console.log("Failed to delete");
+		} else {
+			console.log(`Deleted comment with id: ${id}`);
+			res.status(200).send(id).end();
+		}
+	})
+});
+

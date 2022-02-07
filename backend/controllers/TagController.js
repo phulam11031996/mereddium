@@ -7,41 +7,30 @@ const uniqueID = () => {
 	return uuidv4();
 }
 
-// GET /user/
-exports.getAllUsers = catchAsync(async (req, res) => {
-	const allUsers = await User.find();
+// GET /tag/
+exports.getAllTags = catchAsync(async (req, res) => {
+	const allTags = await Tag.find();
 	res.status(200).json({
 	  status: 'success',
-	  data: allUsers
+	  data: allTags
 	});
 });
 
-// POST /user/
-exports.createUser = catchAsync(async (req, res) => {
+// POST /tag/
+exports.createTag = catchAsync(async (req, res) => {
 	const result = req.body;
 	var token = uniqueID();
 	result._id = uniqueID().slice(0,6);
 	
-	const newUser = 
-		new User(
+	const newTag = 
+		new Tag(
 			{ 
 				_id: result._id, 
-				firstName: req.body.firstName, 
-				lastName: req.body.lastName,
-				email: req.body.email, 
-				role: req.body.role,
-				photo: "default.jpg", 
-				password: req.body.password,
-				password_confirm: req.body.password_confirm, 
-				passwordChangedAt: Date.now(),
-				reset_token: token, 
-				reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
-				blocked: false,
-				interestedIn: req.body.interestedIn
+				name: req.body.name, 
 			}
 		);
 	
-	newUser.save(function (err) {
+	newTag.save(function (err) {
 		if(err) {
 			console.log(err);
 		}
@@ -54,43 +43,43 @@ exports.createUser = catchAsync(async (req, res) => {
 });
 
 
-// GET /user/{id}
-exports.getUserById = catchAsync(async (req, res) => {
+// GET /tag/{id}
+exports.getTagById = catchAsync(async (req, res) => {
 	const id = req.params.id;
-	const user = await User.findById({'_id': id});
+	const tag = await Tag.findById({'_id': id});
   
 	res.status(200).json({
 	  status: 'success',
 	  data: {
-		user,
+		tag,
 	  },
 	});
 });
 
-// UPDATE /user/{id}
-exports.updateUserById = catchAsync(async (req, res) => {
+// UPDATE /tag/{id}
+exports.updateTagById = catchAsync(async (req, res) => {
 	const id = req.params.id;
 	
-	const user = await User.updateOne({'_id': id}, {
+	const tag = await Tag.updateOne({'_id': id}, {
 		$set: req.body,
 	});
   
 	res.status(200).json({
 	  status: 'success',
 	  data: {
-		user,
+		tag,
 	  },
 	});
 });
 
-// DELETE /user/{id}
-exports.deleteUserById = catchAsync(async (req, res) => {
+// DELETE /tag/{id}
+exports.deleteTagById = catchAsync(async (req, res) => {
 	const id = req.params.id;
-	User.deleteOne({ _id: id}, function (err) {
+	Tag.deleteOne({ _id: id}, function (err) {
 		if(err) {
 			console.log("Failed to delete");
 		} else {
-			console.log(`Deleted user: ${id}`);
+			console.log(`Deleted tag: ${id}`);
 			res.status(200).send(id).end();
 		}
 	})
