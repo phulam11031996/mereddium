@@ -9,9 +9,9 @@ Backend:
 		% npm run start
 
 	Endpoints:
-		GET 	 /users/ 	GET ALL DOCUMENTS [USERS]
-		POST 	 /users/ 	CREATE A NEW USER
-		DELETE /users/id	DELETE USER BY ID
+		GET 	 /user/ 	GET ALL DOCUMENTS [USERS]
+		POST 	 /user/ 	CREATE A NEW USER
+		DELETE /user/:id	DELETE USER BY ID
 	
 Frontend:
 	RECOMMENDATIONS:
