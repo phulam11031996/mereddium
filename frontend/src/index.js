@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import Table from './Table';
 import Form from './form';
+import CreateButton from './Components/createPostButton';
+import SideBar from './Components/sidebar';
+import AppBar from './Components/Appbar';
 import './index.css';
 
 function MyApp() {
@@ -40,13 +43,16 @@ function MyApp() {
     }
   };
 
-  function updateList(person) {
-    makePostCall(person).then( result => {
+  function updateList(post) {
+
+    console.log(post);
+    /*makePostCall(post).then( result => {
       if(result.status === 201) {
         console.log(result.data.result);
         setCharacters([...characters, result.data.result]);
       }
     });
+    */
   }
 
   function deleteById(id) {
@@ -81,11 +87,20 @@ function MyApp() {
 
   return (
     <div className="container">
-      <Table characterData={characters} removeCharacter={deleteById} />
-      <Form handleSubmit={updateList} />
+    <AppBar />
+    <SideBar />
     </div>
   );
 
 }
 
 ReactDOM.render(<MyApp />, document.getElementById('root'));
+
+/*
+
+<CreateButton handleSubmit={updateList}/>
+<Table characterData={characters} removeCharacter={deleteById} />
+<Form handleSubmit={updateList} />
+<SideBar />
+
+*/
