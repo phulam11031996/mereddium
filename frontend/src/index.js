@@ -86,9 +86,10 @@ function MyApp() {
 
 
   return (
-    <div className="container">
+    <div className="main">
     <AppBar />
     <SideBar />
+    <CreateButton handleSubmit={updateList}/>
     </div>
   );
 

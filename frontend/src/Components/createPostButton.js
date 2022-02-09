@@ -54,7 +54,7 @@ class PostForm extends React.Component {
 	
 	render() {
 		return (
-			<div>
+			<div style={{marginLeft: "100px"}}>
 			<form>
 			<Button variant="outlined" onClick={this.handleClickOpen}>
 				Create Post
