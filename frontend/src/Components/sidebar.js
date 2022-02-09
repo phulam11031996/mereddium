@@ -52,7 +52,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
     right: 0,
     top: 0,
-    background: "grey",
+    background: "black",
     padding: "0 1px",
     fontSize: "10px"
   }
@@ -102,8 +102,8 @@ export default function MiniDrawer() {
       <CssBaseline />
  
       <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-          <IconButton onClick={handleDrawer}>
+        <DrawerHeader style = {{backgroundColor: "black", minHeight: "70px"}}>
+          <IconButton onClick={handleDrawer} style = {{color: "white"}}>
 				{
 					open === false?
 					<ChevronRightIcon />
@@ -125,7 +125,7 @@ export default function MiniDrawer() {
             <ListItemIcon>
               <AccessTimeOutlinedIcon color="secondary" />
             </ListItemIcon>
-            <ListItemText primary="News" />
+            <ListItemText primary="Recent" />
           </ListItem>
 
           <ListItem button key="Key">
