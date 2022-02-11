@@ -6,7 +6,10 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 
-
+import ListItemIcon from "@mui/material/ListItemIcon";
+import PostAddOutlinedIcon from "@mui/icons-material/PostAddOutlined";
+import ListItemText from "@mui/material/ListItemText";
+import ListItem from "@mui/material/ListItem";
 
 class PostForm extends React.Component {
 	constructor(props) {
@@ -54,11 +57,17 @@ class PostForm extends React.Component {
 	
 	render() {
 		return (
-			<div style={{marginLeft: "100px"}}>
+			<div>
 			<form>
-			<Button variant="outlined" onClick={this.handleClickOpen}>
-				Create Post
-			</Button>
+			
+			
+			<ListItem onClick={this.handleClickOpen} button key="Key">
+				<ListItemIcon>
+				<PostAddOutlinedIcon color="secondary" />
+				</ListItemIcon>
+				<ListItemText primary="Create a Post" />
+          	</ListItem>
+
 			<Dialog open={this.state.open} onClose={this.handleClose}>
 				<DialogTitle>Create a post</DialogTitle>
 				<DialogContent>

@@ -21,9 +21,10 @@ import WhatshotIcon from "@mui/icons-material/Whatshot";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
-import PostAddOutlinedIcon from "@mui/icons-material/PostAddOutlined";
+
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
 
+import CreateButton from './createPostButton';
 
 const drawerWidth = 200;
 
@@ -145,12 +146,10 @@ export default function MiniDrawer() {
             </ListItemIcon>
             <ListItemText primary="Saved" />
           </ListItem>
-          <ListItem button key="Key">
-            <ListItemIcon>
-              <PostAddOutlinedIcon color="secondary" />
-            </ListItemIcon>
-            <ListItemText primary="Add Post" />
-          </ListItem>
+          
+            
+          <CreateButton />
+        
 
           <Divider />
 

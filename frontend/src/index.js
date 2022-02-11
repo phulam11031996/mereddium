@@ -6,6 +6,7 @@ import Form from './form';
 import CreateButton from './Components/createPostButton';
 import SideBar from './Components/sidebar';
 import AppBar from './Components/Appbar';
+import ContentBox from './Components/ContentBox';
 import './index.css';
 
 function MyApp() {
@@ -89,7 +90,7 @@ function MyApp() {
     <div className="main">
     <AppBar />
     <SideBar />
-    <CreateButton handleSubmit={updateList}/>
+    <ContentBox />
     </div>
   );
 
