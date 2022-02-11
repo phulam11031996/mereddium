@@ -98,10 +98,8 @@ export default function RecipeReviewCard() {
             stirring, until mussels have opened and rice is just tender, 5 to 7
             minutes more. (Discard any mussels that don’t open.)
           </Typography>
-          <Typography>
-            Set aside off of the heat to let rest for 10 minutes, and then serve.
-          </Typography>
         </CardContent>
+		
       </Collapse>
     </Card>
   );

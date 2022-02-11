@@ -24,16 +24,16 @@ exports.createPost = catchAsync(async (req, res) => {
 	const newPost = 
 		new Post(
 			{ 
-				_id: req.body.postId, 
+				_id: postId, 
 				userId: req.body.userId, 
 				title: req.body.title, 
 				message: req.body.message,
-				comments: req.body.comments, 
+				comments: [], 
 				turnOnComments: true,
 				published: true, 
-				stringify: req.body.stringify,
+				stringify: "req.body.stringify",
 				tags: req.body.tags, 
-				upVote: req.body.upVote
+				upVote: 1
 			}
 		);
 	

@@ -19,6 +19,7 @@ class PostForm extends React.Component {
 			userId: "",
 			title: "",
 			message: "",
+			tags: "",
 		};
 
 		this.handleChange = this.handleChange.bind(this);
@@ -45,6 +46,9 @@ class PostForm extends React.Component {
 		else if (event.target.id === "message") {
 			this.setState({message : event.target.value})
 		}
+		else if (event.target.id === "tags") {
+			this.setState({tags : event.target.value})
+		}
 
 		console.log(event.target.id);
 	}
@@ -59,7 +63,6 @@ class PostForm extends React.Component {
 		return (
 			<div>
 			<form>
-			
 			
 			<ListItem onClick={this.handleClickOpen} button key="Key">
 				<ListItemIcon>
