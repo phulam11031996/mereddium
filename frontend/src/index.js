@@ -1,26 +1,40 @@
-import  {React, useState, useEffect} from 'react';
+import  React from 'react';
 import ReactDOM from 'react-dom';
-import axios from 'axios';
-import Table from './Table';
-import Form from './form';
+import SideBar from './Components/sidebar';
+import AppBar from './Components/Appbar';
+import ContentBox from './Components/ContentBox';
 import './index.css';
 
-var timeStamp;
+function MyApp() {
+ 
+  return (
+    <div>
+    <div className="NavBar">
+      <AppBar />
+    </div>
 
-function requestUpdate() {
-  timeStamp = Date.now();
-  window.localStorage.setItem('LastUpdated', timeStamp);
+    <div className="SideBar">
+      <SideBar />
+    </div>
+    
+    <div className='Content'>
+      <ContentBox />
+    </div>
+    
+    </div>
+  );
+
 }
 
-function MyApp() {
+ReactDOM.render(<MyApp />, document.getElementById('root'));
 
-  var firstRun = 1;
+/*
 
-  const [characters, setCharacters] = useState([]);
+ const [characters, setCharacters] = useState([]);
 
     async function fetchAll() {
     try {
-      const response = await axios.get('http://localhost:3030/users');
+      const response = await axios.get('http://localhost:3030/user');
       console.log(response.data.data.allUsers);
       return response.data.data.allUsers;
     }
@@ -31,27 +45,17 @@ function MyApp() {
     }
   }
   useEffect(() => {
-    if(firstRun === 1) {
-      fetchAll().then( result => {
-        if(result) {
-          setCharacters(result);
-        }
-      });
-      firstRun++;
-    }
-    window.addEventListener('storage', () => {
-      fetchAll().then( result => {
-        if(result) {
-          setCharacters(result);
-        }
-      });
+    fetchAll().then( result => {
+      if(result) {
+        setCharacters(result);
+      }
     });
-   
-  }, [firstRun]);
 
-  async function makePostCall(person) {
+  }, []);
+
+  async function makePostCall(post) {
     try {
-      const response = await axios.post('http://localhost:3030/users', person);
+      const response = await axios.post('http://localhost:3030/post', post);
       return response;
     }
     catch (error) {
@@ -60,15 +64,16 @@ function MyApp() {
     }
   };
 
-  function updateList(person) {
-    makePostCall(person).then( result => {
+  function updateList(post) {
+
+    console.log(post);
+  /*  makePostCall(post).then( result => {
       if(result.status === 201) {
         console.log(result.data.result);
         setCharacters([...characters, result.data.result]);
       }
     });
-    
-    requestUpdate();
+  
   }
 
   function deleteById(id) {
@@ -84,32 +89,25 @@ function MyApp() {
         setCharacters(updated);
       }
     });
-
-    requestUpdate();
   }
 
 
   async function makeDeleteCall (id) {
     console.log(id);
     try {
-      const response = await axios.delete('http://localhost:3030/users/'+id);
+      const response = await axios.delete('http://localhost:3030/user/'+id);
       console.log("IN waiting: " + response);
       return response;
-    } 
+    }
     catch(error) {
       console.log(error);
       return false;
     }
   }
 
-  
-  return (
-    <div className="container">
-      <Table characterData={characters} removeCharacter={deleteById} />
-      <Form handleSubmit={updateList} />
-    </div>
-  );
+<CreateButton handleSubmit={updateList}/>
+<Table characterData={characters} removeCharacter={deleteById} />
+<Form handleSubmit={updateList} />
+<SideBar />
 
-}
-
-ReactDOM.render(<MyApp />, document.getElementById('root'));
+*/
