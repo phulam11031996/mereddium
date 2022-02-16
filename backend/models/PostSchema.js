@@ -17,12 +17,12 @@ const postSchema = new mongoose.Schema({
 	title: {
 	  type: String,
 	  required: [true, 'A title is required'],
-	  minlength: 20,
+	  minlength: 1,
 	},
 	message: {
 		type: String,
 		required: [true, 'Please enter content'],
-		minlength: 50
+		minlength: 1
 	},
 	comments: [
 		{
