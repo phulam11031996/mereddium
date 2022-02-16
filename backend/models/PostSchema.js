@@ -24,6 +24,10 @@ const postSchema = new mongoose.Schema({
 		required: [true, 'Please enter content'],
 		minlength: 1
 	},
+	imageURL: {
+		type: String,
+		default: null
+	},
 	comments: [
 		{
 			_id: {

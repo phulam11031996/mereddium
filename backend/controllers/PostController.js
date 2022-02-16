@@ -32,7 +32,8 @@ exports.createPost = catchAsync(async (req, res) => {
 				turnOnComments: true,
 				published: true, 
 				stringify: "req.body.stringify",
-				tags: [], 
+				tags: [],
+				imageURL: req.body.imageURL, 
 				upVote: 1
 			}
 		);
