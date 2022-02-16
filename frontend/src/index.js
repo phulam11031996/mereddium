@@ -1,20 +1,40 @@
-import  {React, useState, useEffect} from 'react';
+import  React from 'react';
 import ReactDOM from 'react-dom';
-import axios from 'axios';
-import Table from './Table';
-import Form from './form';
-import CreateButton from './Components/createPostButton';
 import SideBar from './Components/sidebar';
 import AppBar from './Components/Appbar';
 import ContentBox from './Components/ContentBox';
 import './index.css';
 
 function MyApp() {
-  const [characters, setCharacters] = useState([]);
+ 
+  return (
+    <div>
+    <div className="NavBar">
+      <AppBar />
+    </div>
+
+    <div className="SideBar">
+      <SideBar />
+    </div>
+    
+    <div className='Content'>
+      <ContentBox />
+    </div>
+    
+    </div>
+  );
+
+}
+
+ReactDOM.render(<MyApp />, document.getElementById('root'));
+
+/*
+
+ const [characters, setCharacters] = useState([]);
 
     async function fetchAll() {
     try {
-      const response = await axios.get('http://localhost:3030/users');
+      const response = await axios.get('http://localhost:3030/user');
       console.log(response.data.data.allUsers);
       return response.data.data.allUsers;
     }
@@ -33,9 +53,9 @@ function MyApp() {
 
   }, []);
 
-  async function makePostCall(person) {
+  async function makePostCall(post) {
     try {
-      const response = await axios.post('http://localhost:3030/users', person);
+      const response = await axios.post('http://localhost:3030/post', post);
       return response;
     }
     catch (error) {
@@ -47,13 +67,13 @@ function MyApp() {
   function updateList(post) {
 
     console.log(post);
-    /*makePostCall(post).then( result => {
+  /*  makePostCall(post).then( result => {
       if(result.status === 201) {
         console.log(result.data.result);
         setCharacters([...characters, result.data.result]);
       }
     });
-    */
+  
   }
 
   function deleteById(id) {
@@ -75,7 +95,7 @@ function MyApp() {
   async function makeDeleteCall (id) {
     console.log(id);
     try {
-      const response = await axios.delete('http://localhost:3030/users/'+id);
+      const response = await axios.delete('http://localhost:3030/user/'+id);
       console.log("IN waiting: " + response);
       return response;
     }
@@ -84,21 +104,6 @@ function MyApp() {
       return false;
     }
   }
-
-
-  return (
-    <div className="main">
-    <AppBar />
-    <SideBar />
-    <ContentBox />
-    </div>
-  );
-
-}
-
-ReactDOM.render(<MyApp />, document.getElementById('root'));
-
-/*
 
 <CreateButton handleSubmit={updateList}/>
 <Table characterData={characters} removeCharacter={deleteById} />

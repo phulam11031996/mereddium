@@ -86,7 +86,7 @@ const Drawer = styled(MuiDrawer, {
   })
 }));
 
-export default function MiniDrawer() {
+export default function MiniDrawer(props) {
   const [open, setOpen] = React.useState(false);
 
   const handleDrawer = () => {
@@ -148,7 +148,7 @@ export default function MiniDrawer() {
           </ListItem>
           
             
-          <CreateButton />
+          <CreateButton handleSubmit={props.updateList} />
         
 
           <Divider />

@@ -27,8 +27,10 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function RecipeReviewCard() {
+export default function RecipeReviewCard(props) {
   const [expanded, setExpanded] = React.useState(false);
+
+  var subTitle = props.property.message.slice(0,350);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -48,21 +50,22 @@ export default function RecipeReviewCard() {
       />
       <CardMedia
         component="img"
-        height="300"
-        image="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1.00xw:0.669xh;0,0.190xh&resize=768:*"
+        height="500"
+        image= {props.property.img}
         alt="Paella dish"
       />
       <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the mussels,
-          if you like.
+        <Typography variant="body1" color="text.secondary" style={{color: 'black', fontSize: 24}}>
+          {props.property.title}
+        </Typography>
+        <Typography paragraph>
+          {subTitle + " ..."}
         </Typography>
       </CardContent>
       <CardActions disableSpacing style={{marginLeft: 20}}>
         <ThumbUpOutlinedIcon style = {{color: '#0077b6'}}/>
         <Typography style= {{padding: 10, fontSize: 14}}>
-          107
+          {props.property.like}
         </Typography>
         <ThumbDownOutlinedIcon style = {{color: '#ee6c4d'}}/>
         <ExpandMore
@@ -76,30 +79,11 @@ export default function RecipeReviewCard() {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography paragraph>Method:</Typography>
           <Typography paragraph>
-            Heat 1/2 cup of the broth in a pot until simmering, add saffron and set
-            aside for 10 minutes.
-          </Typography>
-          <Typography paragraph>
-            Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over
-            medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring
-            occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a
-            large plate and set aside, leaving chicken and chorizo in the pan. Add
-            pimentón, bay leaves, garlic, tomatoes, onion, salt and pepper, and cook,
-            stirring often until thickened and fragrant, about 10 minutes. Add
-            saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.
-          </Typography>
-          <Typography paragraph>
-            Add rice and stir very gently to distribute. Top with artichokes and
-            peppers, and cook without stirring, until most of the liquid is absorbed,
-            15 to 18 minutes. Reduce heat to medium-low, add reserved shrimp and
-            mussels, tucking them down into the rice, and cook again without
-            stirring, until mussels have opened and rice is just tender, 5 to 7
-            minutes more. (Discard any mussels that don’t open.)
+            {props.property.message}
           </Typography>
         </CardContent>
-		
+        ----Comment Component
       </Collapse>
     </Card>
   );
