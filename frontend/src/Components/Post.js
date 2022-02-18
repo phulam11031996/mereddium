@@ -16,6 +16,9 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 
+import Comments from './comments';
+import { getNativeSelectUtilityClasses } from '@mui/material';
+
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
@@ -27,7 +30,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function RecipeReviewCard(props) {
+export default function Posts(props) {
   const [expanded, setExpanded] = React.useState(false);
 
   var subTitle = props.property.message.slice(0,350);
@@ -38,22 +41,25 @@ export default function RecipeReviewCard(props) {
 
   return (
     <Card sx={{ maxWidth: 800 }}   style = {{marginTop: 50}}>
+
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
             SM
           </Avatar>
         }
-
-        title="Sultanov M - [userId]"
-        subheader="September 20, 2022"
+        title={props.property.userId}
+        subheader={props.property.lastModifiedAt}
       />
-      <CardMedia
+
+      {props.property.imageURL !== '' ? 
+        <CardMedia
         component="img"
         height="500"
-        image= {props.property.img}
+        image= {props.property.imageURL}
         alt="Paella dish"
-      />
+      /> : null}
+
       <CardContent>
         <Typography variant="body1" color="text.secondary" style={{color: 'black', fontSize: 24}}>
           {props.property.title}
@@ -62,10 +68,11 @@ export default function RecipeReviewCard(props) {
           {subTitle + " ..."}
         </Typography>
       </CardContent>
+
       <CardActions disableSpacing style={{marginLeft: 20}}>
         <ThumbUpOutlinedIcon style = {{color: '#0077b6'}}/>
         <Typography style= {{padding: 10, fontSize: 14}}>
-          {props.property.like}
+          {props.property.upVote}
         </Typography>
         <ThumbDownOutlinedIcon style = {{color: '#ee6c4d'}}/>
         <ExpandMore
@@ -77,14 +84,18 @@ export default function RecipeReviewCard(props) {
           <ExpandMoreIcon />
         </ExpandMore>
       </CardActions>
+
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography paragraph>
-            {props.property.message}
+            Comments:
           </Typography>
         </CardContent>
-        ----Comment Component
+          <Comments index={props.property.index} comments={props.property.comments}/>
       </Collapse>
+
+      <button onClick={() => props.deletePostById(props.property._id)}>delete</button>
+
     </Card>
   );
 }

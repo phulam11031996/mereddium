@@ -66,6 +66,7 @@ export default function FullScreenDialog() {
 	makePostCall(post).then( result => {
 		if(result.status === 201) {
 		  console.log(result.data.result);
+		  window.location = '/';
 		}
 	});
 		
