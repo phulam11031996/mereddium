@@ -29,21 +29,7 @@ export default class ContentBox extends Component {
 				<Post 
 					key={index}
 					deletePostById={this.deletePostById}
-					property = {{
-						"comments": currentPost.comments,
-						"createAt": currentPost.createAt,
-						"imageURL": currentPost.imageURL,
-						"lastModifiedAt": currentPost.lastModifiedAt,
-						"message": currentPost.message,
-						"published": currentPost.published,
-						"stringify": currentPost.stringify,
-						"tags": currentPost.tags,
-						"title": currentPost.title,
-						"turnOnComments": currentPost.turnOnComments,
-						"upVote": currentPost.upVote,
-						"userId": currentPost.userId,
-						"_id": currentPost._id
-						}} 
+					property = {currentPost} 
 				/>
 			)
 		});
