@@ -92,4 +92,3 @@ exports.deletePostById = catchAsync(async (req, res) => {
 		}
 	})
 });
-

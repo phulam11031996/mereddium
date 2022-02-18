@@ -1,9 +1,10 @@
 import  React from 'react';
 import ReactDOM from 'react-dom';
+import './index.css';
+
 import SideBar from './Components/sidebar';
 import AppBar from './Components/Appbar';
 import ContentBox from './Components/ContentBox';
-import './index.css';
 
 function MyApp() {
  
