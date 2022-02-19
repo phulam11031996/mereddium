@@ -11,13 +11,14 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
-import Comments from './comments';
-import { getNativeSelectUtilityClasses } from '@mui/material';
+import Reply from './CommentReply';
+
+import Comments from './Comments';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -48,11 +49,16 @@ export default function Posts(props) {
             SM
           </Avatar>
         }
+        action = {
+        <IconButton>
+            <DeleteOutlineIcon style={{color: '#ee6c4d'}} onClick={() => props.deletePostById(props.property._id)} />
+        </IconButton>
+        }
         title={props.property.userId}
-        subheader={props.property.lastModifiedAt}
+        subheader={props.property.createdAt.slice(0,10)}
       />
 
-      {props.property.imageURL !== '' ? 
+      {props.property.imageURL !== '' ?
         <CardMedia
         component="img"
         height="500"
@@ -70,11 +76,11 @@ export default function Posts(props) {
       </CardContent>
 
       <CardActions disableSpacing style={{marginLeft: 20}}>
-        <ThumbUpOutlinedIcon style = {{color: '#0077b6'}}/>
+        <ThumbUpOutlinedIcon style = {{color: '#0077b6'}} fontSize ="small"/>
         <Typography style= {{padding: 10, fontSize: 14}}>
           {props.property.upVote}
         </Typography>
-        <ThumbDownOutlinedIcon style = {{color: '#ee6c4d'}}/>
+          <ThumbDownOutlinedIcon style = {{color: '#ee6c4d'}} fontSize ="small"/>
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
@@ -88,13 +94,14 @@ export default function Posts(props) {
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography paragraph>
-            Comments:
+            {props.property.message}
           </Typography>
         </CardContent>
-          <Comments index={props.property.index} comments={props.property.comments}/>
-      </Collapse>
 
-      <button onClick={() => props.deletePostById(props.property._id)}>delete</button>
+      <Comments />
+      <Reply />
+
+      </Collapse>
 
     </Card>
   );
