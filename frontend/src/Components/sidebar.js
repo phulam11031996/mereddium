@@ -111,21 +111,21 @@ export default function MiniDrawer(props) {
           </IconButton>
         </DrawerHeader>
         <List>
-          <ListItem button key="Key">
+          <ListItem>
             <ListItemIcon>
               <WhatshotIcon color="primary" />
             </ListItemIcon>
             <ListItemText primary="Popular" />
           </ListItem>
 
-          <ListItem button key="Key">
+          <ListItem>
             <ListItemIcon>
               <AccessTimeOutlinedIcon color="secondary" />
             </ListItemIcon>
             <ListItemText primary="Recent" />
           </ListItem>
 
-          <ListItem button key="Key">
+          <ListItem>
             <ListItemIcon>
               <TrendingUpOutlinedIcon color="secondary" />
             </ListItemIcon>
@@ -134,7 +134,7 @@ export default function MiniDrawer(props) {
 
           <Divider />
 
-          <ListItem button key="Key">
+          <ListItem>
             <ListItemIcon>
               <StyledBadge badgeContent={12} style={{ color: "white" }}>
                 <BookmarkBorderOutlinedIcon style={{ color: "orange" }} />
@@ -149,11 +149,11 @@ export default function MiniDrawer(props) {
 
           <Divider />
 
-          <ListItem button key="Key">
+          <ListItem>
             <ListItemIcon>
-              <LoginOutlinedIcon color="secondary" style={{ color: "red" }} />
+              <LoginOutlinedIcon color="secondary" style={{ color: "#00BFFF" }} />
             </ListItemIcon>
-            <ListItemText primary="Logout" style={{ color: "black" }} />
+            <ListItemText primary="Login" style={{ color: "black" }} />
           </ListItem>
         </List>
       </Drawer>

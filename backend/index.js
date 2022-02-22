@@ -2,13 +2,22 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const cookieSession = require('cookie-session');
 
 const userRouter = require('./routes/userRoutes');
 const postRouter = require('./routes/postRoutes');
 const commentRouter = require('./routes/commentRoutes');
 // Initializing
 const app = express();
+// app.set('trust proxy', true);
 app.use(express.json());
+//Authorization
+app.use(
+	cookieSession({
+		signed: false
+	//	secure: true
+	})
+);
 // CORS
 app.use(cors());
 
