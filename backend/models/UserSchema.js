@@ -46,6 +46,7 @@ const userSchema = new mongoose.Schema({
 		},
 		message: 'Password is not the same!',
 	  },
+	  select: false
 	},
 	passwordChangedAt: {
 	  type: Date,

@@ -7,6 +7,9 @@ const cookieSession = require('cookie-session');
 const userRouter = require('./routes/userRoutes');
 const postRouter = require('./routes/postRoutes');
 const commentRouter = require('./routes/commentRoutes');
+
+const authRouter = require('./routes/authRoutes');
+
 // Initializing
 const app = express();
 // app.set('trust proxy', true);
@@ -41,6 +44,7 @@ mongoose.connect(database, {
 app.use('/user', userRouter);
 app.use('/post', postRouter);
 app.use('/comment', commentRouter);
+app.use('/auth', authRouter);
 
 // PORT NUMBER 3030
 const PORT = 3030;
