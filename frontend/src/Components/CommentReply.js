@@ -2,9 +2,11 @@ import React, { useState, useRef } from "react";
 import cn from "classnames";
 import useDynamicHeightField from "./DynamicHeight";
 
+import axios from 'axios';
+
 const INITIAL_HEIGHT = 46;
 
-export default function CommentBox() {
+export default function CommentBox(props) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [commentValue, setCommentValue] = useState("");
 
@@ -32,7 +34,31 @@ export default function CommentBox() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log("send the form data somewhere");
+
+    const newComment = {
+      message: commentValue,
+      upVote: 0
+    }
+
+		createCommentCall(props.post, newComment).then(response => {
+			if (response.status === 200)
+				console.log("Sucessfully Comments!");
+        window.location = '/';
+		});
+
+  async function createCommentCall(post, newComment) {
+    try {
+      const response = await axios.patch(`http://localhost:3030/post/${post._id}`, {
+        comments: [...post.comments, newComment]
+      });
+      return response;
+    }
+    catch (error){
+      console.log(error);
+      return false;
+    }
+  }
+
   };
 
   return (

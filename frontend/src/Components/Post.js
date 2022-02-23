@@ -16,7 +16,7 @@ import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
-import Reply from './CommentReply';
+import CommentReply from './CommentReply';
 
 import Comments from './Comments';
 
@@ -76,11 +76,11 @@ export default function Posts(props) {
       </CardContent>
 
       <CardActions disableSpacing style={{marginLeft: 20}}>
-        <ThumbUpOutlinedIcon style = {{color: '#0077b6'}} fontSize ="small"/>
+        <ThumbUpOutlinedIcon onClick={() => props.upDownVote(props.property._id, props.property.upVote, 1)} style = {{color: '#0077b6'}} fontSize ="small"/>
         <Typography style= {{padding: 10, fontSize: 14}}>
           {props.property.upVote}
         </Typography>
-          <ThumbDownOutlinedIcon style = {{color: '#ee6c4d'}} fontSize ="small"/>
+          <ThumbDownOutlinedIcon onClick={() => props.upDownVote(props.property._id, props.property.upVote, -1)} style = {{color: '#ee6c4d'}} fontSize ="small"/>
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
@@ -98,8 +98,8 @@ export default function Posts(props) {
           </Typography>
         </CardContent>
 
-      <Comments />
-      <Reply />
+      <Comments comments={props.property.comments} />
+      <CommentReply post={props.property} />
 
       </Collapse>
 
