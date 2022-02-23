@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Box from "@mui/material/Box";
 import axios from 'axios';
 
@@ -24,7 +25,56 @@ export default class ContentBox extends Component {
 	}
 
 	postList() {
-		const postList = this.state.posts.map((currentPost, index) => {
+		const postList = this.state.posts.sort((p1, p2) => {
+			if(p1['upVote'] > p2['upVote']) return 1;
+			if(p1['upVote'] < p2['upVote']) return -1;
+			return 0;
+		})
+		.map((currentPost, index) => {
+			return (
+				<Post 
+					key={index}
+					deletePostById={this.deletePostById}
+					property = {currentPost} 
+				/>
+			)
+		});
+		return (
+			<ul>
+			{postList}
+			</ul>
+		)
+	}
+
+	popular_postList() {
+		const postList = this.state.posts.sort((p1, p2) => {
+			if(p1['upVote'] > p2['upVote']) return -1;
+			if(p1['upVote'] < p2['upVote']) return 1;
+			return 0;
+		})
+		.map((currentPost, index) => {
+			return (
+				<Post 
+					key={index}
+					deletePostById={this.deletePostById}
+					property = {currentPost} 
+				/>
+			)
+		});
+		return (
+			<ul>
+			{postList}
+			</ul>
+		)
+	}
+
+	recent_postList() {
+		const postList = this.state.posts.sort((p1, p2) => {
+			const t1 = new Date(p1['createdAt']);
+			const t2 = new Date(p2['createdAt']);
+			return t2 - t1;
+		})
+		.map((currentPost, index) => {
 			return (
 				<Post 
 					key={index}
@@ -66,10 +116,16 @@ export default class ContentBox extends Component {
 
 	render() {
 		return (
-			<Box sx={{ flexGrow: 1 }} style={{marginLeft: 100, marginTop: 30, marginRight: 50, marginBottom: 30}}>
-				{this.postList()}
+			<BrowserRouter>
+				<Box sx={{ flexGrow: 1 }} style={{marginLeft: 100, marginTop: 30, marginRight: 50, marginBottom: 30}}>
+					<Routes>
+						<Route path="/" exact element={this.postList()} />
+						<Route path="/popular" element={this.popular_postList()} />
+						<Route path="/recent" element={this.recent_postList()} />
+					</Routes>
 
-			</Box>
+				</Box>
+			</BrowserRouter>
 		);
 	}
 }
