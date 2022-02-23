@@ -9,6 +9,20 @@ const uniqueID = () => {
 	return uuidv4();
 }
 
+
+exports.loggedUser = catchAsync(async (req, res) => {
+	// Check for session
+	if(!req.session.jwt) {
+		return res.send({currentUser: null});
+	}
+	try {
+		const payload = jwt.verify(req.session.jwt, process.env.JWT_SECRET);
+		res.send({currentUser: payload});
+	} catch (err) {
+		res.send({currentUser: null});
+	}
+});
+
 // POST /auth/login
 exports.login = catchAsync(async (req, res) => {
 	const email = req.body.email;
@@ -28,10 +42,6 @@ exports.login = catchAsync(async (req, res) => {
 			jwt: userJWT
 		};
 
-		req.session.userId = {
-			userId: user._id
-		};
-
 		res.status(201).json({
 			"Status": "Success, User logged in!"
 		});
@@ -40,6 +50,12 @@ exports.login = catchAsync(async (req, res) => {
 			"Status": "Failed, Check email and password!"
 		}).end();
 	}
+});
+
+// GET /auth/logout
+exports.logout = catchAsync(async (req, res) => {
+	req.session = null;
+	res.send({"Status": "Logged out!"})
 });
 
 // POST /auth/signup
@@ -88,12 +104,6 @@ exports.signup = catchAsync(async (req, res) => {
 				req.session = {
 					jwt: userJWT
 				};
-		
-				req.session.userId = {
-					userId: newUser._id
-				};
-
-				console.log(req.session.userId);
 	
 				res.status(201).json({
 					"Status": "Success, User registered!"
