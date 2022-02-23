@@ -99,7 +99,7 @@ export default function Posts(props) {
         </CardContent>
 
       <Comments comments={props.property.comments} />
-      <CommentReply post={props.property} />
+      <CommentReply post={props.property} createComment={props.createComment} />
 
       </Collapse>
 

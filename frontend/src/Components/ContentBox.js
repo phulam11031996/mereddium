@@ -29,6 +29,7 @@ export default class ContentBox extends Component {
 			return (
 				<Post 
 					key={index}
+					createComment={this.createComment}
 					deletePostById={this.deletePostById}
 					upDownVote={this.upDownVote}
 					property = {currentPost} 
@@ -97,6 +98,35 @@ export default class ContentBox extends Component {
 	}
 
 	// comments posts
+	createComment = (commentPost, newComment) => {
+		this.makeCommentCall(commentPost, newComment).then (response => {
+			if (response.status === 200){
+				console.log("Sucessfully Commented!")
+
+				this.setState({
+					posts: this.state.posts.map( post => {
+						if (post._id === commentPost._id){
+							commentPost.comments = [...commentPost.comments, newComment];
+							return commentPost;
+						} else return post;
+					})
+				});
+			}
+		});
+	}
+	
+	async makeCommentCall(commentPost, newComment) {
+		try {
+			const response = await axios.patch(`http://localhost:3030/post/${commentPost._id}`, {
+				comments: [...commentPost.comments, newComment]
+		});
+			return response;
+		}
+			catch (error){
+			console.log(error);
+			return false;
+		}
+	}
 	
 
 

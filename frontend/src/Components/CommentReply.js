@@ -40,24 +40,10 @@ export default function CommentBox(props) {
       upVote: 0
     }
 
-		createCommentCall(props.post, newComment).then(response => {
-			if (response.status === 200)
-				console.log("Sucessfully Comments!");
-        window.location = '/';
-		});
+    setCommentValue("");
+    setIsExpanded(false);
+    props.createComment(props.post, newComment);
 
-  async function createCommentCall(post, newComment) {
-    try {
-      const response = await axios.patch(`http://localhost:3030/post/${post._id}`, {
-        comments: [...post.comments, newComment]
-      });
-      return response;
-    }
-    catch (error){
-      console.log(error);
-      return false;
-    }
-  }
 
   };
 
