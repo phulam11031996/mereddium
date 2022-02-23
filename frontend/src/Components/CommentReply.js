@@ -2,9 +2,11 @@ import React, { useState, useRef } from "react";
 import cn from "classnames";
 import useDynamicHeightField from "./DynamicHeight";
 
+import axios from 'axios';
+
 const INITIAL_HEIGHT = 46;
 
-export default function CommentBox() {
+export default function CommentBox(props) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [commentValue, setCommentValue] = useState("");
 
@@ -32,7 +34,17 @@ export default function CommentBox() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log("send the form data somewhere");
+
+    const newComment = {
+      message: commentValue,
+      upVote: 0
+    }
+
+    setCommentValue("");
+    setIsExpanded(false);
+    props.createComment(props.post, newComment);
+
+
   };
 
   return (
