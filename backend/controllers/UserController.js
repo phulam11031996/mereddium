@@ -38,7 +38,7 @@ exports.createUser = catchAsync(async (req, res) => {
 				blocked: false,
 				interestedIn: req.body.interestedIn
 			}
-		);
+	);
 	
 	newUser.save(function (err) {
 		if(err) {
