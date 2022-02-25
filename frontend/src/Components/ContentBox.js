@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Box from "@mui/material/Box";
 import axios from 'axios';
 
@@ -25,16 +25,13 @@ export default class ContentBox extends Component {
 	}
 
 	postList() {
-		const postList = this.state.posts.sort((p1, p2) => {
-			if(p1['upVote'] > p2['upVote']) return 1;
-			if(p1['upVote'] < p2['upVote']) return -1;
-			return 0;
-		})
-		.map((currentPost, index) => {
+		const postList = this.state.posts.map((currentPost, index) => {
 			return (
 				<Post 
 					key={index}
+					createComment={this.createComment}
 					deletePostById={this.deletePostById}
+					upDownVote={this.upDownVote}
 					property = {currentPost} 
 				/>
 			)
@@ -48,15 +45,17 @@ export default class ContentBox extends Component {
 
 	popular_postList() {
 		const postList = this.state.posts.sort((p1, p2) => {
-			if(p1['upVote'] > p2['upVote']) return -1;
-			if(p1['upVote'] < p2['upVote']) return 1;
-			return 0;
+			const v1 = p1['upVote'];
+			const v2 = p2['upVote'];
+			return v2 - v1;
 		})
 		.map((currentPost, index) => {
 			return (
 				<Post 
 					key={index}
+					createComment={this.createComment}
 					deletePostById={this.deletePostById}
+					upDownVote={this.upDownVote}
 					property = {currentPost} 
 				/>
 			)
@@ -78,7 +77,9 @@ export default class ContentBox extends Component {
 			return (
 				<Post 
 					key={index}
+					createComment={this.createComment}
 					deletePostById={this.deletePostById}
+					upDownVote={this.upDownVote}
 					property = {currentPost} 
 				/>
 			)
@@ -116,16 +117,15 @@ export default class ContentBox extends Component {
 
 	render() {
 		return (
-			<BrowserRouter>
+			<Router>
 				<Box sx={{ flexGrow: 1 }} style={{marginLeft: 100, marginTop: 30, marginRight: 50, marginBottom: 30}}>
 					<Routes>
-						<Route path="/" exact element={this.postList()} />
-						<Route path="/popular" element={this.popular_postList()} />
-						<Route path="/recent" element={this.recent_postList()} />
+						<Route exact path="/" element={this.postList()} />
+						<Route exact path="/popular" element={this.popular_postList()} />
+						<Route exact path="/recent" element={this.recent_postList()} />
 					</Routes>
-
 				</Box>
-			</BrowserRouter>
+			</Router>
 		);
 	}
 }

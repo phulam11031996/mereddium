@@ -115,21 +115,21 @@ export default function MiniDrawer(props) {
           </IconButton>
         </DrawerHeader>
         <List>
-          <ListItem button key="Popular">
+          <ListItem button key="Popular" onClick={() => { window.location.href = "/popular"; }}>
             <ListItemIcon>
               <WhatshotIcon color="primary" />
             </ListItemIcon>
             <ListItemText primary="Popular" />
           </ListItem>
 
-          <ListItem button key="Recent">
+          <ListItem button key="Recent" onClick={() => { window.location.href = "/recent"; }}>
             <ListItemIcon>
               <AccessTimeOutlinedIcon color="secondary" />
             </ListItemIcon>
             <ListItemText primary="Recent" />
           </ListItem>
 
-          <ListItem button key="Trending">
+          <ListItem button key="Trending" onClick={() => { window.location.href = "/"; }}>
             <ListItemIcon>
               <TrendingUpOutlinedIcon color="secondary" />
             </ListItemIcon>
