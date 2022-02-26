@@ -7,6 +7,7 @@ import axios from 'axios';
 const INITIAL_HEIGHT = 46;
 
 export default function CommentBox(props) {
+  
   const [isExpanded, setIsExpanded] = useState(false);
   const [commentValue, setCommentValue] = useState("");
 
@@ -36,14 +37,17 @@ export default function CommentBox(props) {
     e.preventDefault();
 
     const newComment = {
+      userId: "sultanovMO",
+      postId: props.postId,
       message: commentValue,
-      upVote: 0
+      upVote: 1
     }
-
+    
+    console.log(newComment);
+    
+    props.createComment(newComment);
     setCommentValue("");
     setIsExpanded(false);
-    props.createComment(props.post, newComment);
-
 
   };
 

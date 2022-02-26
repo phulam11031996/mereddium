@@ -24,6 +24,7 @@ const commentSchema = new mongoose.Schema({
 	},
 	message: {
 	  type: String,
+	  minlength: 5,
 	  required: [true, 'Please enter comment']
 	},
 	upVote: {
