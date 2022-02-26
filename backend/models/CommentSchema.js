@@ -20,7 +20,6 @@ const commentSchema = new mongoose.Schema({
 	},
 	lastModifiedAt: {
 		type: Date,
-		default: Date.now()
 	},
 	message: {
 	  type: String,
