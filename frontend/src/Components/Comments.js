@@ -6,6 +6,7 @@ export default function Comments(props) {
 
   function CommentList(props) {
     const listPosts = props.comments.map((comment, index) => {
+        console.log(comment);
         var timeStamp = comment.timeStamp;
         var year = timeStamp.slice(0,4);
         var month = timeStamp.slice(5,7);
@@ -56,12 +57,12 @@ export default function Comments(props) {
         }
 
         return (
-          <Paper style={{ padding: "40px 20px" }}>
+          <Paper key = {index}  style={{ padding: "40px 20px" }}>
             <Grid container wrap="nowrap" spacing={2}>
               <Grid item>
                 <Avatar alt="Remy Sharp" src={imgLink} />
               </Grid>
-              <Grid justifyContent="left" item xs zeroMinWidth>
+              <Grid item xs zeroMinWidth>
                 <div>
                 <h4 style={{ margin: 0, textAlign: "left" }}>Michel Michel</h4>
                 </div>

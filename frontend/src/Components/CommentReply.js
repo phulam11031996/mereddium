@@ -33,17 +33,15 @@ export default function CommentBox(props) {
 
   const onSubmit = (e) => {
     e.preventDefault();
-
     const newComment = {
       userId: "sultanovMO",
       postId: props.postId,
       message: commentValue,
       upVote: 1
     }
-    
-    console.log(newComment);
 
     props.createComment(newComment);
+
     setCommentValue("");
     setIsExpanded(false);
 
