@@ -101,17 +101,7 @@ export default class ContentBox extends Component {
 	createComment = (newComment) => {
 		this.makeCommentCall(newComment).then (response => {
 			if (response.status === 200){
-				console.log("Sucessfully Commented!");
-				
-				this.setState({
-					posts: this.state.posts.map( post => {
-						if (post._id === newComment.postId){
-							post.comments = [...post.comments, newComment];
-							return post;
-						} else return post;
-					})
-				});
-
+				this.componentDidMount();
 			} else {
 				console.log("Failed to create comment");
 			}
@@ -120,12 +110,10 @@ export default class ContentBox extends Component {
 	
 	async makeCommentCall(newComment) {
 		try {
-			console.log(newComment);
 			const response = await axios.post("http://localhost:3030/comment/", newComment);
 			return response;
 		}
 		catch (error){
-			console.log(error)
 			return false;
 		}
 	}
