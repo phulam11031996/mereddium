@@ -1,8 +1,5 @@
 import React from 'react';
-
 import { Avatar, Grid, Paper } from "@material-ui/core";
-import { grey } from '@mui/material/colors';
-import { fontSize } from '@mui/system';
 
 export default function Comments(props) {
 
