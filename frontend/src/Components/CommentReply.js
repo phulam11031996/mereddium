@@ -2,8 +2,6 @@ import React, { useState, useRef } from "react";
 import cn from "classnames";
 import useDynamicHeightField from "./DynamicHeight";
 
-import axios from 'axios';
-
 const INITIAL_HEIGHT = 46;
 
 export default function CommentBox(props) {
@@ -44,7 +42,7 @@ export default function CommentBox(props) {
     }
     
     console.log(newComment);
-    
+
     props.createComment(newComment);
     setCommentValue("");
     setIsExpanded(false);

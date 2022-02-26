@@ -108,7 +108,7 @@ export default class ContentBox extends Component {
 						if (post._id === newComment.postId){
 							post.comments = [...post.comments, newComment];
 							return post;
-						}
+						} else return post;
 					})
 				});
 
