@@ -36,11 +36,16 @@ export default function Posts(props) {
 
   const [state, setState] = React.useState({
     userId: props.currentUserId,
-    login: true
+    login: true,
+    userMatch: false
   })
 
   if(state.userId.length >= 5) {
     state.login = false;
+  }
+
+  if(state.userId === props.property.userId) {
+    state.userMatch = true
   }
 
   var subTitle = props.property.message.slice(0,350);
@@ -60,7 +65,9 @@ export default function Posts(props) {
         }
         action = {
         <IconButton>
+            {state.userMatch &&
             <DeleteOutlineIcon style={{color: '#ee6c4d'}} onClick={() => props.deletePostById(props.property._id)} />
+            }
         </IconButton>
         }
         title={props.property.userId}
