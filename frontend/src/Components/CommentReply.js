@@ -33,6 +33,7 @@ export default function CommentBox(props) {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    
     const newComment = {
       userId: "sultanovMO",
       postId: props.postId,

@@ -18,9 +18,9 @@ import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 
-import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
-
 import CreateButton from './createPostButton';
+import LoginButton from './loginButton';
+import LogoutButton from './logoutButton';
 
 const drawerWidth = 200;
 
@@ -82,8 +82,19 @@ const Drawer = styled(MuiDrawer, {
   })
 }));
 
+const parseCookie = str =>
+  str
+  .split(';')
+  .map(v => v.split('='))
+  .reduce((acc, v) => {
+    acc[decodeURIComponent(v[0].trim())] = decodeURIComponent(v[1].trim());
+    return acc;
+  }, {});
+
 export default function MiniDrawer(props) {
   const [open, setOpen] = React.useState(false);
+  
+  let cookie = parseCookie(document.cookie);
 
   const handleDrawer = () => {
 		if(open === true) {
@@ -144,17 +155,14 @@ export default function MiniDrawer(props) {
           </ListItem>
           
             
-          <CreateButton handleSubmit={props.updateList} />
+          <CreateButton userId = {cookie.userId} handleSubmit={props.updateList} />
         
 
           <Divider />
-
-          <ListItem button key="loginout">
-            <ListItemIcon>
-              <LoginOutlinedIcon color="secondary" style={{ color: "red" }} />
-            </ListItemIcon>
-            <ListItemText primary="Logout" style={{ color: "black" }} />
-          </ListItem>
+          
+          <LoginButton />
+          <LogoutButton />
+    
         </List>
       </Drawer>
     </Box>

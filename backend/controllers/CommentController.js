@@ -29,7 +29,7 @@ exports.createComment = catchAsync(async (req, res) => {
 				_id: result._id, 
 				userId: req.body.userId, 
 				postId: req.body.postId,
-				message: req.body.message, 
+				message: req.body.message,
 				upVote: req.body.upVote,
 			}
 		);

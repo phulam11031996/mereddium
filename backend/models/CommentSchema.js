@@ -16,14 +16,14 @@ const commentSchema = new mongoose.Schema({
 	},
 	timeStamp: {
 		type: Date,
-		default: Date.now(),
+      	default: function() { return Date.now() },
 	},
 	lastModifiedAt: {
-		type: Date,
+		type: String,
+		default: function() { return Date.now() },
 	},
 	message: {
 	  type: String,
-	  minlength: 5,
 	  required: [true, 'Please enter comment']
 	},
 	upVote: {

@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const cookieSession = require('cookie-session');
+const cookieParser = require('cookie-parser')
 
 const userRouter = require('./routes/userRoutes');
 const postRouter = require('./routes/postRoutes');
@@ -12,6 +13,8 @@ const authRouter = require('./routes/authRoutes');
 
 // Initializing
 const app = express();
+
+app.use(cookieParser());
 // app.set('trust proxy', true);
 app.use(express.json());
 //Authorization

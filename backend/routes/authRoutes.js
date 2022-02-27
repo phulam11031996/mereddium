@@ -21,6 +21,6 @@ router
 // /auth/me
 router
   .route('/me')
-  .get(authController.loggedUser);
+  .get(authController.isLoggedIn);
 
 module.exports = router;

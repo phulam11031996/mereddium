@@ -19,12 +19,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog() {
+export default function FullScreenDialog(props) {
   const [open, setOpen] = React.useState(false);
 
   const [post, setPost] = React.useState(
 	{
-	   userId: '',
+	   userId: props.userId,
 	   title: '',
 	   message: '',
 	   imageURL: ''
@@ -36,10 +36,7 @@ export default function FullScreenDialog() {
   };
 
   const handleOnChange = (event) => {
-	if(event.target.id === "userId") {
-		setPost({userId: event.target.value, title: post.title, message: post.message, imageURL: post.imageURL});
-	}
-	else if(event.target.id === "title") {
+	if(event.target.id === "title") {
 		setPost({userId: post.userId, title: event.target.value, message: post.message, imageURL: post.imageURL});
 	}
 	else if(event.target.id === "message") {
@@ -112,16 +109,6 @@ export default function FullScreenDialog() {
         </AppBar>
 
         <List>
-			<ListItem>
-				<TextField
-				fullWidth
-				label="UserId"
-				variant="standard"
-				id="userId"
-        		value={post.userId}
-				onChange = {handleOnChange}
-				/>
-			</ListItem>
 			<ListItem>
 			<TextField
 				fullWidth

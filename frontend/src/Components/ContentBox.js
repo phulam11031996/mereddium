@@ -7,9 +7,10 @@ import Post from "./Post";
 export default class ContentBox extends Component {
 	constructor(props) {
 		super(props);
-	
+		console.log(document.cookie);
 		this.state = {posts: []};
-	  }
+	}
+
 	
 	// Similar to useEffect
 	componentDidMount() {
@@ -99,6 +100,7 @@ export default class ContentBox extends Component {
 
 	// comments posts
 	createComment = (newComment) => {
+		console.log(newComment);
 		this.makeCommentCall(newComment).then (response => {
 			if (response.status === 200){
 				this.componentDidMount();
