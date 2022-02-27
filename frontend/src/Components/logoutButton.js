@@ -12,6 +12,7 @@ export default function AlertDialogSlide() {
       await axios.get('http://localhost:3030/auth/logout');
       document.cookie = 'jwt=null';
       document.cookie = 'userId=null';
+      window.location = '/';
 	}
 
   return (
@@ -22,7 +23,7 @@ export default function AlertDialogSlide() {
         </ListItemIcon>
         <ListItemText primary="Logout" />
       </ListItem>
-     
+
     </div>
   );
 }

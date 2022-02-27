@@ -58,11 +58,12 @@ export default function AlertDialogSlide() {
 
   const handleOnSubmit = (event) => {
     logInCall(user).then( jwt => {
-		if(jwt.status === 200) {
+
+    if(jwt.status === 200) {
       document.cookie = `jwt=${jwt.data.token}`;
       document.cookie = `userId=${jwt.data.data.user._id}`;
+      window.location = '/';
 		}
-    console.log(jwt);
 	});
 
 	handleClose();

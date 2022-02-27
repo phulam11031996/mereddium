@@ -64,7 +64,7 @@ export default function Comments(props) {
               </Grid>
               <Grid item xs zeroMinWidth>
                 <div>
-                <h4 style={{ margin: 0, textAlign: "left" }}>Michel Michel</h4>
+                <h4 style={{ margin: 0, textAlign: "left" }}>{comment.userId}</h4>
                 </div>
                 <p style= {{ textAlign: "left", marginTop: "0px", color: "grey", fontSize: "10px"}}>{year}, {month} - {day} at {hour}:{minute}</p>
                 <p style={{ textAlign: "left" }}>
@@ -84,7 +84,7 @@ export default function Comments(props) {
 
   const imgLink =
   "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260";
-  
+
   return (
     <div style={{ padding: 14 }} className="App">
       <h1>Comments</h1>
@@ -92,5 +92,5 @@ export default function Comments(props) {
 
     </div>
   );
-  
+
 }

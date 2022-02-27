@@ -82,19 +82,16 @@ const Drawer = styled(MuiDrawer, {
   })
 }));
 
-const parseCookie = str =>
-  str
-  .split(';')
-  .map(v => v.split('='))
-  .reduce((acc, v) => {
-    acc[decodeURIComponent(v[0].trim())] = decodeURIComponent(v[1].trim());
-    return acc;
-  }, {});
-
 export default function MiniDrawer(props) {
   const [open, setOpen] = React.useState(false);
-  
-  let cookie = parseCookie(document.cookie);
+  const [state, setState] = React.useState({
+    userId: props.userId,
+    login: true
+  })
+
+  if(props.userId.length >= 5) {
+    state.login = false;
+  }
 
   const handleDrawer = () => {
 		if(open === true) {
@@ -108,7 +105,7 @@ export default function MiniDrawer(props) {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
- 
+
       <Drawer variant="permanent" open={open}>
         <DrawerHeader style = {{backgroundColor: "black", minHeight: "70px"}}>
           <IconButton onClick={handleDrawer} style = {{color: "white"}}>
@@ -118,7 +115,7 @@ export default function MiniDrawer(props) {
 					:
 					<ChevronLeftIcon />
 				}
-        		
+
           </IconButton>
         </DrawerHeader>
         <List>
@@ -145,6 +142,7 @@ export default function MiniDrawer(props) {
 
           <Divider />
 
+          {!state.login &&
           <ListItem button key="bookmark">
             <ListItemIcon>
               <StyledBadge badgeContent={12} style={{ color: "white" }}>
@@ -153,16 +151,17 @@ export default function MiniDrawer(props) {
             </ListItemIcon>
             <ListItemText primary="Saved" />
           </ListItem>
-          
-            
-          <CreateButton userId = {cookie.userId} handleSubmit={props.updateList} />
-        
+          }
+
+          {!state.login &&
+          <CreateButton userId = {state.userId} handleSubmit={props.updateList} />
+          }
 
           <Divider />
-          
-          <LoginButton />
-          <LogoutButton />
-    
+
+          {state.login && <LoginButton /> }
+          {!state.login && <LogoutButton /> }
+
         </List>
       </Drawer>
     </Box>

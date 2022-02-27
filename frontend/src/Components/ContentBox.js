@@ -11,7 +11,7 @@ export default class ContentBox extends Component {
 		this.state = {posts: []};
 	}
 
-	
+
 	// Similar to useEffect
 	componentDidMount() {
 	axios.get(`http://localhost:3030/post/`)
@@ -28,12 +28,13 @@ export default class ContentBox extends Component {
 	postList() {
 		const postList = this.state.posts.map((currentPost, index) => {
 			return (
-				<Post 
+				<Post
 					key={index}
 					createComment={this.createComment}
 					deletePostById={this.deletePostById}
 					upDownVote={this.upDownVote}
-					property = {currentPost} 
+					property = {currentPost}
+					currentUserId = {this.props.userId} 
 				/>
 			)
 		});
@@ -109,7 +110,7 @@ export default class ContentBox extends Component {
 			}
 		});
 	}
-	
+
 	async makeCommentCall(newComment) {
 		try {
 			const response = await axios.post("http://localhost:3030/comment/", newComment);
@@ -119,7 +120,7 @@ export default class ContentBox extends Component {
 			return false;
 		}
 	}
-	
+
 
 
 	render() {

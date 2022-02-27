@@ -34,6 +34,15 @@ const ExpandMore = styled((props) => {
 export default function Posts(props) {
   const [expanded, setExpanded] = React.useState(false);
 
+  const [state, setState] = React.useState({
+    userId: props.currentUserId,
+    login: true
+  })
+
+  if(state.userId.length >= 5) {
+    state.login = false;
+  }
+
   var subTitle = props.property.message.slice(0,350);
 
   const handleExpandClick = () => {
@@ -99,8 +108,9 @@ export default function Posts(props) {
         </CardContent>
 
       <Comments comments={props.property.comments} />
-      <CommentReply postId={props.property._id} createComment={props.createComment} />
-
+      {!state.login &&
+      <CommentReply userId = {state.userId} postId={props.property._id} createComment={props.createComment} />
+      }
       </Collapse>
 
     </Card>

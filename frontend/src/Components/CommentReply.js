@@ -5,14 +5,14 @@ import useDynamicHeightField from "./DynamicHeight";
 const INITIAL_HEIGHT = 46;
 
 export default function CommentBox(props) {
-  
+
   const [isExpanded, setIsExpanded] = useState(false);
   const [commentValue, setCommentValue] = useState("");
 
   const outerHeight = useRef(INITIAL_HEIGHT);
   const textRef = useRef(null);
   const containerRef = useRef(null);
-  
+
   useDynamicHeightField(textRef, commentValue);
 
   const onExpand = () => {
@@ -33,9 +33,9 @@ export default function CommentBox(props) {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    
+
     const newComment = {
-      userId: "sultanovMO",
+      userId: props.userId,
       postId: props.postId,
       message: commentValue,
       upVote: 1
@@ -68,7 +68,7 @@ export default function CommentBox(props) {
               src="https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/df/df7789f313571604c0e4fb82154f7ee93d9989c6.jpg"
               alt="User avatar"
             />
-            <span>Mongooose1987</span>
+            <span>{props.userId}</span>
           </div>
         </div>
         <label htmlFor="comment" className="replyLabel">What are your thoughts?</label>

@@ -7,7 +7,21 @@ import AppBar from './Components/Appbar';
 import ContentBox from './Components/ContentBox';
 
 function MyApp() {
- 
+
+  let cookie;
+  const parseCookie = str =>
+  str
+  .split(';')
+  .map(v => v.split('='))
+  .reduce((acc, v) => {
+    acc[decodeURIComponent(v[0].trim())] = decodeURIComponent(v[1].trim());
+    return acc;
+  }, {});
+
+  if(document.cookie) {
+    cookie = parseCookie(document.cookie);
+  }
+
   return (
     <div>
     <div className="NavBar">
@@ -15,13 +29,13 @@ function MyApp() {
     </div>
 
     <div className="SideBar">
-      <SideBar />
+      <SideBar userId = {cookie.userId} />
     </div>
-    
+
     <div className='Content'>
-      <ContentBox />
+      <ContentBox userId = {cookie.userId} />
     </div>
-    
+
     </div>
   );
 
@@ -74,7 +88,7 @@ ReactDOM.render(<MyApp />, document.getElementById('root'));
         setCharacters([...characters, result.data.result]);
       }
     });
-  
+
   }
 
   function deleteById(id) {
