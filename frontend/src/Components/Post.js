@@ -66,9 +66,9 @@ export default function Posts(props) {
           </Avatar>
         }
         action = {
-        <IconButton>
+        <IconButton onClick={() => props.deletePostById(props.property._id)} >
             {state.userMatch &&
-            <DeleteOutlineIcon style={{color: '#ee6c4d'}} onClick={() => props.deletePostById(props.property._id)} />
+            <DeleteOutlineIcon style={{color: '#ee6c4d'}}  />
             }
         </IconButton>
         }
