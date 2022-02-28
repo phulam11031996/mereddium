@@ -1,16 +1,12 @@
 import * as React from "react";
-import { styled, useTheme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Badge from "@mui/material/Badge";
 import MuiDrawer from "@mui/material/Drawer";
-import MuiAppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import CssBaseline from "@mui/material/CssBaseline";
-import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
@@ -22,9 +18,9 @@ import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 
-import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
-
 import CreateButton from './createPostButton';
+import LoginButton from './loginButton';
+import LogoutButton from './logoutButton';
 
 const drawerWidth = 200;
 
@@ -88,6 +84,16 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MiniDrawer(props) {
   const [open, setOpen] = React.useState(false);
+  const [state] = React.useState({
+    userId: props.userId,
+    login: true
+  })
+
+  console.log("From sidebar: userId " + state.userId.length);
+  
+  if(state.userId.length >= 5) {
+    state.login = false;
+  }
 
   const handleDrawer = () => {
 		if(open === true) {
@@ -101,7 +107,7 @@ export default function MiniDrawer(props) {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
- 
+
       <Drawer variant="permanent" open={open}>
         <DrawerHeader style = {{backgroundColor: "black", minHeight: "70px"}}>
           <IconButton onClick={handleDrawer} style = {{color: "white"}}>
@@ -111,7 +117,7 @@ export default function MiniDrawer(props) {
 					:
 					<ChevronLeftIcon />
 				}
-        		
+
           </IconButton>
         </DrawerHeader>
         <List>
@@ -148,10 +154,10 @@ export default function MiniDrawer(props) {
             <ListItemText primary="Saved" />
           </ListItem>
           }
-          
-            
-          <CreateButton handleSubmit={props.updateList} />
-        
+
+          {!state.login &&
+          <CreateButton userId = {state.userId} handleSubmit={props.updateList} />
+          }
 
           <Divider />
 

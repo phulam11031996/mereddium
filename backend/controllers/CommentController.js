@@ -1,4 +1,5 @@
 const Comment = require("../models/CommentSchema");
+const Post = require("../models/PostSchema");
 const catchAsync = require('../utils/catchAsync');
 const { v4: uuidv4 } = require('uuid');
 
@@ -28,24 +29,31 @@ exports.createComment = catchAsync(async (req, res) => {
 				_id: result._id, 
 				userId: req.body.userId, 
 				postId: req.body.postId,
-				message: req.body.message, 
+				message: req.body.message,
 				upVote: req.body.upVote,
 			}
 		);
 	
 	newComment.save(function (err) {
-		if(err) {
-			console.log(err);
-		}
+		Post.findOneAndUpdate(
+				{ _id: req.body.postId }, 
+				{ $push: { comments: newComment  } },
+			   function (error, success) {
+					 if (error) {
+						res.status(404).json({
+							status: 'failed to add comment',
+							data: newComment
+						});
+					 } else {
+						res.status(200).json({
+							status: 'success, added comment',
+							data: newComment
+						  });
+					 }
+				 });
 	});
 
-	res.status(201).json({
-		result
-	  });
-
 });
-
-
 // GET /comment/{id}
 exports.getCommentById = catchAsync(async (req, res) => {
 	const id = req.params.id;

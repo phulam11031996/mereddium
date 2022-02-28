@@ -11,13 +11,14 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
-import Comments from './comments';
-import { getNativeSelectUtilityClasses } from '@mui/material';
+import CommentReply from './CommentReply';
+
+import Comments from './Comments';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -32,6 +33,22 @@ const ExpandMore = styled((props) => {
 
 export default function Posts(props) {
   const [expanded, setExpanded] = React.useState(false);
+
+  const [state] = React.useState({
+    userId: props.currentUserId,
+    login: true,
+    userMatch: false
+  })
+
+  console.log("From post: userId " + state.userId.length);
+
+  if(state.userId.length >= 5) {
+    state.login = false;
+  }
+
+  if(state.userId === props.property.userId) {
+    state.userMatch = true
+  }
 
   var subTitle = props.property.message.slice(0,350);
 
@@ -48,11 +65,18 @@ export default function Posts(props) {
             SM
           </Avatar>
         }
+        action = {
+        <IconButton onClick={() => props.deletePostById(props.property._id)} >
+            {state.userMatch &&
+            <DeleteOutlineIcon style={{color: '#ee6c4d'}}  />
+            }
+        </IconButton>
+        }
         title={props.property.userId}
-        subheader={props.property.lastModifiedAt}
+        subheader={props.property.createdAt.slice(0,10)}
       />
 
-      {props.property.imageURL !== '' ? 
+      {props.property.imageURL !== '' ?
         <CardMedia
         component="img"
         height="500"
@@ -70,11 +94,11 @@ export default function Posts(props) {
       </CardContent>
 
       <CardActions disableSpacing style={{marginLeft: 20}}>
-        <ThumbUpOutlinedIcon style = {{color: '#0077b6'}}/>
+        <ThumbUpOutlinedIcon onClick={() => props.upDownVote(props.property._id, props.property.upVote, 1)} style = {{color: '#0077b6'}} fontSize ="small"/>
         <Typography style= {{padding: 10, fontSize: 14}}>
           {props.property.upVote}
         </Typography>
-        <ThumbDownOutlinedIcon style = {{color: '#ee6c4d'}}/>
+          <ThumbDownOutlinedIcon onClick={() => props.upDownVote(props.property._id, props.property.upVote, -1)} style = {{color: '#ee6c4d'}} fontSize ="small"/>
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
@@ -88,13 +112,15 @@ export default function Posts(props) {
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography paragraph>
-            Comments:
+            {props.property.message}
           </Typography>
         </CardContent>
-          <Comments index={props.property.index} comments={props.property.comments}/>
-      </Collapse>
 
-      <button onClick={() => props.deletePostById(props.property._id)}>delete</button>
+      <Comments comments={props.property.comments} />
+      {!state.login &&
+      <CommentReply userId = {state.userId} postId={props.property._id} createComment={props.createComment} />
+      }
+      </Collapse>
 
     </Card>
   );

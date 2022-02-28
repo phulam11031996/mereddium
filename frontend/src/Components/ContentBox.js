@@ -8,11 +8,11 @@ import Post from "./Post";
 export default class ContentBox extends Component {
 	constructor(props) {
 		super(props);
-	
-	
 		this.state = {posts: []};
-	  }
-	
+	}
+
+
+	// Similar to useEffect
 	componentDidMount() {
 	axios.get(`http://localhost:3030/post/`)
 		.then(response => {
@@ -24,10 +24,11 @@ export default class ContentBox extends Component {
 		})
 	}
 
+	// displays all posts
 	postList() {
 		const postList = this.state.posts.map((currentPost, index) => {
 			return (
-				<Post 
+				<Post
 					key={index}
 					createComment={this.createComment}
 					deletePostById={this.deletePostById}
@@ -94,6 +95,7 @@ export default class ContentBox extends Component {
 		)
 	}
 
+	// deletes posts
 	deletePostById = (_id) => {
 		this.makeDeleteCall(_id).then( response => {
 			if (response.status === 200) {
@@ -107,9 +109,38 @@ export default class ContentBox extends Component {
 		});
 	}
 
-	async makeDeleteCall(id) {
+	async makeDeleteCall(_id) {
 		try {
-			const response = await axios.delete(`http://localhost:3030/post/${id}`);
+			const response = await axios.delete(`http://localhost:3030/post/${_id}`);
+			return response;
+		}
+		catch (error){
+			console.log(error);
+			return false;
+		}
+	}
+
+	// votes posts
+	upDownVote = (_id, numUpVote, vote) => {
+		this.makeVoteCall(_id, numUpVote, vote).then (response => {
+			if (response.status === 200){
+				console.log("Sucessfully Upvoted!")
+
+				this.setState({
+					posts: this.state.posts.map( post => {
+						if (post._id === _id){
+							post.upVote += vote;
+							return post;
+						} else return post;
+					})
+				});
+			}
+		});
+	}
+
+	async makeVoteCall(_id, numUpVote, vote) {
+		try {
+			const response = await axios.patch(`http://localhost:3030/post/${_id}`, {upVote: numUpVote + vote});
 			return response;
 		}
 		catch (error){
@@ -117,6 +148,30 @@ export default class ContentBox extends Component {
 			return false;
 		}
 	}
+
+	// comments posts
+	createComment = (newComment) => {
+		console.log(newComment);
+		this.makeCommentCall(newComment).then (response => {
+			if (response.status === 200){
+				this.componentDidMount();
+			} else {
+				console.log("Failed to create comment");
+			}
+		});
+	}
+
+	async makeCommentCall(newComment) {
+		try {
+			const response = await axios.post("http://localhost:3030/comment/", newComment);
+			return response;
+		}
+		catch (error){
+			return false;
+		}
+	}
+
+
 
 	render() {
 		return (

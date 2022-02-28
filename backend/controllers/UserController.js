@@ -20,12 +20,11 @@ exports.getAllUsers = catchAsync(async (req, res) => {
 exports.createUser = catchAsync(async (req, res) => {
 	const result = req.body;
 	var token = uniqueID();
-	result._id = uniqueID().slice(0,6);
 	
 	const newUser = 
 		new User(
 			{ 
-				_id: result._id, 
+				_id: uniqueID().slice(0,6), 
 				firstName: req.body.firstName, 
 				lastName: req.body.lastName,
 				email: req.body.email, 
@@ -39,7 +38,7 @@ exports.createUser = catchAsync(async (req, res) => {
 				blocked: false,
 				interestedIn: req.body.interestedIn
 			}
-		);
+	);
 	
 	newUser.save(function (err) {
 		if(err) {

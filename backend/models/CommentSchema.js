@@ -16,11 +16,11 @@ const commentSchema = new mongoose.Schema({
 	},
 	timeStamp: {
 		type: Date,
-		default: Date.now(),
+      	default: function() { return Date.now() },
 	},
 	lastModifiedAt: {
-		type: Date,
-		default: Date.now()
+		type: String,
+		default: function() { return Date.now() },
 	},
 	message: {
 	  type: String,

@@ -46,6 +46,7 @@ const userSchema = new mongoose.Schema({
 		},
 		message: 'Password is not the same!',
 	  },
+	  select: false
 	},
 	passwordChangedAt: {
 	  type: Date,
@@ -64,8 +65,19 @@ const userSchema = new mongoose.Schema({
 				required: [true, 'Please enter valid tagID']
 			}
 		}
-	]		
-});
+	],
+	},
+	{
+		toJSON: {
+			transform(doc, ret) {
+				// ret.id = ret._id;
+				// delete ret._id
+				delete ret.__v;
+			}
+		}
+	}
+
+);
 
 // Creating Model with Schema tourSchema
 const User = mongoose.model('User', userSchema);

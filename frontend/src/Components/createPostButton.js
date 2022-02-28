@@ -15,17 +15,16 @@ import TextField from '@mui/material/TextField';
 import ListItemIcon from "@mui/material/ListItemIcon";
 import PostAddOutlinedIcon from "@mui/icons-material/PostAddOutlined";
 
-
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog() {
+export default function FullScreenDialog(props) {
   const [open, setOpen] = React.useState(false);
 
   const [post, setPost] = React.useState(
-	{  
-	   userId: '',
+	{
+	   userId: props.userId,
 	   title: '',
 	   message: '',
 	   imageURL: ''
@@ -37,17 +36,14 @@ export default function FullScreenDialog() {
   };
 
   const handleOnChange = (event) => {
-	if(event.target.id === "userId") {
-		setPost({userId: event.target.value, title: post.title, message: post.message, imageURL: post.imageURL});
-	}
-	else if(event.target.id === "title") {
+	if(event.target.id === "title") {
 		setPost({userId: post.userId, title: event.target.value, message: post.message, imageURL: post.imageURL});
 	}
 	else if(event.target.id === "message") {
-		setPost({userId: post.userId, title: post.title, message: event.target.value, imageURL: post.imageURL});	
+		setPost({userId: post.userId, title: post.title, message: event.target.value, imageURL: post.imageURL});
 	}
 	else if(event.target.id === "imageURL") {
-		setPost({userId: post.userId, title: post.title, message: post.message, imageURL: event.target.value});	
+		setPost({userId: post.userId, title: post.title, message: post.message, imageURL: event.target.value});
 	}
   }
 
@@ -69,8 +65,8 @@ export default function FullScreenDialog() {
 		  window.location = '/';
 		}
 	});
-		
-	handleClose();  
+
+	handleClose();
 	event.preventDefault();
   }
 
@@ -100,12 +96,13 @@ export default function FullScreenDialog() {
               onClick={handleClose}
               aria-label="close"
             >
-              <CloseIcon />
+            
+			<CloseIcon style = {{color: 'white'}} />
             </IconButton>
-            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+            <Typography sx={{ ml: 2, flex: 1 }} style={{color: 'white'}} variant="h6">
               Create a Post
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleOnSubmit} style={{border: '1px solid white'}}>
+            <Button autoFocus color="inherit" onClick={handleOnSubmit} style={{border: '1px solid white', color: 'white'}}>
               Submit
             </Button>
           </Toolbar>
@@ -113,52 +110,42 @@ export default function FullScreenDialog() {
 
         <List>
 			<ListItem>
-				<TextField 
-				fullWidth 
-				label="UserId" 
-				variant="standard"
-				id="userId"
-        		value={post.userId}
-				onChange = {handleOnChange} 
-				/>
-			</ListItem>
-			<ListItem>
-			<TextField 
+			<TextField
 				fullWidth
-				multiline 
-				label="Title" 
+				multiline
+				label="Title"
 				variant="standard"
 				id="title"
         		value={post.title}
-				onChange = {handleOnChange} 
+				onChange = {handleOnChange}
 				/>
 			</ListItem>
 			<ListItem>
-			<TextField 
+			<TextField
 				fullWidth 
 				multiline
-				label="Message" 
+				label="Message"
 				variant="standard"
 				id="message"
         		value={post.message}
-				onChange = {handleOnChange} 
+				onChange = {handleOnChange}
 				/>
 			</ListItem>
 			<ListItem>
-			<TextField 
-				fullWidth 
+			<TextField
+				fullWidth
 				multiline
-				label="ImageURL" 
+				label="ImageURL"
 				variant="standard"
 				id="imageURL"
         		value={post.imageURL}
-				onChange = {handleOnChange} 
+				onChange = {handleOnChange}
 				/>
 			</ListItem>
-			
+
         </List>
 
-		
+
       </Dialog>
     </div>
   );
