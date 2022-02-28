@@ -8,7 +8,7 @@ import ContentBox from './Components/ContentBox';
 
 function MyApp() {
 
-  let cookie;
+  let userId;
   const parseCookie = str =>
   str
   .split(';')
@@ -19,7 +19,9 @@ function MyApp() {
   }, {});
 
   if(document.cookie) {
-    cookie = parseCookie(document.cookie);
+    userId = parseCookie(document.cookie).userId;
+  } else {
+    userId = null;
   }
 
   return (
@@ -29,11 +31,11 @@ function MyApp() {
     </div>
 
     <div className="SideBar">
-      <SideBar userId = {cookie.userId} />
+      <SideBar userId = {userId} />
     </div>
 
     <div className='Content'>
-      <ContentBox userId = {cookie.userId} />
+      <ContentBox userId = {userId} />
     </div>
 
     </div>

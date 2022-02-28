@@ -40,6 +40,8 @@ export default function Posts(props) {
     userMatch: false
   })
 
+  console.log("From post: userId " + state.userId.length);
+
   if(state.userId.length >= 5) {
     state.login = false;
   }

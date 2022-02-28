@@ -103,11 +103,10 @@ export default function AlertDialogSlide() {
           <ListItem>
           <TextField
             fullWidth
-            multiline
             label="password"
             variant="standard"
             id="password"
-                value={user.password}
+            value={user.password}
             onChange = {handleOnChange}
             />
           </ListItem>

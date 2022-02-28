@@ -84,12 +84,14 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MiniDrawer(props) {
   const [open, setOpen] = React.useState(false);
-  const [state, setState] = React.useState({
+  const [state] = React.useState({
     userId: props.userId,
     login: true
   })
 
-  if(props.userId.length >= 5) {
+  console.log("From sidebar: userId " + state.userId.length);
+  
+  if(state.userId.length >= 5) {
     state.login = false;
   }
 
