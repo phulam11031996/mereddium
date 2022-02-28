@@ -32,7 +32,8 @@ export default class ContentBox extends Component {
 					createComment={this.createComment}
 					deletePostById={this.deletePostById}
 					upDownVote={this.upDownVote}
-					property = {currentPost} 
+					property = {currentPost}
+					currentUserId = {this.props.userId}
 				/>
 			)
 		});
@@ -57,6 +58,7 @@ export default class ContentBox extends Component {
 					deletePostById={this.deletePostById}
 					upDownVote={this.upDownVote}
 					property = {currentPost} 
+					currentUserId = {this.props.userId}
 				/>
 			)
 		});
@@ -80,7 +82,8 @@ export default class ContentBox extends Component {
 					createComment={this.createComment}
 					deletePostById={this.deletePostById}
 					upDownVote={this.upDownVote}
-					property = {currentPost} 
+					property = {currentPost}
+					currentUserId = {this.props.userId}
 				/>
 			)
 		});

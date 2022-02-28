@@ -138,6 +138,7 @@ export default function MiniDrawer(props) {
 
           <Divider />
 
+          {!state.login &&
           <ListItem button key="Saved">
             <ListItemIcon>
               <StyledBadge badgeContent={12} style={{ color: "white" }}>
@@ -146,6 +147,7 @@ export default function MiniDrawer(props) {
             </ListItemIcon>
             <ListItemText primary="Saved" />
           </ListItem>
+          }
           
             
           <CreateButton handleSubmit={props.updateList} />
@@ -153,12 +155,9 @@ export default function MiniDrawer(props) {
 
           <Divider />
 
-          <ListItem button key="Logout">
-            <ListItemIcon>
-              <LoginOutlinedIcon color="secondary" style={{ color: "red" }} />
-            </ListItemIcon>
-            <ListItemText primary="Logout" style={{ color: "black" }} />
-          </ListItem>
+          {state.login && <LoginButton /> }
+          {!state.login && <LogoutButton /> }
+
         </List>
       </Drawer>
     </Box>
