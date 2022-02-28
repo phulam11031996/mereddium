@@ -88,9 +88,11 @@ export default function MiniDrawer(props) {
     userId: props.userId,
     login: true
   })
-
-  console.log("From sidebar: userId " + state.userId.length);
   
+  if(state.userId === undefined) {
+    state.userId = -1;
+  }
+
   if(state.userId.length >= 5) {
     state.login = false;
   }
