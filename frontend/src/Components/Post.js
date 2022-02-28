@@ -34,7 +34,7 @@ const ExpandMore = styled((props) => {
 export default function Posts(props) {
   const [expanded, setExpanded] = React.useState(false);
 
-  const [state, setState] = React.useState({
+  const [state] = React.useState({
     userId: props.currentUserId,
     login: true,
     userMatch: false

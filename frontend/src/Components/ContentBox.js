@@ -7,7 +7,6 @@ import Post from "./Post";
 export default class ContentBox extends Component {
 	constructor(props) {
 		super(props);
-		console.log(document.cookie);
 		this.state = {posts: []};
 	}
 
