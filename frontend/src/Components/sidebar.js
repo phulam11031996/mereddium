@@ -121,31 +121,31 @@ export default function MiniDrawer(props) {
           </IconButton>
         </DrawerHeader>
         <List>
-          <ListItem button key="popular">
+          <ListItem button key="Popular" onClick={() => { window.location.href = "/popular"; }}>
             <ListItemIcon>
               <WhatshotIcon color="primary" />
             </ListItemIcon>
             <ListItemText primary="Popular" />
           </ListItem>
 
-          <ListItem button key="timeout">
+          <ListItem button key="Recent" onClick={() => { window.location.href = "/recent"; }}>
             <ListItemIcon>
               <AccessTimeOutlinedIcon color="secondary" />
             </ListItemIcon>
             <ListItemText primary="Recent" />
           </ListItem>
 
-          <ListItem button key="trending">
+          <ListItem button key="Trending" onClick={() => { window.location.href = "/"; }}>
             <ListItemIcon>
               <TrendingUpOutlinedIcon color="secondary" />
             </ListItemIcon>
-            <ListItemText primary="Tranding" />
+            <ListItemText primary="Trending" />
           </ListItem>
 
           <Divider />
 
           {!state.login &&
-          <ListItem button key="bookmark">
+          <ListItem button key="Saved">
             <ListItemIcon>
               <StyledBadge badgeContent={12} style={{ color: "white" }}>
                 <BookmarkBorderOutlinedIcon style={{ color: "orange" }} />

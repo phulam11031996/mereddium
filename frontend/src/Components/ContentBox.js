@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Box from "@mui/material/Box";
 import axios from 'axios';
 
@@ -33,7 +34,57 @@ export default class ContentBox extends Component {
 					deletePostById={this.deletePostById}
 					upDownVote={this.upDownVote}
 					property = {currentPost}
-					currentUserId = {this.props.userId} 
+					currentUserId = {this.props.userId}
+				/>
+			)
+		});
+		return (
+			<ul>
+			{postList}
+			</ul>
+		)
+	}
+
+	popular_postList() {
+		const postList = this.state.posts.sort((p1, p2) => {
+			const v1 = p1['upVote'];
+			const v2 = p2['upVote'];
+			return v2 - v1;
+		})
+		.map((currentPost, index) => {
+			return (
+				<Post 
+					key={index}
+					createComment={this.createComment}
+					deletePostById={this.deletePostById}
+					upDownVote={this.upDownVote}
+					property = {currentPost} 
+					currentUserId = {this.props.userId}
+				/>
+			)
+		});
+		return (
+			<ul>
+			{postList}
+			</ul>
+		)
+	}
+
+	recent_postList() {
+		const postList = this.state.posts.sort((p1, p2) => {
+			const t1 = new Date(p1['createdAt']);
+			const t2 = new Date(p2['createdAt']);
+			return t2 - t1;
+		})
+		.map((currentPost, index) => {
+			return (
+				<Post 
+					key={index}
+					createComment={this.createComment}
+					deletePostById={this.deletePostById}
+					upDownVote={this.upDownVote}
+					property = {currentPost}
+					currentUserId = {this.props.userId}
 				/>
 			)
 		});
@@ -124,10 +175,15 @@ export default class ContentBox extends Component {
 
 	render() {
 		return (
-			<Box sx={{ flexGrow: 1 }} style={{marginLeft: 100, marginTop: 30, marginRight: 50, marginBottom: 30}}>
-				{this.postList()}
-
-			</Box>
+			<Router>
+				<Box sx={{ flexGrow: 1 }} style={{marginLeft: 100, marginTop: 30, marginRight: 50, marginBottom: 30}}>
+					<Routes>
+						<Route exact path="/" element={this.postList()} />
+						<Route exact path="/popular" element={this.popular_postList()} />
+						<Route exact path="/recent" element={this.recent_postList()} />
+					</Routes>
+				</Box>
+			</Router>
 		);
 	}
 }

@@ -68,21 +68,21 @@ export default function SearchAppBar() {
           </IconButton>
           <Typography
             variant="h6"
-			color="black"
+			      color="black"
             noWrap
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
-          <Logo style = {{ height: "50px", width: "50px", border: "1px solid black",marginTop: "10"}}/>
+            <Logo style = {{ height: "50px", width: "50px", border: "1px solid black",marginTop: "10"}}/>
           </Typography>
           <Search style = {{backgroundColor: "white", border: "1px solid grey"}}>
-            <SearchIconWrapper>
+            <SearchIconWrapper button key="Search-Icon" /* add onClick */ >
               <SearchIcon style = {{color: "black"}}/>
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
-			  style = {{color: "black"}}
+			        style = {{color: "black"}}
             />
           </Search>
         </Toolbar>
