@@ -11,6 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Tooltip from '@mui/material/Tooltip';
 
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
@@ -96,11 +97,34 @@ export default function Posts(props) {
       </CardContent>
 
       <CardActions disableSpacing style={{marginLeft: 20}}>
-        <ThumbUpOutlinedIcon onClick={() => props.upDownVote(props.property._id, props.property.upVote, 1)} style = {{color: '#0077b6'}} fontSize ="small"/>
+       {/* like thumb */}
+       <Tooltip title={
+            (props.property.upVoteUsers.find(ele => ele.userId === props.currentUserId) === undefined) ? 
+            "Like"
+            :
+            "Liked"
+          }>
+        <IconButton>
+          <ThumbUpOutlinedIcon onClick={() => props.vote(props.property._id, true)} style = {{color: '#0077b6'}} fontSize ="small"/>
+        </IconButton>
+        </Tooltip>
+
+        {/* like-plus-displike number */}
         <Typography style= {{padding: 10, fontSize: 14}}>
-          {props.property.upVote}
+          {props.property.upVoteUsers.length - props.property.downVoteUsers.length}
         </Typography>
-          <ThumbDownOutlinedIcon onClick={() => props.upDownVote(props.property._id, props.property.upVote, -1)} style = {{color: '#ee6c4d'}} fontSize ="small"/>
+
+        {/* dislike thumb */}
+        <Tooltip title={
+            (props.property.downVoteUsers.find(ele => ele.userId === props.currentUserId) === undefined) ? 
+            "Dislike"
+            :
+            "Disliked"
+          }>
+        <IconButton>
+          <ThumbDownOutlinedIcon onClick={() => props.vote(props.property._id, false)} style = {{color: '#ee6c4d'}} fontSize ="small"/>
+          </IconButton>
+        </Tooltip>
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}

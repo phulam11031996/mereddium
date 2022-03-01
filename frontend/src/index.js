@@ -22,7 +22,7 @@ function MyApp() {
   if(document.cookie) {
     userId = parseCookie(document.cookie).userId;
   } else {
-    userId = -1;
+    userId = "asdsadsadsa";
   }
   return (
     <div>
