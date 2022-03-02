@@ -95,6 +95,37 @@ export default class ContentBox extends Component {
 		)
 	}
 
+	trending_postList() {
+		const postList = this.state.posts.filter((post) => {
+			const time = new Date(post['createdAt']);
+			var threshold = new Date();
+			threshold.setDate(threshold.getDate() - 30);
+			return time > threshold;
+		})
+		.sort((p1, p2) => {
+			const v1 = p1['upVote'];
+			const v2 = p2['upVote'];
+			return v2 - v1;
+		})
+		.map((currentPost, index) => {
+			return (
+				<Post 
+					key={index}
+					createComment={this.createComment}
+					deletePostById={this.deletePostById}
+					upDownVote={this.upDownVote}
+					property = {currentPost}
+					currentUserId = {this.props.userId}
+				/>
+			)
+		});
+		return (
+			<ul>
+			{postList}
+			</ul>
+		)
+	}
+
 	// deletes posts
 	deletePostById = (_id) => {
 		this.makeDeleteCall(_id).then( response => {
@@ -181,6 +212,7 @@ export default class ContentBox extends Component {
 						<Route exact path="/" element={this.postList()} />
 						<Route exact path="/popular" element={this.popular_postList()} />
 						<Route exact path="/recent" element={this.recent_postList()} />
+						<Route exact path="/trending" element={this.trending_postList()} />
 					</Routes>
 				</Box>
 			</Router>

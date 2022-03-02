@@ -73,7 +73,10 @@ export default function SearchAppBar() {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
-            <Logo style = {{ height: "50px", width: "50px", border: "1px solid black",marginTop: "10"}}/>
+            <Logo
+              onClick={() => { window.location.href = "/"; }}
+              style = {{ height: "50px", width: "50px", border: "1px solid black",marginTop: "10"}}
+            />
           </Typography>
           <Search style = {{backgroundColor: "white", border: "1px solid grey"}}>
             <SearchIconWrapper key="Search-Icon" /* add onClick */ >

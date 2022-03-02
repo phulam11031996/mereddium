@@ -137,7 +137,7 @@ export default function MiniDrawer(props) {
             <ListItemText primary="Recent" />
           </ListItem>
 
-          <ListItem button key="Trending" onClick={() => { window.location.href = "/"; }}>
+          <ListItem button key="Trending" onClick={() => { window.location.href = "/trending"; }}>
             <ListItemIcon>
               <TrendingUpOutlinedIcon color="secondary" />
             </ListItemIcon>
