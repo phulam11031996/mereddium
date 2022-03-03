@@ -100,33 +100,33 @@ exports.votePost = catchAsync(async (req, res) => {
 	const userId = req.body.userId;
 	const isUpVote = req.body.isUpVote
 
-	let post = await Post.findById({'_id': postId});
-	const index = post.upVoteUsers.indexOf(post.upVoteUsers.find(ele => ele.userId === userId));
-	const index2 = post.downVoteUsers.indexOf(post.downVoteUsers.find(ele => ele.userId === userId));
+	let postdown = await Post.findById({'_id': postId}).select("downVoteUsers");
+	let postup = await Post.findById({'_id': postId}).select("upVoteUsers");
+	const index = postup.upVoteUsers.indexOf(postup.upVoteUsers.find(ele => ele.userId === userId));
+	const index2 = postdown.downVoteUsers.indexOf(postdown.downVoteUsers.find(ele => ele.userId === userId));
 
 	if (isUpVote) {
 		if (index2 !== -1) 
-			post.downVoteUsers = post.downVoteUsers.slice(0, index2).concat(post.downVoteUsers.slice(index2 + 1));
+		postdown.downVoteUsers.splice(index2, 1);
 		
 		index === -1 ?
-		post.upVoteUsers = [...post.upVoteUsers, {userId: userId}] :
-		post.upVoteUsers = post.upVoteUsers.slice(0, index).concat(post.upVoteUsers.slice(index + 1));
+		postup.upVoteUsers = [...postup.upVoteUsers, {userId: userId}] :
+		postup.upVoteUsers.splice(index, 1);
 	} else {
-		if (index !== 1) 
-			post.upVoteUsers = post.upVoteUsers.slice(0, index).concat(post.upVoteUsers.slice(index + 1));	
+		if (index !== -1) 
+		postup.upVoteUsers.splice(index, 1);	
 		
 		index2 === -1 ?
-		post.downVoteUsers = [...post.downVoteUsers, {userId: userId}] :
-		post.downVoteUsers = post.downVoteUsers.slice(0, index2).concat(post.downVoteUsers.slice(index2 + 1));
+		postdown.downVoteUsers = [...postdown.downVoteUsers, {userId: userId}] :
+		postdown.downVoteUsers.splice(index2, 1);
 	}
 
-	await Post.updateOne({'_id': postId}, {"downVoteUsers" : post.downVoteUsers})
-	await Post.updateOne({'_id': postId}, {"upVoteUsers" : post.upVoteUsers})
-	post = await Post.findById({'_id': postId})
+	await Post.updateOne({'_id': postId}, {"downVoteUsers" : postdown.downVoteUsers , "upVoteUsers" : postup.upVoteUsers})
+	const post = await Post.findById({'_id': postId})
 	
 	res.status(200).json({
 	  status: 'success',
-	  data: post,
+	  data: post
 	});
  
 
