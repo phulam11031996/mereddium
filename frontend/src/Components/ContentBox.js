@@ -28,21 +28,21 @@ export default class ContentBox extends Component {
 	postList(sort_filter=null) {
 		var postList = this.state.posts;
 		// check if sort filter is specified, otherwise display all posts
-		if(sort_filter == "popular") {
+		if(sort_filter === "popular") {
 			// sort posts by votes
 			postList = postList.sort((p1, p2) => {
 				const v1 = p1['upVote'];
 				const v2 = p2['upVote'];
 				return v2 - v1;
 			});
-		} else if(sort_filter == "recent") {
+		} else if(sort_filter === "recent") {
 			// sort posts by most recent publish date
 			postList = postList.sort((p1, p2) => {
 				const t1 = new Date(p1['createdAt']);
 				const t2 = new Date(p2['createdAt']);
 				return t2 - t1;
 			});
-		} else if(sort_filter == "trending") {
+		} else if(sort_filter === "trending") {
 			// filter posts created in the last 30 days and sort by most votes
 			postList = postList.filter((post) => {
 				const time = new Date(post['createdAt']);
