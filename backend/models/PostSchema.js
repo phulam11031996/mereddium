@@ -79,10 +79,22 @@ const postSchema = new mongoose.Schema({
 			required: [true, 'Please enter valid tagID']
 		}
 	}],
-	upVote: {
-		type: Number,
-		default: 1
-	  }
+	upVoteUsers: [
+		{
+			userId: {
+				type: String,
+				required: true,
+			}
+		}
+	],
+	downVoteUsers: [
+		{
+			userId: {
+				type: String,
+				required: true,
+			}
+		}
+	]
   });
 
 // Creating Model with Schema tourSchema

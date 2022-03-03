@@ -11,16 +11,14 @@ export default class ContentBox extends Component {
 		this.state = {posts: []};
 	}
 
-
 	// Similar to useEffect
 	componentDidMount() {
 	axios.get(`http://localhost:3030/post/`)
 		.then(response => {
-		this.setState({ posts: response.data.data })
-		console.log(response.data.data);
+			this.setState({ posts: response.data.data })
 		})
-		.catch((error) => {
-		console.log(error);
+			.catch((error) => {
+			console.log(error);
 		})
 	}
 
@@ -66,7 +64,7 @@ export default class ContentBox extends Component {
 					key={index}
 					createComment={this.createComment}
 					deletePostById={this.deletePostById}
-					upDownVote={this.upDownVote}
+					vote={this.vote}
 					property = {currentPost}
 					currentUserId = {this.props.userId}
 				/>
@@ -74,7 +72,7 @@ export default class ContentBox extends Component {
 		});
 		return (
 			<ul>
-			{postList}
+				{postList}
 			</ul>
 		)
 	}
@@ -105,26 +103,24 @@ export default class ContentBox extends Component {
 	}
 
 	// votes posts
-	upDownVote = (_id, numUpVote, vote) => {
-		this.makeVoteCall(_id, numUpVote, vote).then (response => {
+	vote = (_id, isUpVote) => {	
+		this.makeVoteCall(_id, isUpVote).then (response => {
 			if (response.status === 200){
-				console.log("Sucessfully Upvoted!")
+					console.log("Sucessfully Voted!");
 
 				this.setState({
-					posts: this.state.posts.map( post => {
-						if (post._id === _id){
-							post.upVote += vote;
-							return post;
-						} else return post;
-					})
-				});
+					posts: this.state.posts.map(post => post._id !== _id ? post : response.data.data)
+				})
 			}
 		});
 	}
 
-	async makeVoteCall(_id, numUpVote, vote) {
+	async makeVoteCall(_id, isUpVote) {
 		try {
-			const response = await axios.patch(`http://localhost:3030/post/${_id}`, {upVote: numUpVote + vote});
+			const response = await axios.post(`http://localhost:3030/post/vote/${_id}`, {
+				userId: this.props.userId,
+				isUpVote: isUpVote
+			});
 			return response;
 		}
 		catch (error){
