@@ -34,10 +34,11 @@ exports.createPost = catchAsync(async (req, res) => {
 				stringify: "req.body.stringify",
 				tags: [],
 				imageURL: req.body.imageURL, 
-				upVote: 1
+				upVoteUsers: [],
+				downVoteUsers: []
 			}
 		);
-	
+
 	newPost.save(function (err) {
 		if(err) {
 			console.log(err);
@@ -91,4 +92,42 @@ exports.deletePostById = catchAsync(async (req, res) => {
 			res.status(200).send(id).end();
 		}
 	})
+});
+
+// UPDATE /vote/{id}
+exports.votePost = catchAsync(async (req, res) => {
+	const postId = req.params.id;
+	const userId = req.body.userId;
+	const isUpVote = req.body.isUpVote
+
+	let postdown = await Post.findById({'_id': postId}).select("downVoteUsers");
+	let postup = await Post.findById({'_id': postId}).select("upVoteUsers");
+	const index = postup.upVoteUsers.indexOf(postup.upVoteUsers.find(ele => ele.userId === userId));
+	const index2 = postdown.downVoteUsers.indexOf(postdown.downVoteUsers.find(ele => ele.userId === userId));
+
+	if (isUpVote) {
+		if (index2 !== -1) 
+		postdown.downVoteUsers.splice(index2, 1);
+		
+		index === -1 ?
+		postup.upVoteUsers = [...postup.upVoteUsers, {userId: userId}] :
+		postup.upVoteUsers.splice(index, 1);
+	} else {
+		if (index !== -1) 
+		postup.upVoteUsers.splice(index, 1);	
+		
+		index2 === -1 ?
+		postdown.downVoteUsers = [...postdown.downVoteUsers, {userId: userId}] :
+		postdown.downVoteUsers.splice(index2, 1);
+	}
+
+	await Post.updateOne({'_id': postId}, {"downVoteUsers" : postdown.downVoteUsers , "upVoteUsers" : postup.upVoteUsers})
+	const post = await Post.findById({'_id': postId})
+	
+	res.status(200).json({
+	  status: 'success',
+	  data: post
+	});
+ 
+
 });

@@ -11,16 +11,14 @@ export default class ContentBox extends Component {
 		this.state = {posts: []};
 	}
 
-
 	// Similar to useEffect
 	componentDidMount() {
 	axios.get(`http://localhost:3030/post/`)
 		.then(response => {
-		this.setState({ posts: response.data.data })
-		console.log(response.data.data);
+			this.setState({ posts: response.data.data })
 		})
-		.catch((error) => {
-		console.log(error);
+			.catch((error) => {
+			console.log(error);
 		})
 	}
 
@@ -31,9 +29,11 @@ export default class ContentBox extends Component {
 		if(sort_filter === "popular") {
 			// sort posts by votes
 			postList = postList.sort((p1, p2) => {
-				const v1 = p1['upVote'];
-				const v2 = p2['upVote'];
-				return v2 - v1;
+				const upvote1 = p1['upVoteUsers'].length;
+				const downvote1 = p1['downVoteUsers'].length;
+				const upvote2 = p2['upVoteUsers'].length;
+				const downvote2 = p2['downVoteUsers'].length;
+				return (upvote2 - downvote2) - (upvote1 - downvote1);
 			});
 		} else if(sort_filter === "recent") {
 			// sort posts by most recent publish date
@@ -50,9 +50,11 @@ export default class ContentBox extends Component {
 				threshold.setDate(threshold.getDate() - 30);
 				return time > threshold;
 			}).sort((p1, p2) => {
-				const v1 = p1['upVote'];
-				const v2 = p2['upVote'];
-				return v2 - v1;
+				const upvote1 = p1['upVoteUsers'].length;
+				const downvote1 = p1['downVoteUsers'].length;
+				const upvote2 = p2['upVoteUsers'].length;
+				const downvote2 = p2['downVoteUsers'].length;
+				return (upvote2 - downvote2) - (upvote1 - downvote1);
 			});
 		}
 		return this.render_postList(postList);
@@ -66,7 +68,7 @@ export default class ContentBox extends Component {
 					key={index}
 					createComment={this.createComment}
 					deletePostById={this.deletePostById}
-					upDownVote={this.upDownVote}
+					vote={this.vote}
 					property = {currentPost}
 					currentUserId = {this.props.userId}
 				/>
@@ -74,7 +76,7 @@ export default class ContentBox extends Component {
 		});
 		return (
 			<ul>
-			{postList}
+				{postList}
 			</ul>
 		)
 	}
@@ -105,26 +107,24 @@ export default class ContentBox extends Component {
 	}
 
 	// votes posts
-	upDownVote = (_id, numUpVote, vote) => {
-		this.makeVoteCall(_id, numUpVote, vote).then (response => {
+	vote = (_id, isUpVote) => {	
+		this.makeVoteCall(_id, isUpVote).then (response => {
 			if (response.status === 200){
-				console.log("Sucessfully Upvoted!")
+					console.log("Sucessfully Voted!");
 
 				this.setState({
-					posts: this.state.posts.map( post => {
-						if (post._id === _id){
-							post.upVote += vote;
-							return post;
-						} else return post;
-					})
-				});
+					posts: this.state.posts.map(post => post._id !== _id ? post : response.data.data)
+				})
 			}
 		});
 	}
 
-	async makeVoteCall(_id, numUpVote, vote) {
+	async makeVoteCall(_id, isUpVote) {
 		try {
-			const response = await axios.patch(`http://localhost:3030/post/${_id}`, {upVote: numUpVote + vote});
+			const response = await axios.post(`http://localhost:3030/post/vote/${_id}`, {
+				userId: this.props.userId,
+				isUpVote: isUpVote
+			});
 			return response;
 		}
 		catch (error){
