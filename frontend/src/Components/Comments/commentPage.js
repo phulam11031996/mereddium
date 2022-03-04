@@ -1,12 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, Grid, Paper } from "@material-ui/core";
+import axios from 'axios';
 
-export default function Comments(props) {
+export default function DisplayComment(index, comment) {
+	
+	const [user, setUser] = useState({
+		userName: "",
+		userId: ""
+	});
 
+	useEffect(() => {
+		axios.get("http://localhost:3030/user/" + comment.userId)
+		.then(user => {
+			setUser({ userName: user.data.data.user.firstName,
+					  userId: comment.userId})
+		}).catch((error) => {
+			console.log(error);
+		})
+	},[comment.userId]);
 
-  function CommentList(props) {
-    const listPosts = props.comments.map((comment, index) => {
-        console.log(comment);
+	const imgLink =
+    "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260";
         var timeStamp = comment.timeStamp;
         var year = timeStamp.slice(0,4);
         var month = timeStamp.slice(5,7);
@@ -55,16 +69,16 @@ export default function Comments(props) {
             month = "";
             break;
         }
-
-        return (
-          <Paper key = {index}  style={{ padding: "40px 20px" }}>
+	
+	return (
+		<Paper key = {index}  style={{ padding: "40px 20px" }}>
             <Grid container wrap="nowrap" spacing={2}>
               <Grid item>
                 <Avatar alt="Remy Sharp" src={imgLink} />
               </Grid>
               <Grid item xs zeroMinWidth>
                 <div>
-                <h4 style={{ margin: 0, textAlign: "left" }}>{comment.userId}</h4>
+                <h4 style={{ margin: 0, textAlign: "left" }}>{user.userName}</h4>
                 </div>
                 <p style= {{ textAlign: "left", marginTop: "0px", color: "grey", fontSize: "10px"}}>{year}, {month} - {day} at {hour}:{minute}</p>
                 <p style={{ textAlign: "left" }}>
@@ -73,24 +87,6 @@ export default function Comments(props) {
               </Grid>
             </Grid>
           </Paper>
-        )
-    });
-    return (
-        <div>
-            {listPosts}
-        </div>
-        )
-}
-
-  const imgLink =
-  "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260";
-
-  return (
-    <div style={{ padding: 14 }} className="App">
-      <h1>Comments</h1>
-        {props.comments.length !== 0 ? <CommentList comments={props.comments} /> : null}
-
-    </div>
-  );
+	);
 
 }

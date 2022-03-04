@@ -1,0 +1,22 @@
+import React, { useState, useEffect } from "react";
+import DisplayComment from "./commentPage"
+export default function Comment (props) {
+  
+  const [comment, setComments] = useState({
+    comments: props.comments,
+    imageLink: "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
+  });
+
+  const listPosts = comment.comments.map((comment, index) => {
+        return (
+          DisplayComment(index, comment)
+        )
+    });
+
+    return (
+        <div style={{ padding: 14 }} className="App">
+            <h1>Comments</h1>
+            {listPosts}
+        </div>
+        )
+}

@@ -1,13 +1,42 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import cn from "classnames";
-import useDynamicHeightField from "./DynamicHeight";
-
+import useDynamicHeightField from "../../Helper/DynamicHeight";
+import { parseCookie } from '../../Helper/cookieParser';
+import axios from 'axios';
+import { createComment } from "../Comments/createComment";
 const INITIAL_HEIGHT = 46;
 
 export default function CommentBox(props) {
-
   const [isExpanded, setIsExpanded] = useState(false);
   const [commentValue, setCommentValue] = useState("");
+  
+  const [user, setUser] = useState({
+    postId: "",
+    userName: "",
+    userId: ""
+  });
+
+  var userTemp;
+
+  if(document.cookie) {
+    userTemp = parseCookie(document.cookie).userId;
+  }
+
+  if(userTemp === "null") {
+    user.userId = null;
+  } else {
+    user.userId = userTemp;
+  }
+
+  useEffect(() => {
+		axios.get("http://localhost:3030/user/" + user.userId)
+		.then(user => {
+			setUser({ userName: user.data.data.user.firstName,
+                postId: props.postId })
+		}).catch((error) => {
+			console.log(error);
+		})
+	},[props.postId, user.userId]);
 
   const outerHeight = useRef(INITIAL_HEIGHT);
   const textRef = useRef(null);
@@ -35,13 +64,13 @@ export default function CommentBox(props) {
     e.preventDefault();
 
     const newComment = {
-      userId: props.userId,
-      postId: props.postId,
+      userId: user.userId,
+      postId: user.postId,
       message: commentValue,
       upVote: 1
     }
 
-    props.createComment(newComment);
+    createComment(newComment);
 
     setCommentValue("");
     setIsExpanded(false);
@@ -68,7 +97,7 @@ export default function CommentBox(props) {
               src="https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/df/df7789f313571604c0e4fb82154f7ee93d9989c6.jpg"
               alt="User avatar"
             />
-            <span>{props.userId}</span>
+            <span>{user.userName}</span>
           </div>
         </div>
         <label htmlFor="comment" className="replyLabel">What are your thoughts?</label>

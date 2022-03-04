@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -11,15 +11,17 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Tooltip from '@mui/material/Tooltip';
 
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
-import CommentReply from './CommentReply';
+import CommentReply from '../Comments/CommentReply';
+import { parseCookie } from '../../Helper/cookieParser';
+import axios from 'axios';
 
-import Comments from './Comments';
+import { deletePostById } from "./deletePost"
+import Comments from '../Comments/comment';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -33,27 +35,53 @@ const ExpandMore = styled((props) => {
 }));
 
 export default function Posts(props) {
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = useState(false);
+  
+  const [user, setUser] = useState({
+    userId: "",
+    postOwnerName: "",
+  });
+  
+  const [state, setState] = useState({
+    postUserId: props.property.userId,  
+    postId: props.property._id,
+    title: props.property.title,
+    message: props.property.message,
+    login: false,
+    userMatch: false,
+    turnOnComments: props.property.turnOnComments,
+    subTitle: props.property.message.slice(0,350),
+    comments: props.property.comments
+  });
 
-  const [state] = React.useState({
-    userId: props.currentUserId,
-    login: true,
-    userMatch: false
-  })
-
-  if(state.userId === undefined) {
-    state.userId = -1;
+  var userCheck;
+  if(document.cookie) {
+    userCheck = parseCookie(document.cookie).userId;
   }
 
-  if(state.userId.length >= 5) {
+  if(userCheck === "null") {
+    user.userId = null;
     state.login = false;
+  } else {
+    user.userId = user;
+    state.login = true;
+    
+    if(state.postUserId === user.userId) {
+      state.userMatch = true;
+    }
   }
 
-  if(state.userId === props.property.userId) {
-    state.userMatch = true
-  }
-
-  var subTitle = props.property.message.slice(0,350);
+  useEffect(() => {
+		axios.get("http://localhost:3030/user/" + props.property.userId)
+		.then(user => {
+			 setUser({ 
+        userId: user.userId, 
+        postOwnerName: user.data.data.user.firstName
+       })
+		}).catch((error) => {
+			console.log(error);
+		})
+	},[props.property.userId]);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -69,13 +97,13 @@ export default function Posts(props) {
           </Avatar>
         }
         action = {
-        <IconButton onClick={() => props.deletePostById(props.property._id)} >
+        <IconButton onClick={() => deletePostById(props.property._id)} >
             {state.userMatch &&
             <DeleteOutlineIcon style={{color: '#ee6c4d'}}  />
             }
         </IconButton>
         }
-        title={props.property.userId}
+        title={user.postOwnerName}
         subheader={props.property.createdAt.slice(0,10)}
       />
 
@@ -89,42 +117,29 @@ export default function Posts(props) {
 
       <CardContent>
         <Typography variant="body1" color="text.secondary" style={{color: 'black', fontSize: 24}}>
-          {props.property.title}
+          {state.title}
         </Typography>
         <Typography paragraph>
-          {subTitle + " ..."}
+          {state.subTitle + " ..."}
         </Typography>
       </CardContent>
 
       <CardActions disableSpacing style={{marginLeft: 20}}>
-       {/* like thumb */}
-       <Tooltip title={
-            (props.property.upVoteUsers.find(ele => ele.userId === props.currentUserId) === undefined) ? 
-            "Like"
-            :
-            "Liked"
-          }>
+        
         <IconButton>
-          <ThumbUpOutlinedIcon onClick={() => props.vote(props.property._id, true)} style = {{color: '#0077b6'}} fontSize ="small"/>
+          <ThumbUpOutlinedIcon style = {{color: '#0077b6'}} fontSize ="small"/>
         </IconButton>
-        </Tooltip>
 
         {/* like-plus-displike number */}
         <Typography style= {{padding: 10, fontSize: 14}}>
-          {props.property.upVoteUsers.length - props.property.downVoteUsers.length}
+          1
         </Typography>
 
         {/* dislike thumb */}
-        <Tooltip title={
-            (props.property.downVoteUsers.find(ele => ele.userId === props.currentUserId) === undefined) ? 
-            "Dislike"
-            :
-            "Disliked"
-          }>
         <IconButton>
-          <ThumbDownOutlinedIcon onClick={() => props.vote(props.property._id, false)} style = {{color: '#ee6c4d'}} fontSize ="small"/>
+          <ThumbDownOutlinedIcon style = {{color: '#ee6c4d'}} fontSize ="small"/>
           </IconButton>
-        </Tooltip>
+
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
@@ -138,13 +153,16 @@ export default function Posts(props) {
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography paragraph>
-            {props.property.message}
+            {state.message}
           </Typography>
         </CardContent>
+      
+      {state.turnOnComments &&
+      <Comments comments={state.comments} />
+      }
 
-      <Comments comments={props.property.comments} />
-      {!state.login &&
-      <CommentReply userId = {state.userId} postId={props.property._id} createComment={props.createComment} />
+      {state.login &&
+      <CommentReply postId={state.postId} />
       }
       </Collapse>
 

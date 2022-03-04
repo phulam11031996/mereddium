@@ -18,9 +18,11 @@ import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 
-import CreateButton from './createPostButton';
-import LoginButton from './loginButton';
-import LogoutButton from './logoutButton';
+import CreateButton from '../Post/createPostButton';
+import LoginButton from '../Login/loginButton';
+import LogoutButton from '../Login/logoutButton';
+
+import { parseCookie } from '../../Helper/cookieParser';
 
 const drawerWidth = 200;
 
@@ -85,16 +87,20 @@ const Drawer = styled(MuiDrawer, {
 export default function MiniDrawer(props) {
   const [open, setOpen] = React.useState(false);
   const [state] = React.useState({
-    userId: props.userId,
-    login: true
+    userId: "",
+    login: false
   })
-  
-  if(state.userId === undefined) {
-    state.userId = -1;
+
+  var user;
+  if(document.cookie) {
+    user = parseCookie(document.cookie).userId;
   }
 
-  if(state.userId.length >= 5) {
+  if(user === "null") {
     state.login = false;
+  } else {
+    state.userId = user;
+    state.login = true;
   }
 
   const handleDrawer = () => {
@@ -146,7 +152,7 @@ export default function MiniDrawer(props) {
 
           <Divider />
 
-          {!state.login &&
+          {state.login &&
           <ListItem button key="Saved">
             <ListItemIcon>
               <StyledBadge badgeContent={12} style={{ color: "white" }}>
@@ -157,14 +163,14 @@ export default function MiniDrawer(props) {
           </ListItem>
           }
 
-          {!state.login &&
+          {state.login &&
           <CreateButton userId = {state.userId} handleSubmit={props.updateList} />
           }
 
           <Divider />
 
-          {state.login && <LoginButton /> }
-          {!state.login && <LogoutButton /> }
+          {!state.login && <LoginButton /> }
+          {state.login && <LogoutButton /> }
 
         </List>
       </Drawer>
