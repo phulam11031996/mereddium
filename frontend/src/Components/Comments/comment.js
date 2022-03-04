@@ -15,7 +15,7 @@ export default function Comment (props) {
 
     return (
         <div style={{ padding: 14 }} className="App">
-            <h1>Comments</h1>
+            {comment.comments.length > 0 && <h2>Comments</h2> }
             {listPosts}
         </div>
         )

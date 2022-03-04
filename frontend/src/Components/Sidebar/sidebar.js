@@ -155,7 +155,7 @@ export default function MiniDrawer(props) {
           {state.login &&
           <ListItem button key="Saved">
             <ListItemIcon>
-              <StyledBadge badgeContent={12} style={{ color: "white" }}>
+              <StyledBadge badgeContent={3} style={{ color: "white" }}>
                 <BookmarkBorderOutlinedIcon style={{ color: "orange" }} />
               </StyledBadge>
             </ListItemIcon>
