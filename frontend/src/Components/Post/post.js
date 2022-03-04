@@ -8,11 +8,7 @@ export function postList (sort_filter=null, posts) {
 	if(sort_filter === "popular") {
 		// sort posts by votes
 		postList = postList.sort((p1, p2) => {
-			const upvote1 = p1['upVoteUsers'].length;
-			const downvote1 = p1['downVoteUsers'].length;
-			const upvote2 = p2['upVoteUsers'].length;
-			const downvote2 = p2['downVoteUsers'].length;
-			return (upvote2 - downvote2) - (upvote1 - downvote1);
+			return compare_votes(p1, p2);
 		});
 	} else if(sort_filter === "recent") {
 		// sort posts by most recent publish date
@@ -29,11 +25,7 @@ export function postList (sort_filter=null, posts) {
 			threshold.setDate(threshold.getDate() - 30);
 			return time > threshold;
 		}).sort((p1, p2) => {
-			const upvote1 = p1['upVoteUsers'].length;
-			const downvote1 = p1['downVoteUsers'].length;
-			const upvote2 = p2['upVoteUsers'].length;
-			const downvote2 = p2['downVoteUsers'].length;
-			return (upvote2 - downvote2) - (upvote1 - downvote1);
+			return compare_votes(p1, p2);
 		});
 	}
 	return render_postList(postList);
@@ -56,5 +48,11 @@ function render_postList(posts) {
 	)
 }
 
-
-
+// comparison logic for sorting by votes
+function compare_votes(p1, p2) {
+	const upvote1 = p1['upVoteUsers'].length;
+	const downvote1 = p1['downVoteUsers'].length;
+	const upvote2 = p2['upVoteUsers'].length;
+	const downvote2 = p2['downVoteUsers'].length;
+	return (upvote2 - downvote2) - (upvote1 - downvote1);
+}

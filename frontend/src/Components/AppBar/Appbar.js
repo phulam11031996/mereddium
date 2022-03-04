@@ -79,7 +79,7 @@ export default function SearchAppBar() {
             />
           </Typography>
           <Search style = {{backgroundColor: "white", border: "1px solid grey"}}>
-            <SearchIconWrapper key="Search-Icon" /* add onClick */ >
+            <SearchIconWrapper>
               <SearchIcon style = {{color: "black"}}/>
             </SearchIconWrapper>
             <StyledInputBase
