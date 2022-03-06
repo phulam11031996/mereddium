@@ -35,7 +35,7 @@ const  ReactEditor = () => {
               id: "sheNwCUP5A",
               type: "header",
               data: {
-                text: "Editor.js",
+                text: "CSC 308, GROUP G",
                 level: 2
               }
             },
