@@ -5,19 +5,8 @@ import './index.css';
 import SideBar from './Components/Sidebar/sidebar';
 import AppBar from './Components/AppBar/Appbar';
 import ContentBox from './Components/ContentBox';
-import { editorConstructor } from './Components/editor';
 
 function MyApp() {
-
-  const editor = editorConstructor ();
-  
-  function printOutput() {
-    editor.save().then((outputData) => {
-      console.log('article data: ', outputData)
-    }).catch((error) => {
-      console.log('Saving failed: ', error)
-    })
-  }
 
   return (
     <div>

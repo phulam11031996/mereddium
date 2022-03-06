@@ -35,6 +35,13 @@
 	cursor: pointer;
   }
 
+  .css-10ghrmp-MuiPaper-root-MuiAppBar-root {
+	  background-color: black !important;
+  }
+
+
+
+
   button:disabled {
 	opacity: 0.5;
 	cursor: not-allowed;
@@ -124,9 +131,4 @@
 
   .comment-box.modified {
 	max-height: unset;
-  }
-
-  .box {
-	  margin: 30px;
-
   }

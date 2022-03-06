@@ -89,7 +89,7 @@ export default function FullScreenDialog(props) {
         TransitionComponent={Transition}
       >
         <AppBar sx={{ position: 'relative' }}>
-          <Toolbar style={{backgroundColor: 'black'}}>
+          <Toolbar style={{ width: '100%', backgroundColor: 'black'}}>
             <IconButton
               edge="start"
               color="inherit"

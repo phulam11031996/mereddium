@@ -169,7 +169,7 @@ export default function MiniDrawer(props) {
           }
 
           {state.login &&
-          <CreateButton2 style={{ color: "orange" }} userId = {state.userId} handleSubmit={props.updateList} />
+          <CreateButton2 userId = {state.userId} handleSubmit={props.updateList} />
           }
 
           <Divider />

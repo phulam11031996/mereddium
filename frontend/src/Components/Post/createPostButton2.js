@@ -1,21 +1,19 @@
 import * as React from 'react';
-import axios from 'axios';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import ListItemText from '@mui/material/ListItemText';
 import ListItem from '@mui/material/ListItem';
-import List from '@mui/material/List';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
-import TextField from '@mui/material/TextField';
 import ListItemIcon from "@mui/material/ListItemIcon";
 import PostAddOutlinedIcon from "@mui/icons-material/PostAddOutlined";
+import EditorJs from "../Editor.js/Editorjs";
+import { Box } from '@material-ui/core';
 
-import { editorConstructor } from '../editor';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -33,18 +31,11 @@ export default function FullScreenDialog(props) {
 	}
  );
 
-	const editor = editorConstructor();
-
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleOnSubmit = (event) => {
-	editor.save().then((outputData) => {
-		console.log('article data: ', outputData)
-	  }).catch((error) => {
-		console.log('Saving failed: ', error)
-	  })
   }
 
   const handleClose = () => {
@@ -55,7 +46,7 @@ export default function FullScreenDialog(props) {
     <div>
       <ListItem onClick={handleClickOpen} button key="Key">
 			<ListItemIcon>
-			<PostAddOutlinedIcon color="secondary" />
+			<PostAddOutlinedIcon style ={{color: "black"}}  />
 			</ListItemIcon>
 			<ListItemText primary="Create a Post" />
 	  </ListItem>
@@ -85,13 +76,12 @@ export default function FullScreenDialog(props) {
           </Toolbar>
         </AppBar>
 
-		<div className='Editor'>
-			<div className='box' >
-				<div id="editorjs"></div>
-			</div>
-   	   </div>
+		<Box style={{ margin: '20px'}}>
+			<EditorJs />
+		</Box>
 
-
+		
+		
       </Dialog>
     </div>
   );
