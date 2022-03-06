@@ -6,6 +6,7 @@ import InlineImage from 'editorjs-inline-image';
 
 export function editorConstructor(){
 	const editor = new EditorJS({
+		holder: 'editorjs',
 		tools: {
 			header: {
 				class: Header,
@@ -46,13 +47,3 @@ export function editorConstructor(){
 	
 	  return editor;
 }
-
-//   let saveBtn = document.getElementById('customButton');
-
-//   saveBtn.addEventListener('click', function() {
-// 	  editor.save().then((outputData) => {
-// 		  console.log('article data: ', outputData)
-// 	  }).catch((error) => {
-// 		  console.log('Saving failed: ', error)
-// 	  })
-//   });

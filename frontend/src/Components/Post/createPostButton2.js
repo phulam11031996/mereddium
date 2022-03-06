@@ -86,7 +86,7 @@ export default function FullScreenDialog(props) {
         </AppBar>
 
 		<div className='Editor'>
-			<div className="box">
+			<div className='box' >
 				<div id="editorjs"></div>
 			</div>
    	   </div>
