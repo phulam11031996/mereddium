@@ -31,12 +31,11 @@ export default function CommentBox(props) {
   useEffect(() => {
 		axios.get("http://localhost:3030/user/" + user.userId)
 		.then(user => {
-			setUser({ userName: user.data.data.user.firstName,
-                postId: props.postId })
+			setUser({...user, userName: user.data.data.user.firstName})
 		}).catch((error) => {
 			console.log(error);
 		})
-	},[props.postId, user.userId]);
+	},[user.userId]);
 
   const outerHeight = useRef(INITIAL_HEIGHT);
   const textRef = useRef(null);

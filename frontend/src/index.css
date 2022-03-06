@@ -125,3 +125,10 @@
   .comment-box.modified {
 	max-height: unset;
   }
+
+  .Editor {
+	  margin-top: 20px;
+	  background: white;
+	  padding: 2em;
+  }
+  

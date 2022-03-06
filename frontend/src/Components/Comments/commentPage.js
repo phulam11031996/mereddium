@@ -12,8 +12,7 @@ export default function DisplayComment(index, comment) {
 	useEffect(() => {
 		axios.get("http://localhost:3030/user/" + comment.userId)
 		.then(user => {
-			setUser({ userName: user.data.data.user.firstName,
-					  userId: comment.userId})
+			setUser({ ...user, userName: user.data.data.user.firstName})
 		}).catch((error) => {
 			console.log(error);
 		})

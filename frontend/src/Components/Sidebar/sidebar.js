@@ -19,6 +19,7 @@ import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlin
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 
 import CreateButton from '../Post/createPostButton';
+import CreateButton2 from '../Post/createPostButton2';
 import LoginButton from '../Login/loginButton';
 import LogoutButton from '../Login/logoutButton';
 
@@ -165,6 +166,10 @@ export default function MiniDrawer(props) {
 
           {state.login &&
           <CreateButton userId = {state.userId} handleSubmit={props.updateList} />
+          }
+
+          {state.login &&
+          <CreateButton2 style={{ color: "orange" }} userId = {state.userId} handleSubmit={props.updateList} />
           }
 
           <Divider />
