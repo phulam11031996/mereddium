@@ -1,10 +1,14 @@
-import  React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Box from "@mui/material/Box";
+import axios from 'axios';
+import { postList } from "./Components/Post/post";
+
 import './index.css';
 
 import SideBar from './Components/Sidebar/sidebar';
 import AppBar from './Components/AppBar/Appbar';
-import ContentBox from './Components/ContentBox';
 
 function MyApp() {
 

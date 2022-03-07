@@ -93,7 +93,7 @@ export default function Posts(props) {
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            SM
+            {user.postOwnerName.slice(0,2)}
           </Avatar>
         }
         action = {
