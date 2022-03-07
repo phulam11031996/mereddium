@@ -1,7 +1,6 @@
-
 import PostPage from "./PostPage";
-// compile post list
 
+// compile post list
 export function postList (sort_filter=null, posts) {
 	var postList = posts;
 	// check if sort filter is specified, otherwise display all posts
@@ -32,7 +31,7 @@ export function postList (sort_filter=null, posts) {
 }
 
 // render the given post list (standard, popular, recent, or trending)
-function render_postList(posts) {
+export function render_postList(posts) {
 	const postList = posts.map((currentPost, index) => {
 		return (
 			<PostPage

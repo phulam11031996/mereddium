@@ -52,6 +52,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+var searchQuery = "";
+
 export default function SearchAppBar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -75,16 +77,28 @@ export default function SearchAppBar() {
           >
             <Logo
               onClick={() => { window.location.href = "/"; }}
-              style = {{ height: "50px", width: "50px", border: "1px solid black",marginTop: "10"}}
+              style = {{ height: "50px", width: "50px", border: "1px solid black", marginTop: "10"}}
             />
           </Typography>
           <Search style = {{backgroundColor: "white", border: "1px solid grey"}}>
-            <SearchIconWrapper>
+            <IconButton onClick={() => { window.location.href = "/search/" + searchQuery; }}
+              style={{
+              height: '100%',
+              position: 'absolute',
+              visibility: 'visible',
+              pointerEvents: 'visible',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: '999'
+              }}
+            >
               <SearchIcon style = {{color: "black"}}/>
-            </SearchIconWrapper>
+            </IconButton>
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
+              onChange={(e) => { searchQuery = e.target.value; }}
 			        style = {{color: "black"}}
             />
           </Search>
