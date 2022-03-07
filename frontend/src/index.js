@@ -14,7 +14,7 @@ function MyApp() {
 
   const [state, setState] = useState({
 		posts: []
-	  })
+	})
 	
 	useEffect(() => {
 		axios.get(`http://localhost:3030/post/`)
@@ -27,27 +27,26 @@ function MyApp() {
 
   return (
     <div>
-        <div className="NavBar">
-          <AppBar/>
-        </div>
+      <div className="NavBar">
+        <AppBar/>
+      </div>
 
-        <div className="SideBar">
-          <SideBar/>
-        </div>
+      <div className="SideBar">
+        <SideBar/>
+      </div>
 
-        <Router>
-          <Box sx={{ flexGrow: 1 }} style={{marginLeft: 100, marginTop: 30, marginRight: 50, marginBottom: 30}}>
-            <Routes>
-              <Route exact path="/" element={postList("", state.posts)} />
-              <Route exact path="/popular" element={postList("popular", state.posts)} />
-              <Route exact path="/recent" element={postList("recent", state.posts)} />
-              <Route exact path="/trending" element={postList("trending", state.posts)} />
-            </Routes>
-          </Box>
-        </Router>
+      <Router>
+        <Box sx={{ flexGrow: 1 }} style={{marginLeft: 100, marginTop: 30, marginRight: 50, marginBottom: 30}}>
+          <Routes>
+            <Route exact path="/" element={postList("", state.posts)} />
+            <Route exact path="/popular" element={postList("popular", state.posts)} />
+            <Route exact path="/recent" element={postList("recent", state.posts)} />
+            <Route exact path="/trending" element={postList("trending", state.posts)} />
+          </Routes>
+        </Box>
+      </Router>
     </div>
   );
-
 }
 
 ReactDOM.render(<MyApp />, document.getElementById('root'));
