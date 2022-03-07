@@ -66,7 +66,7 @@ export default function Posts(props) {
     user.userId = user;
     state.login = true;
     
-    if(state.postUserId === user.userId) {
+    if(state.postUserId === userCheck) {
       state.userMatch = true;
     }
   }
