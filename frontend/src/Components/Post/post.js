@@ -1,5 +1,8 @@
 
 import PostPage from "./PostPage";
+import SideBar from '../Sidebar/sidebar';
+import AppBar from '../AppBar/Appbar';
+import Box from "@mui/material/Box";
 // compile post list
 
 export function postList (sort_filter=null, posts) {
@@ -50,9 +53,19 @@ function render_postList(posts) {
 		)
 	});
 	return (
-		<ul>
-			{postList}
-		</ul>
+		<Box>
+			<div className="NavBar">
+				<AppBar/>
+			</div>
+			<div className="SideBar">
+				<SideBar/>
+			</div>
+			<Box sx={{ flexGrow: 1 }} style={{marginLeft: "10px", marginTop: "100px", marginRight: "10px", marginBottom: "30px"}}>
+				<ul>
+					{postList}
+				</ul>
+			</Box>
+		</Box>
 	)
 }
 

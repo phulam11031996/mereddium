@@ -20,8 +20,12 @@ import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 
 import CreateButton from '../Post/createPostButton';
 import CreateButton2 from '../Post/createPostButton2';
-import LoginButton from '../Login/loginButton';
+
+import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
 import LogoutButton from '../Login/logoutButton';
+
+import { ReactComponent as Logo } from '../../Images/logo.svg';
+import Typography from '@mui/material/Typography';
 
 import { parseCookie } from '../../Helper/cookieParser';
 
@@ -42,9 +46,9 @@ const closedMixin = (theme) => ({
     duration: theme.transitions.duration.leavingScreen
   }),
   overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`,
+  width: `calc(${theme.spacing(12)} + 1px)`,
   [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(7)} + 1px)`
+    width: `calc(${theme.spacing(12)} + 1px)`
   }
 });
 
@@ -118,49 +122,42 @@ export default function MiniDrawer(props) {
       <CssBaseline />
 
       <Drawer variant="permanent" open={open}>
-        <DrawerHeader style = {{backgroundColor: "black", minHeight: "70px"}}>
-          <IconButton onClick={handleDrawer} style = {{color: "white"}}>
-				{
-					open === false?
-					<ChevronRightIcon />
-					:
-					<ChevronLeftIcon />
-				}
-
-          </IconButton>
+        <DrawerHeader style = {{backgroundColor: "white", minHeight: "70px"}}>
+        
+        <Logo
+              onClick={() => { window.location.href = "/"; }}
+              style = {{ position: "absolute", top: "5", left: "10", height: "50px", width: "50px", marginLeft: "15px", marginTop: "5px"}}
+        />
+       
         </DrawerHeader>
-        <List>
+        <List >
           <ListItem button key="Popular" onClick={() => { window.location.href = "/popular"; }}>
-            <ListItemIcon>
+            <ListItemIcon style={{ marginLeft: "20px"}}>
               <WhatshotIcon color="primary" />
             </ListItemIcon>
-            <ListItemText primary="Popular" />
           </ListItem>
 
           <ListItem button key="Recent" onClick={() => { window.location.href = "/recent"; }}>
-            <ListItemIcon>
+            <ListItemIcon style={{ marginLeft: "20px"}}>
               <AccessTimeOutlinedIcon color="secondary" />
             </ListItemIcon>
-            <ListItemText primary="Recent" />
           </ListItem>
 
           <ListItem button key="Trending" onClick={() => { window.location.href = "/trending"; }}>
-            <ListItemIcon>
+            <ListItemIcon style={{ marginLeft: "20px"}}>
               <TrendingUpOutlinedIcon color="secondary" />
             </ListItemIcon>
-            <ListItemText primary="Trending" />
           </ListItem>
 
-          <Divider />
-
+          {state.login && <Divider  style={{ marginTop: "10px", marginBottom: "10px"}}/> }
+          
           {state.login &&
           <ListItem button key="Saved">
-            <ListItemIcon>
-              <StyledBadge badgeContent={3} style={{ color: "white" }}>
+            <ListItemIcon style={{ marginLeft: "20px"}}>
+              <Badge color="primary" variant="dot">
                 <BookmarkBorderOutlinedIcon style={{ color: "orange" }} />
-              </StyledBadge>
+              </Badge>
             </ListItemIcon>
-            <ListItemText primary="Saved" />
           </ListItem>
           }
 
@@ -172,9 +169,15 @@ export default function MiniDrawer(props) {
           <CreateButton2 userId = {state.userId} handleSubmit={props.updateList} />
           }
 
-          <Divider />
+          <Divider  style={{ marginTop: "10px", marginBottom: "10px"}}/>
 
-          {!state.login && <LoginButton /> }
+          {!state.login && 
+            <ListItem  button key="login" onClick={() => { window.location.href = "/login"; }}>
+              <ListItemIcon style={{ marginLeft: "20px"}}>
+                <LoginOutlinedIcon color="secondary" style={{ color: "blue" }}  />
+              </ListItemIcon>
+          </ListItem>
+          }
           {state.login && <LogoutButton /> }
 
         </List>

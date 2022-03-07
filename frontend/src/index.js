@@ -4,11 +4,10 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Box from "@mui/material/Box";
 import axios from 'axios';
 import { postList } from "./Components/Post/post";
+import Signin from "./Components/Login/SigninForm";
+import Signup from "./Components/Login/SignupForm";
 
 import './index.css';
-
-import SideBar from './Components/Sidebar/sidebar';
-import AppBar from './Components/AppBar/Appbar';
 
 function MyApp() {
 
@@ -26,15 +25,6 @@ function MyApp() {
 	},[]);
 
   return (
-    <div>
-        <div className="NavBar">
-          <AppBar/>
-        </div>
-
-        <div className="SideBar">
-          <SideBar/>
-        </div>
-
         <Router>
           <Box sx={{ flexGrow: 1 }} style={{marginLeft: 100, marginTop: 30, marginRight: 50, marginBottom: 30}}>
             <Routes>
@@ -42,10 +32,11 @@ function MyApp() {
               <Route exact path="/popular" element={postList("popular", state.posts)} />
               <Route exact path="/recent" element={postList("recent", state.posts)} />
               <Route exact path="/trending" element={postList("trending", state.posts)} />
+              <Route exact path="/login" element={<Signin />} />
+              <Route exact path="/signup" element={<Signup />} />
             </Routes>
           </Box>
         </Router>
-    </div>
   );
 
 }

@@ -77,10 +77,9 @@ export default function FullScreenDialog(props) {
   return (
     <div>
       <ListItem onClick={handleClickOpen} button key="Key">
-			<ListItemIcon>
+		<ListItemIcon style={{ marginLeft: "20px"}}>
 			<PostAddOutlinedIcon color="secondary" />
-			</ListItemIcon>
-			<ListItemText primary="Create a Post" />
+		</ListItemIcon>
 	  </ListItem>
       <Dialog
         fullScreen

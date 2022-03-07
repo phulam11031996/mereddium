@@ -18,10 +18,9 @@ export default function AlertDialogSlide() {
   return (
     <div>
       <ListItem onClick={handLogOut} button key="login">
-        <ListItemIcon>
+        <ListItemIcon style={{ marginLeft: "20px"}}>
           <LoginOutlinedIcon color="secondary" style={{ color: "red" }} />
         </ListItemIcon>
-        <ListItemText primary="Logout" />
       </ListItem>
 
     </div>

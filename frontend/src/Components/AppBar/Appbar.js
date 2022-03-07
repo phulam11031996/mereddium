@@ -8,17 +8,18 @@ import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import { ReactComponent as Logo } from '../../Images/logo.svg';
+
 
 const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
+  position: 'fixed',
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
-  marginLeft: 0,
-  width: '100%',
+  marginLeft: 20,
+  right: 10,
+  width: '80%',
   [theme.breakpoints.up('sm')]: {
     marginLeft: theme.spacing(1),
     width: 'auto',
@@ -42,42 +43,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '12ch',
-      '&:focus': {
-        width: '20ch',
-      },
-    },
+    width: '80%',
   },
 }));
 
 export default function SearchAppBar() {
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" style = {{backgroundColor: "#fff4e2"}}>
+    <Box>
+      <AppBar position="fixed" style = {{backgroundColor: "#fff4e2"}}>
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-			      color="black"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-          >
-            <Logo
-              onClick={() => { window.location.href = "/"; }}
-              style = {{ height: "50px", width: "50px", border: "1px solid black",marginTop: "10"}}
-            />
-          </Typography>
           <Search style = {{backgroundColor: "white", border: "1px solid grey"}}>
             <SearchIconWrapper key="Search-Icon" /* add onClick */ >
               <SearchIcon style = {{color: "black"}}/>
