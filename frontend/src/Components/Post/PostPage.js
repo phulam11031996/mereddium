@@ -162,7 +162,7 @@ export default function Posts(props) {
       }
 
       {state.login &&
-      <CommentReply postId={state.postId} />
+      <CommentReply postId={props.property._id} />
       }
       </Collapse>
 

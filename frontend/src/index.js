@@ -6,14 +6,14 @@ import axios from 'axios';
 import { postList } from "./Components/Post/post";
 import Signin from "./Components/Login/SigninForm";
 import Signup from "./Components/Login/SignupForm";
+import PostSearch from './Components/Post/postSearch';
 
 import './index.css';
-
 function MyApp() {
 
   const [state, setState] = useState({
 		posts: []
-	  })
+	})
 	
 	useEffect(() => {
 		axios.get(`http://localhost:3030/post/`)
@@ -32,13 +32,13 @@ function MyApp() {
               <Route exact path="/popular" element={postList("popular", state.posts)} />
               <Route exact path="/recent" element={postList("recent", state.posts)} />
               <Route exact path="/trending" element={postList("trending", state.posts)} />
+              <Route path="/search/:query" element={<PostSearch posts={state.posts} />} />
               <Route exact path="/login" element={<Signin />} />
               <Route exact path="/signup" element={<Signup />} />
             </Routes>
           </Box>
         </Router>
   );
-
 }
 
 ReactDOM.render(<MyApp />, document.getElementById('root'));

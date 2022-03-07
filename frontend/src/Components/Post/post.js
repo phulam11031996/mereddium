@@ -1,21 +1,17 @@
-
 import PostPage from "./PostPage";
 import SideBar from '../Sidebar/sidebar';
 import AppBar from '../AppBar/Appbar';
 import Box from "@mui/material/Box";
-// compile post list
 
+
+// compile post list
 export function postList (sort_filter=null, posts) {
 	var postList = posts;
 	// check if sort filter is specified, otherwise display all posts
 	if(sort_filter === "popular") {
 		// sort posts by votes
 		postList = postList.sort((p1, p2) => {
-			const upvote1 = p1['upVoteUsers'].length;
-			const downvote1 = p1['downVoteUsers'].length;
-			const upvote2 = p2['upVoteUsers'].length;
-			const downvote2 = p2['downVoteUsers'].length;
-			return (upvote2 - downvote2) - (upvote1 - downvote1);
+			return compare_votes(p1, p2);
 		});
 	} else if(sort_filter === "recent") {
 		// sort posts by most recent publish date
@@ -32,18 +28,14 @@ export function postList (sort_filter=null, posts) {
 			threshold.setDate(threshold.getDate() - 30);
 			return time > threshold;
 		}).sort((p1, p2) => {
-			const upvote1 = p1['upVoteUsers'].length;
-			const downvote1 = p1['downVoteUsers'].length;
-			const upvote2 = p2['upVoteUsers'].length;
-			const downvote2 = p2['downVoteUsers'].length;
-			return (upvote2 - downvote2) - (upvote1 - downvote1);
+			return compare_votes(p1, p2);
 		});
 	}
 	return render_postList(postList);
 }
 
 // render the given post list (standard, popular, recent, or trending)
-function render_postList(posts) {
+export function render_postList(posts) {
 	const postList = posts.map((currentPost, index) => {
 		return (
 			<PostPage
@@ -69,5 +61,11 @@ function render_postList(posts) {
 	)
 }
 
-
-
+// comparison logic for sorting by votes
+function compare_votes(p1, p2) {
+	const upvote1 = p1['upVoteUsers'].length;
+	const downvote1 = p1['downVoteUsers'].length;
+	const upvote2 = p2['upVoteUsers'].length;
+	const downvote2 = p2['downVoteUsers'].length;
+	return (upvote2 - downvote2) - (upvote1 - downvote1);
+}

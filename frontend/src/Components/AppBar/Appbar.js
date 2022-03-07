@@ -4,9 +4,7 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
-import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 
 
@@ -26,16 +24,6 @@ const Search = styled('div')(({ theme }) => ({
   },
 }));
 
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
@@ -47,18 +35,33 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+var searchQuery = "";
+
 export default function SearchAppBar() {
   return (
     <Box>
       <AppBar position="fixed" style = {{backgroundColor: "#fff4e2"}}>
         <Toolbar>
+
           <Search style = {{backgroundColor: "white", border: "1px solid grey"}}>
-            <SearchIconWrapper key="Search-Icon" /* add onClick */ >
+            <IconButton onClick={() => { window.location.href = "/search/" + searchQuery; }}
+              style={{
+              height: '100%',
+              position: 'absolute',
+              visibility: 'visible',
+              pointerEvents: 'visible',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: '999'
+              }}
+            >
               <SearchIcon style = {{color: "black"}}/>
-            </SearchIconWrapper>
+            </IconButton>
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
+              onChange={(e) => { searchQuery = e.target.value; }}
 			        style = {{color: "black"}}
             />
           </Search>

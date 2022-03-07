@@ -10,8 +10,9 @@ export default function CommentBox(props) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [commentValue, setCommentValue] = useState("");
   
+  const postId = props.postId;
+
   const [user, setUser] = useState({
-    postId: "",
     userName: "",
     userId: ""
   });
@@ -64,10 +65,11 @@ export default function CommentBox(props) {
 
     const newComment = {
       userId: user.userId,
-      postId: user.postId,
+      postId: postId,
       message: commentValue,
       upVote: 1
     }
+    console.log(newComment);
 
     createComment(newComment);
 
