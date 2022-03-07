@@ -9,6 +9,7 @@ import './index.css';
 
 import SideBar from './Components/Sidebar/sidebar';
 import AppBar from './Components/AppBar/Appbar';
+import PostSearch from './Components/Post/postSearch';
 
 function MyApp() {
 
@@ -42,6 +43,8 @@ function MyApp() {
             <Route exact path="/popular" element={postList("popular", state.posts)} />
             <Route exact path="/recent" element={postList("recent", state.posts)} />
             <Route exact path="/trending" element={postList("trending", state.posts)} />
+            <Route exact path="/search" element={postList("", state.posts)} />
+            <Route path="/search/:query" element={<PostSearch posts={state.posts} />} />
           </Routes>
         </Box>
       </Router>
