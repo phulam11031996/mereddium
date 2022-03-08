@@ -12,6 +12,8 @@ import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
+import ThumbDownAltIcon from '@mui/icons-material/ThumbDownAlt';
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -51,7 +53,9 @@ export default function Posts(props) {
     userMatch: false,
     turnOnComments: props.property.turnOnComments,
     subTitle: props.property.message.slice(0,350),
-    comments: props.property.comments
+    comments: props.property.comments,
+    upVoteUsers: props.property.upVoteUsers,
+    downVoteUsers: props.property.downVoteUsers,
   });
 
   var userCheck;
@@ -63,7 +67,7 @@ export default function Posts(props) {
     user.userId = null;
     state.login = false;
   } else {
-    user.userId = user;
+    user.userId = userCheck;
     state.login = true;
     
     if(state.postUserId === userCheck) {
@@ -86,6 +90,36 @@ export default function Posts(props) {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+
+    // votes posts
+  function votePost(userId, postId, value){
+
+    makeVoteCall(userId, postId, value).then( response => {
+      if (response.status === 200) {
+      console.log("Sucessfully Voted!");
+        setState({
+          ...state,
+          upVoteUsers : response.data.data.upVoteUsers[0].upVoteUsers,
+          downVoteUsers : response.data.data.downVoteUsers[0].downVoteUsers,
+        })
+      } else {
+        console.log("Must login first!")
+      }
+    });
+  }
+
+  async function makeVoteCall(userId, postId, value) {
+    try {
+      const response = await axios.post(`http://localhost:3030/post/vote/${postId}`,
+          { userId: userId, value: value }
+        );
+        return response;
+    }
+    catch (error){
+      console.log(error);
+      return false;
+    }
+  }
 
   return (
     <Card sx={{ maxWidth: 800 }}   style = {{marginTop: 50}}>
@@ -126,19 +160,28 @@ export default function Posts(props) {
 
       <CardActions disableSpacing style={{marginLeft: 20}}>
         
-        <IconButton>
-          <ThumbUpOutlinedIcon style = {{color: '#0077b6'}} fontSize ="small"/>
+      <IconButton onClick={() => votePost(user.userId, state.postId, 1)}>
+          {
+            state.upVoteUsers.find(ele => ele.userId === user.userId) !== undefined ?
+            <ThumbUpAltIcon style = {{color: '#0077b6'}} fontSize ="small"/> :
+            <ThumbUpOutlinedIcon style = {{color: '#0077b6'}} fontSize ="small"/>
+          }
         </IconButton>
 
-        {/* like-plus-displike number */}
         <Typography style= {{padding: 10, fontSize: 14}}>
-          1
+          {state.upVoteUsers.length}
         </Typography>
 
-        {/* dislike thumb */}
-        <IconButton>
-          <ThumbDownOutlinedIcon style = {{color: '#ee6c4d'}} fontSize ="small"/>
+        <IconButton onClick={() => votePost(user.userId, state.postId, -1)}>
+          {
+            state.downVoteUsers.find(ele => ele.userId === user.userId) !== undefined ?
+            <ThumbDownAltIcon style = {{color: '#ee6c4d'}} fontSize ="small"/> :
+            <ThumbDownOutlinedIcon style = {{color: '#ee6c4d'}} fontSize ="small"/>
+          }
           </IconButton>
+          <Typography style= {{padding: 10, fontSize: 14}}>
+          {state.downVoteUsers.length}
+        </Typography>
 
         <ExpandMore
           expand={expanded}

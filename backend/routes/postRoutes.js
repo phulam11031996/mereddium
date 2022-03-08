@@ -16,6 +16,9 @@ router
   .patch(postController.updatePostById)
   .delete(postController.deletePostById);
 
-
+// /post/vote/:id
+router
+  .route('/vote/:id')
+  .post(postController.votePost);
 
 module.exports = router;

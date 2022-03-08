@@ -93,3 +93,63 @@ exports.deletePostById = catchAsync(async (req, res) => {
 	})
 });
 
+
+// UPDATE /vote/{id}
+exports.votePost = catchAsync(async (req, res) => {
+	const postId = req.params.id;
+	const userId = req.body.userId;
+	const value = req.body.value;
+
+	if (userId === null){
+		res.status(401).json({
+			status: "Must login first!",
+		});
+	}
+
+	const inUpVote = await Post.update(
+		{"_id": postId},
+		{$pull: {"upVoteUsers": {"userId": userId}}}
+	);
+
+	const inDownVote = await Post.update(
+		{"_id": postId},
+		{ $pull: { downVoteUsers: {"userId": userId}}}
+	);
+
+	if (value == 1 && inUpVote.modifiedCount === 0) {
+		await Post.updateOne(
+			{"_id": postId},
+			{$push: {"upVoteUsers": {"userId": userId}}}
+		);
+	}
+
+	if(value == -1 && inDownVote.modifiedCount === 0){
+		await Post.updateOne(
+			{"_id": postId},
+			{$push: {"downVoteUsers": {"userId": userId}}}
+		);
+	}
+
+	const upVoteUsers = await Post.find(
+		{"_id": postId},
+		{"upVoteUsers": 1, "_id": 0}
+	);
+
+	const downVoteUsers = await Post.find(
+		{"_id": postId},
+		{"downVoteUsers": 1, "_id": 0}
+	);
+
+	// const post = await Post.find(
+	// 		{"_id": postId},
+	// 	)
+	
+	res.status(200).json({
+		status: 'success',
+		data: {
+			upVoteUsers,
+			downVoteUsers,
+			// post
+		}
+	});
+});
