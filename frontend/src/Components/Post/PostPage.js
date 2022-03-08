@@ -93,19 +93,20 @@ export default function Posts(props) {
 
     // votes posts
   function votePost(userId, postId, value){
-
-    makeVoteCall(userId, postId, value).then( response => {
-      if (response.status === 200) {
-      console.log("Sucessfully Voted!");
-        setState({
-          ...state,
-          upVoteUsers : response.data.data.upVoteUsers[0].upVoteUsers,
-          downVoteUsers : response.data.data.downVoteUsers[0].downVoteUsers,
-        })
-      } else {
+    if(userId !== null) {
+      makeVoteCall(userId, postId, value).then( response => {
+        if (response.status === 200) {
+        console.log("Sucessfully Voted!");
+          setState({
+            ...state,
+            upVoteUsers : response.data.data.upVoteUsers[0].upVoteUsers,
+            downVoteUsers : response.data.data.downVoteUsers[0].downVoteUsers,
+          })
+        }
+      })
+    } else {
         console.log("Must login first!")
       }
-    });
   }
 
   async function makeVoteCall(userId, postId, value) {
@@ -169,7 +170,7 @@ export default function Posts(props) {
         </IconButton>
 
         <Typography style= {{padding: 10, fontSize: 14}}>
-          {state.upVoteUsers.length}
+          {state.upVoteUsers.length -  state.downVoteUsers.length}
         </Typography>
 
         <IconButton onClick={() => votePost(user.userId, state.postId, -1)}>
@@ -178,10 +179,7 @@ export default function Posts(props) {
             <ThumbDownAltIcon style = {{color: '#ee6c4d'}} fontSize ="small"/> :
             <ThumbDownOutlinedIcon style = {{color: '#ee6c4d'}} fontSize ="small"/>
           }
-          </IconButton>
-          <Typography style= {{padding: 10, fontSize: 14}}>
-          {state.downVoteUsers.length}
-        </Typography>
+        </IconButton>
 
         <ExpandMore
           expand={expanded}
