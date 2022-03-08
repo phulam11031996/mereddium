@@ -24,6 +24,42 @@ function MyApp() {
 		})
 	},[]);
 
+  // // votes posts
+  // function votePost(userId, postId, value){
+  //   makeVoteCall(userId, postId, value).then( response => {
+  //     if (response.status === 200) {
+  //     console.log("Sucessfully Voted!");
+  //       // setState({
+  //       //   posts: state.posts.map(post => {
+  //       //     if (post._id !== postId) {
+  //       //       return post;
+  //       //     } else {
+  //       //       post.upVoteUsers = response.data.data.upVoteUsers;
+  //       //       post.downVoteUsers = response.data.data.downVoteUsers;
+  //       //       return post;
+  //       //     }
+  //       //   })
+  //       // })
+  //       window.location = '/';
+  //     } else {
+  //       console.log("Must login first!")
+  //     }
+  //   });
+  // }
+
+  // async function makeVoteCall(userId, postId, value) {
+  //   try {
+  //     const response = await axios.post(`http://localhost:3030/post/vote/${postId}`,
+  //         { userId: userId, value: value }
+  //       );
+  //       return response;
+  //   }
+  //   catch (error){
+  //     console.log(error);
+  //     return false;
+  //   }
+  // }
+
   return (
         <Router>
           <Box sx={{ flexGrow: 1 }} style={{marginLeft: 100, marginTop: 30, marginRight: 50, marginBottom: 30}}>
