@@ -2,9 +2,7 @@ const mongoose = require("mongoose");
 const dotenv = require('dotenv');
 dotenv.config();
 
-
 // Initializing DB Connection
-
 let dbConnection;
 
 function setConnection(newConn){
@@ -23,7 +21,6 @@ function getDbConnection() {
 	console.log("Successfully Connected to CSC309 DataBase");
 	return dbConnection;
 }
-
 
 module.exports = {
 	setConnection,

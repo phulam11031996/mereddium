@@ -32,12 +32,11 @@ app.use(cors());
 app.use(express.urlencoded( {extended: false} ));
 dotenv.config();
 
-
 // Routers
 app.use('/user', userRouter);
 app.use('/post', postRouter);
-// app.use('/comment', commentRouter);
-// app.use('/auth', authRouter);
+app.use('/comment', commentRouter);
+app.use('/auth', authRouter);
 app.use('/tag', tagRouter);
 
 // PORT NUMBER 3030

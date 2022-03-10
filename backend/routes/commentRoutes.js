@@ -1,5 +1,5 @@
 const express = require('express');
-const commentController = require('../models/CommentHandler');
+const commentController = require('../controllers/CommentController');
 
 const router = express.Router();
 
@@ -15,6 +15,5 @@ router
   .get(commentController.getCommentById)
   .patch(commentController.updateCommentById)
   .delete(commentController.deleteCommentById);
-
 
 module.exports = router;

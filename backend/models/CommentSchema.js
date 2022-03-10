@@ -32,7 +32,4 @@ const commentSchema = new mongoose.Schema({
 	}		
 });
 
-// Creating Model with Schema tourSchema
-const Comment = mongoose.model('Comment', commentSchema);
-module.exports = Comment;
-
+module.exports = commentSchema;
