@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser')
 const userRouter = require('./routes/userRoutes');
 const postRouter = require('./routes/postRoutes');
 const commentRouter = require('./routes/commentRoutes');
+const tagRouter = require('./routes/tagRoutes')
 
 const authRouter = require('./routes/authRoutes');
 
@@ -36,6 +37,7 @@ app.use('/user', userRouter);
 app.use('/post', postRouter);
 app.use('/comment', commentRouter);
 app.use('/auth', authRouter);
+app.use('/tag', tagRouter);
 
 // PORT NUMBER 3030
 const PORT = 3030;

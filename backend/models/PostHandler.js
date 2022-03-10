@@ -1,39 +1,40 @@
-const Post = require("../models/PostSchema");
-const catchAsync = require('../utils/catchAsync');
-const { v4: uuidv4 } = require('uuid');
+const DatabaseHandler = require('./DatabaseHandler');
+const PostSchema = require('./PostSchema');
 
+const { v4: uuidv4 } = require('uuid');
 
 const uniqueID = () => {
 	return uuidv4();
 }
 
 // GET /post/
-exports.getAllPosts = catchAsync(async (req, res) => {
-	const allPosts = await Post.find();
-	res.status(200).json({
-	  status: 'success',
-	  data: allPosts
-	});
-});
+async function getAllPosts() {
+	const db = await DatabaseHandler.getDbConnection();
+	const postModel = db.model('Post', PostSchema);
+	let result = await postModel.find();
+	return result;
+}
 
 // POST /post/
-exports.createPost = catchAsync(async (req, res) => {
-	const result = req.body;
+async function createPost(post) {
+	const db = await DatabaseHandler.getDbConnection();
+	const postModel = db.model('Post', PostSchema);
+
 	const postId = uniqueID().slice(0,6);
 	
 	const newPost = 
-		new Post(
+		new postModel(
 			{ 
 				_id: postId, 
-				userId: req.body.userId, 
-				title: req.body.title, 
-				message: req.body.message,
+				userId: post.userId, 
+				title: post.title, 
+				message: post.message,
 				comments: [], 
 				turnOnComments: true,
 				published: true, 
-				stringify: "req.body.stringify",
+				stringify: "post.stringify",
 				tags: [],
-				imageURL: req.body.imageURL, 
+				imageURL: post.imageURL, 
 				upVoteUsers: [],
 				downVoteUsers: []
 			}
@@ -45,111 +46,101 @@ exports.createPost = catchAsync(async (req, res) => {
 		}
 	});
 
-	res.status(201).json({
-		result
-	  });
-
-});
-
+	return post;
+}
 
 // GET /post/{id}
-exports.getPostById = catchAsync(async (req, res) => {
-	const id = req.params.id;
-	const post = await Post.findById({'_id': id});
-  
-	res.status(200).json({
-	  status: 'success',
-	  data: {
-		post,
-	  },
-	});
-});
+async function getPostById(id) {
+	const db = await DatabaseHandler.getDbConnection();
+	const postModel  = db.model('Post', PostSchema);
+
+	const post = await postModel.findById({'_id': id});
+  return post;
+}
 
 // UPDATE /post/{id}
-exports.updatePostById = catchAsync(async (req, res) => {
-	const id = req.params.id;	
-	const post = await Post.updateOne({'_id': id}, {
-		$set: req.body,
+async function updatePostById(id, newInfo) {
+	const db = await DatabaseHandler.getDbConnection();
+	const postModel = db.model('Post', PostSchema);
+
+	const post = await postModel.updateOne({'_id': id}, {
+		$set: newInfo,
 	});
   
-	res.status(200).json({
-	  status: 'success',
-	  data: {
-		post,
-	  },
-	});
-});
+	return post;
+}
 
 // DELETE /post/{id}
-exports.deletePostById = catchAsync(async (req, res) => {
-	const id = req.params.id;
-	Post.deleteOne({ _id: id}, function (err) {
+async function deletePostById(id) {
+	const db = await DatabaseHandler.getDbConnection();
+	const postModel = db.model('Post', PostSchema);
+
+	postModel.deleteOne({ _id: id}, function (err) {
 		if(err) {
 			console.log("Failed to delete");
+			return 0;
 		} else {
-			console.log(`Deleted post: ${id}`);
-			res.status(200).send(id).end();
+			console.log(`Deleted user: ${id}`);
+			return 1;
 		}
 	})
-});
+}
 
 
 // UPDATE /vote/{id}
-exports.votePost = catchAsync(async (req, res) => {
-	const postId = req.params.id;
-	const userId = req.body.userId;
-	const value = req.body.value;
+async function votePost(postId, userId, value) {
+	const db = await DatabaseHandler.getDbConnection();
+	const postModel = db.model('Post', PostSchema);
+
+
 
 	if (userId === null){
-		res.status(401).json({
-			status: "Must login first!",
-		});
-	}
-
-	const inUpVote = await Post.update(
-		{"_id": postId},
-		{$pull: {"upVoteUsers": {"userId": userId}}}
-	);
-
-	const inDownVote = await Post.update(
-		{"_id": postId},
-		{ $pull: { downVoteUsers: {"userId": userId}}}
-	);
-
-	if (value == 1 && inUpVote.modifiedCount === 0) {
-		await Post.updateOne(
+		return 0;
+	} else {
+		const inUpVote = await postModel.update(
 			{"_id": postId},
-			{$push: {"upVoteUsers": {"userId": userId}}}
+			{$pull: {"upVoteUsers": {"userId": userId}}}
 		);
-	}
-
-	if(value == -1 && inDownVote.modifiedCount === 0){
-		await Post.updateOne(
-			{"_id": postId},
-			{$push: {"downVoteUsers": {"userId": userId}}}
-		);
-	}
-
-	const upVoteUsers = await Post.find(
-		{"_id": postId},
-		{"upVoteUsers": 1, "_id": 0}
-	);
-
-	const downVoteUsers = await Post.find(
-		{"_id": postId},
-		{"downVoteUsers": 1, "_id": 0}
-	);
-
-	// const post = await Post.find(
-	// 		{"_id": postId},
-	// 	)
 	
-	res.status(200).json({
-		status: 'success',
-		data: {
-			upVoteUsers,
-			downVoteUsers,
-			// post
+		const inDownVote = await postModel.update(
+			{"_id": postId},
+			{ $pull: { "downVoteUsers": {"userId": userId}}}
+		);
+	
+		if (value == 1 && inUpVote.modifiedCount === 0) {
+			await postModel.updateOne(
+				{"_id": postId},
+				{$push: {"upVoteUsers": {"userId": userId}}}
+			);
 		}
-	});
-});
+	
+		if(value == -1 && inDownVote.modifiedCount === 0){
+			await postModel.updateOne(
+				{"_id": postId},
+				{$push: {"downVoteUsers": {"userId": userId}}}
+			);
+		}
+	
+		const upVoteUsers = await postModel.find(
+			{"_id": postId},
+			{"upVoteUsers": 1, "_id": 0}
+		);
+	
+		const downVoteUsers = await postModel.find(
+			{"_id": postId},
+			{"downVoteUsers": 1, "_id": 0}
+		);
+
+		return [upVoteUsers, downVoteUsers];
+	}
+
+}
+
+module.exports = {
+	getAllPosts,
+	createPost,
+	getPostById,
+	updatePostById,
+	deletePostById,
+	votePost,
+}

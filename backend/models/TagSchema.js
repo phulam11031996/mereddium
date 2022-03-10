@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 // Creating Tag Schema
 const tagSchema = new mongoose.Schema({
 	_id: {
-		type: Number,
+		type: String,
 		required: true,
 	},
 	name: {
@@ -13,7 +13,5 @@ const tagSchema = new mongoose.Schema({
 		
   });
 
-// Creating Model with Schema tourSchema
-const Tag = mongoose.model('Tag', tagSchema);
-module.exports = Tag;
+module.exports = tagSchema;
 

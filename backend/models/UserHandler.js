@@ -7,7 +7,7 @@ const uniqueID = () => {
 }
 
 // GET /user/
-async function getAllUsers () {
+async function getAllUsers() {
 	const db = await DatabaseHandler.getDbConnection();
 	const userModel = db.model('User', UserSchema);
 	let result = await userModel.find();
