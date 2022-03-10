@@ -27,6 +27,7 @@ async function createPost(post) {
 			{ 
 				_id: postId, 
 				userId: post.userId, 
+				createdAt: Date.now(), 
 				title: post.title, 
 				message: post.message,
 				comments: [], 
