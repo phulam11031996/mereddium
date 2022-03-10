@@ -1,15 +1,13 @@
 const DatabaseHandler = require("./DatabaseHandler");
 const UserSchema = require("./UserSchema");
-const catchAsync = require('../utils/catchAsync');
 const { v4: uuidv4 } = require('uuid');
-
 
 const uniqueID = () => {
 	return uuidv4();
 }
 
 // GET /user/
-async function getAllUsers () {
+async function getAllUsers() {
 	const db = await DatabaseHandler.getDbConnection();
 	const userModel = db.model('User', UserSchema);
 	let result = await userModel.find();
@@ -50,7 +48,6 @@ async function createUser(user) {
 
 	return user;
 }
-
 
 // GET /user/{id}
 async function getUserById(id) {

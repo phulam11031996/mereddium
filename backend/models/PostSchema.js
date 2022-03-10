@@ -101,7 +101,4 @@ const postSchema = new mongoose.Schema({
 	  },
   });
 
-// Creating Model with Schema tourSchema
-const Post = mongoose.model('Post', postSchema);
-module.exports = Post;
-
+module.exports = postSchema;

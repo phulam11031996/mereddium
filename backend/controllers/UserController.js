@@ -25,30 +25,24 @@ exports.getUserById = catchAsync(async (req, res) => {
 	res.status(200).json({
 	  status: 'success',
 	  data: {
-		user,
+		  user,
 	  },
 	});
 });
 
 // UPDATE /user/{id}
 exports.updateUserById = catchAsync(async (req, res) => {
-	const id = req.params.id;
-  const new_user = req.body;
-
-	const user = await UserHandler.updateUserById(id, new_user);
-  
+	const user = await UserHandler.updateUserById(req.params.id, req.body);
 	res.status(200).json({
 	  status: 'success',
 	  data: {
-		user,
+		  user,
 	  },
 	});
 });
 
 // DELETE /user/{id}
 exports.deleteUserById = catchAsync(async (req, res) => {
-	const id = req.params.id;
-	const result = await UserHandler.deleteUserById(id);
-  res.status(200).send(id).end();
+	const result = await UserHandler.deleteUserById(req.params.id);
+  res.status(200).send(req.params.id).end();
 });
-

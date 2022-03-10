@@ -1,32 +1,33 @@
-const Tag = require("./TagSchema");
-const catchAsync = require('../utils/catchAsync');
-const { v4: uuidv4 } = require('uuid');
+const DatabaseHandler = require("./DatabaseHandler");
+const TagSchema = require("./TagSchema");
 
+const { v4: uuidv4 } = require('uuid');
 
 const uniqueID = () => {
 	return uuidv4();
 }
 
 // GET /tag/
-exports.getAllTags = catchAsync(async (req, res) => {
-	const allTags = await Tag.find();
-	res.status(200).json({
-	  status: 'success',
-	  data: allTags
-	});
-});
+async function getAllTags() {
+	const db = await DatabaseHandler.getDbConnection();
+	const tagModel = db.model('Tag', TagSchema);
+
+	const allTags = await tagModel.find();
+	return allTags;
+}
 
 // POST /tag/
-exports.createTag = catchAsync(async (req, res) => {
-	const result = req.body;
-	var token = uniqueID();
-	result._id = uniqueID().slice(0,6);
+async function createTag(tag){
+	const db = await DatabaseHandler.getDbConnection();
+	const tagModel = db.model('Tag', TagSchema);
+
+	const tagId = uniqueID().slice(0,6);
 	
 	const newTag = 
-		new Tag(
+		new tagModel(
 			{ 
-				_id: result._id, 
-				name: req.body.name, 
+				_id: tagId, 
+				name: tag.name,
 			}
 		);
 	
@@ -36,52 +37,49 @@ exports.createTag = catchAsync(async (req, res) => {
 		}
 	});
 
-	res.status(201).json({
-		result
-	  });
-
-});
-
+	return newTag;
+}
 
 // GET /tag/{id}
-exports.getTagById = catchAsync(async (req, res) => {
-	const id = req.params.id;
-	const tag = await Tag.findById({'_id': id});
-  
-	res.status(200).json({
-	  status: 'success',
-	  data: {
-		tag,
-	  },
-	});
-});
+async function getTagById(id){
+	const db = await DatabaseHandler.getDbConnection();
+	const tagModel = db.model('Tag', TagSchema);
+
+	const tag = await tagModel.findById({'_id': id});
+  return tag;
+}
 
 // UPDATE /tag/{id}
-exports.updateTagById = catchAsync(async (req, res) => {
-	const id = req.params.id;
-	
-	const tag = await Tag.updateOne({'_id': id}, {
-		$set: req.body,
+async function updateTagById(id, newInfo){
+	const db = await DatabaseHandler.getDbConnection();
+	const tagModel = db.model('Tag', TagSchema);
+
+	const updatedTag = await tagModel.updateOne({'_id': id}, {
+		$set: newInfo,
 	});
-  
-	res.status(200).json({
-	  status: 'success',
-	  data: {
-		tag,
-	  },
-	});
-});
+  return updatedTag;
+}
 
 // DELETE /tag/{id}
-exports.deleteTagById = catchAsync(async (req, res) => {
-	const id = req.params.id;
-	Tag.deleteOne({ _id: id}, function (err) {
+async function deleteTagById(id) {
+	const db = await DatabaseHandler.getDbConnection();
+	const tagModel = db.model('Tag', TagSchema);
+
+	tagModel.deleteOne({ _id: id}, function (err) {
 		if(err) {
 			console.log("Failed to delete");
+			return 0;
 		} else {
-			console.log(`Deleted tag: ${id}`);
-			res.status(200).send(id).end();
+			console.log(`Deleted user: ${id}`);
+			return 1;
 		}
 	})
-});
+}
 
+module.exports = {
+	getAllTags,
+	createTag,
+	getTagById,
+	updateTagById,
+	deleteTagById,
+}
