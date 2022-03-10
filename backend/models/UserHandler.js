@@ -1,8 +1,6 @@
 const DatabaseHandler = require("./DatabaseHandler");
 const UserSchema = require("./UserSchema");
-const catchAsync = require('../utils/catchAsync');
 const { v4: uuidv4 } = require('uuid');
-
 
 const uniqueID = () => {
 	return uuidv4();
@@ -45,12 +43,12 @@ async function createUser(user) {
 	newUser.save(function (err) {
 		if(err) {
 			console.log(err);
+			return undefined;
 		}
 	});
 
 	return user;
 }
-
 
 // GET /user/{id}
 async function getUserById(id) {
@@ -60,7 +58,6 @@ async function getUserById(id) {
 	const user = await userModel.findById({'_id': id});
 	return user;  
 }
-
 
 // UPDATE /user/{id}
 async function updateUserById(id, newUser) {
@@ -90,10 +87,20 @@ async function deleteUserById(id) {
 	})
 }
 
+// GET /user/{email}
+async function getUserByEmail(email) {
+	const db = await DatabaseHandler.getDbConnection();
+	const userModel = db.model('User', UserSchema);
+
+	const user = await userModel.findOne({"email": email});
+	return user;
+}
+
 module.exports = {
 	getAllUsers,
 	createUser,
 	getUserById,
 	updateUserById,
 	deleteUserById,
+	getUserByEmail
 }

@@ -31,23 +31,11 @@ app.use(cors());
 app.use(express.urlencoded( {extended: false} ));
 dotenv.config();
 
-// Initializing DB Connection
-// const database = process.env.MONGOLAB_URI;
-
-// mongoose.connect(database, {
-// 	useUnifiedTopology: true,
-// 	useNewUrlParser: true
-// }).then( () => {
-// 	console.log("Successfully Connected to CSC309 DataBase");
-// }).catch ( err => {
-// 	console.log(err);
-// });
-
 // Routers
 app.use('/user', userRouter);
-// app.use('/post', postRouter);
-// app.use('/comment', commentRouter);
-// app.use('/auth', authRouter);
+app.use('/post', postRouter);
+app.use('/comment', commentRouter);
+app.use('/auth', authRouter);
 
 // PORT NUMBER 3030
 const PORT = 3030;
