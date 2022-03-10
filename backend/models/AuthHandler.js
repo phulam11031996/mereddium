@@ -1,5 +1,5 @@
-const User = require("../models/UserSchema");
-const UserController = require('../controllers/UserController');
+const User = require("./UserSchema");
+const UserController = require('../models/UserHandler');
 const catchAsync = require('../utils/catchAsync');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');

@@ -1,5 +1,5 @@
-const Comment = require("../models/CommentSchema");
-const Post = require("../models/PostSchema");
+const Comment = require("./CommentSchema");
+const Post = require("./PostSchema");
 const catchAsync = require('../utils/catchAsync');
 const { v4: uuidv4 } = require('uuid');
 

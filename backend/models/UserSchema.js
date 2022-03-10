@@ -79,7 +79,4 @@ const userSchema = new mongoose.Schema({
 
 );
 
-// Creating Model with Schema tourSchema
-const User = mongoose.model('User', userSchema);
-module.exports = User;
-
+module.exports = userSchema;
