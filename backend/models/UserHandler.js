@@ -40,14 +40,8 @@ async function createUser(user) {
 			}
 	);
 	
-	newUser.save(function (err) {
-		if(err) {
-			console.log(err);
-			return undefined;
-		}
-	});
-
-	return user;
+	const result = await newUser.save();
+	return result;
 }
 
 // GET /user/{id}
@@ -76,15 +70,8 @@ async function deleteUserById(id) {
 	const db = await DatabaseHandler.getDbConnection();
 	const userModel = db.model('User', UserSchema);
 
-	userModel.deleteOne({ _id: id}, function (err) {
-		if(err) {
-			console.log("Failed to delete");
-			return 0;
-		} else {
-			console.log(`Deleted user: ${id}`);
-			return 1;
-		}
-	})
+	await userModel.deleteOne({ _id: id });
+	return 0;
 }
 
 // GET /user/{email}
