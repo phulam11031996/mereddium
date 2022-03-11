@@ -150,3 +150,11 @@ test("Adding user -- already existing", async () => {
   await expect(UserHandler.createUser(user)).rejects
     .toThrow("E11000 duplicate key error collection: test.users index: email_1 dup key: { email: \"marco@polo.com\" }");
 });
+
+test("Print user JSON", async () => {
+    const id = "abc123";
+    const user = await UserHandler.getUserById(id);
+
+    expect(user).toBeDefined();
+    expect(user.toJSON()).toBeDefined();
+});

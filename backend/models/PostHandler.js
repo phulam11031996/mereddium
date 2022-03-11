@@ -81,8 +81,6 @@ async function votePost(postId, userId, value) {
 	const db = await DatabaseHandler.getDbConnection();
 	const postModel = db.model('Post', PostSchema);
 
-
-
 	if (userId === null){
 		return 0;
 	} else {

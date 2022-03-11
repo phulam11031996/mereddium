@@ -12,9 +12,15 @@ exports.getAllUsers = catchAsync(async (req, res) => {
 
 // POST /user/
 exports.createUser = catchAsync(async (req, res) => {
-  	const result = await UserHandler.createUser(req.body);
+	let result;
 	
-	  if(!result) {
+	try {	
+		result = await UserHandler.createUser(req.body);
+	} catch (err) {
+		console.log(err);
+	}
+
+	if(result === undefined) {
 		res.status(404).json({
 			"Status": "Failed to create user!"
 		});
