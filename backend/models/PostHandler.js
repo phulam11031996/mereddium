@@ -26,8 +26,7 @@ async function createPost(post) {
 		new postModel(
 			{ 
 				_id: postId, 
-				userId: post.userId, 
-				createdAt: Date.now(), 
+				userId: post.userId,
 				title: post.title, 
 				message: post.message,
 				comments: [], 

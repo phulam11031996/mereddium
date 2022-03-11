@@ -1,7 +1,14 @@
 const mongoose = require("mongoose");
-const UserSchema = require("./user");
-const userServices = require("./user-services");
+const UserSchema = require("./UserSchema");
+const UserHandler = require("./UserHandler");
+const DatabaseHandler = require("./DatabaseHandler");
 const { MongoMemoryServer } = require("mongodb-memory-server");
+
+const { v4: uuidv4 } = require('uuid');
+
+const uniqueID = () => {
+	return uuidv4();
+}
 
 let mongoServer;
 let conn;
@@ -20,7 +27,7 @@ beforeAll(async () => {
 
   userModel = conn.model("User", UserSchema);
 
-  userServices.setConnection(conn);
+  DatabaseHandler.setConnection(conn);
 });
 
 afterAll(async () => {
@@ -45,17 +52,16 @@ beforeEach(async () => {
     upVoteUsers: [],
     downVoteUsers: []
   }
-  let result = new Post(newPost);
+  result = new postModel(newPost);
   await result.save();
-
 }); 
 
 afterEach(async () => {
-    await Post.deleteMany();
+    await userModel.deleteMany();
 });
 
 test("Fetching all users", async () => {
-    const posts = await postController.getAllPosts;
-    expect(posts).toBeDefined();
-    expect(posts.length).toBeGreaterThan(0);
+    const users = await UserHandler.getAllUsers();
+    expect(users).toBeDefined();
+    expect(users.length).toBeGreaterThan(0);
 });

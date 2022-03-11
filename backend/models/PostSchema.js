@@ -12,7 +12,7 @@ const postSchema = new mongoose.Schema({
 	},
 	createdAt: {
 		type: Date,
-		default: Date.now(),
+		default: function() { return Date.now() },
 	},
 	title: {
 	  type: String,
@@ -69,7 +69,7 @@ const postSchema = new mongoose.Schema({
 	},
 	lastModifiedAt: {
 		type: Date,
-		default: Date.now()
+		default: function() { return Date.now() }
 	},
 	stringify: String,
 	tags: [ 
