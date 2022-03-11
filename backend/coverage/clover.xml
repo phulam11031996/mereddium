@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1647035149416" clover="3.2.0">
-  <project timestamp="1647035149416" name="All files">
+<coverage generated="1647035371454" clover="3.2.0">
+  <project timestamp="1647035371454" name="All files">
     <metrics statements="161" coveredstatements="161" conditionals="12" coveredconditionals="12" methods="34" coveredmethods="34" elements="207" coveredelements="207" complexity="0" loc="161" ncloc="161" packages="1" files="9" classes="9"/>
     <file name="CommentHandler.js" path="C:\Users\nickz\Downloads\_CSC 308\CSC 308 Project\blog-website\backend\models\CommentHandler.js">
       <metrics statements="30" coveredstatements="30" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="6"/>
