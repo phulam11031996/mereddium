@@ -40,13 +40,9 @@ async function createPost(post) {
 			}
 		);
 
-	newPost.save(function (err) {
-		if(err) {
-			console.log(err);
-		}
-	});
+	const result = await newPost.save();
 
-	return post;
+	return result;
 }
 
 // GET /post/{id}
@@ -75,15 +71,8 @@ async function deletePostById(id) {
 	const db = await DatabaseHandler.getDbConnection();
 	const postModel = db.model('Post', PostSchema);
 
-	postModel.deleteOne({ _id: id}, function (err) {
-		if(err) {
-			console.log("Failed to delete");
-			return 0;
-		} else {
-			console.log(`Deleted user: ${id}`);
-			return 1;
-		}
-	})
+	await postModel.deleteOne({ _id: id});
+	return 0;
 }
 
 
