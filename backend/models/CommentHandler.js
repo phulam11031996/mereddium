@@ -35,20 +35,8 @@ async function createComment(comment) {
 		}
 	);
 	
-	newComment.save(function (err) {
-		postModel.findOneAndUpdate(
-			{ _id: comment.postId }, 
-			{ $push: { comments: newComment } },
-			function (error) {
-				if (error) {
-					console.log(error);
-					return undefined;
-				} else {
-					return newComment;
-				}
-			}
-		);
-	});
+	const result = await newComment.save();
+	return result;
 }
 
 // GET /comment/{id}
@@ -69,6 +57,7 @@ async function updateCommentById(id, new_comment) {
 		{'_id': id},
 		{$set: new_comment}
 	);
+
 	return comment;
 }
 
@@ -77,18 +66,8 @@ async function deleteCommentById(id) {
 	const db = await DatabaseHandler.getDbConnection();
 	const commentModel = db.model('Comment', CommentSchema);
 
-	commentModel.deleteOne(
-		{ _id: id},
-		function (err) {
-			if(err) {
-				console.log("Failed to delete");
-				return 0;
-			} else {
-				console.log(`Deleted comment with id: ${id}`);
-				return 1;
-			}
-		}
-	);
+	await commentModel.deleteOne({ _id: id});
+	return 0;
 }
 
 module.exports = {

@@ -29,15 +29,10 @@ async function createTag(tag){
 				_id: tagId, 
 				name: tag.name,
 			}
-		);
+	);
 	
-	newTag.save(function (err) {
-		if(err) {
-			console.log(err);
-		}
-	});
-
-	return newTag;
+	const result = await newTag.save();
+	return result;
 }
 
 // GET /tag/{id}
@@ -46,7 +41,7 @@ async function getTagById(id){
 	const tagModel = db.model('Tag', TagSchema);
 
 	const tag = await tagModel.findById({'_id': id});
-  return tag;
+  	return tag;
 }
 
 // UPDATE /tag/{id}
@@ -57,7 +52,8 @@ async function updateTagById(id, newInfo){
 	const updatedTag = await tagModel.updateOne({'_id': id}, {
 		$set: newInfo,
 	});
-  return updatedTag;
+  	
+	return updatedTag;
 }
 
 // DELETE /tag/{id}
@@ -65,15 +61,8 @@ async function deleteTagById(id) {
 	const db = await DatabaseHandler.getDbConnection();
 	const tagModel = db.model('Tag', TagSchema);
 
-	tagModel.deleteOne({ _id: id}, function (err) {
-		if(err) {
-			console.log("Failed to delete");
-			return 0;
-		} else {
-			console.log(`Deleted user: ${id}`);
-			return 1;
-		}
-	})
+	await tagModel.deleteOne({ _id: id});
+	return 0;
 }
 
 module.exports = {

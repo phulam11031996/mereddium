@@ -46,6 +46,6 @@ exports.updateUserById = catchAsync(async (req, res) => {
 
 // DELETE /user/{id}
 exports.deleteUserById = catchAsync(async (req, res) => {
-	const result = await UserHandler.deleteUserById(req.params.id);
-  res.status(200).send(req.params.id).end();
+	await UserHandler.deleteUserById(req.params.id);
+  	res.status(200).send(req.params.id).end();
 });
