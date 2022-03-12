@@ -122,7 +122,7 @@ export default function SignIn() {
             </Grid>
           </Box>
         </Box>
-		<Typography variant="body2" style = {{color: 'red'}} align="center">
+		 <Typography variant="body2" style = {{color: 'red'}} align="center">
       		{error}
     	</Typography>
         

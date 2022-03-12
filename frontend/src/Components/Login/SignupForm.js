@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,26 +12,54 @@ import { ReactComponent as Logo } from '../../Images/logo.svg';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-        TJ - 308G {new Date().getFullYear()}
-    </Typography>
-  );
-}
-
+import axios from 'axios';
 const theme = createTheme();
 
 export default function SignUp() {
+  const [error, setError] = useState("");
+  const [user, setUser] = useState(
+		{
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      password_confirm: ''
+		}
+	);
+
+  async function signUp(user) {
+		try {
+		  const response = await axios.post('http://localhost:3030/auth/signup', user);
+		  return response;
+		}
+		catch (error) {
+		  console.log(error);
+		  return false;
+		}
+	};
+
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    user.firstName = data.get('firstName');
+    user.lastName = data.get('lastName');
+    user.email = data.get('email');
+    user.password = data.get('password');
+    user.password_confirm = data.get('password_confirm');
+
+    console.log(user);
+
+	  signUp(user).then( jwt => {
+      if(jwt.status === 201) {
+        document.cookie = `jwt=${jwt.data.token}`;
+        document.cookie = `userId=${jwt.data.data.user._id}`;
+        window.location = '/';
+      } else {
+        setError("Incorrect username/password, please check for spelling!");
+      }
+	});
   };
 
   return (
@@ -97,6 +125,17 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
+              <TextField
+                  required
+                  fullWidth
+                  name="password_confirm"
+                  label="Password Cofirm"
+                  type="password"
+                  id="password_confirm"
+                  autoComplete="new-password"
+                />
+              </Grid>
+              <Grid item xs={12}>
                 <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
                   label="I want to receive inspiration, marketing promotions and updates via email."
@@ -120,7 +159,9 @@ export default function SignUp() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
+        <Typography variant="body2" style = {{color: 'red'}} align="center">
+      		{error}
+    	</Typography>
       </Container>
     </ThemeProvider>
   );

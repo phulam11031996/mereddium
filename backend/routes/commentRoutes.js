@@ -16,5 +16,4 @@ router
   .patch(commentController.updateCommentById)
   .delete(commentController.deleteCommentById);
 
-
 module.exports = router;
