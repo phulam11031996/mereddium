@@ -103,20 +103,13 @@ exports.logout = (req, res) => {
 exports.signup = catchAsync(async (req, res) => {
 	const email = req.body.email;
 	const user = await UserHandler.getUserByEmail(email);
-
 	if(user) {
 		res.status(404).json({
 			"Status": "This email is already exists!"
 		});
 	} else {
-        const user = UserHandler.createUser(req.body);
-	
-		if(!user) {
-            res.status(404).json({
-                "Status": "Failed to register user!"
-            });
-        } else {
-            createSendToken(user, 201, res);
-        }
+		console.log("I am creating user!");
+        const user = await UserHandler.createUser(req.body);
+        createSendToken(user, 201, res);
 	}
 });

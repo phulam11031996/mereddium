@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1647035149416" clover="3.2.0">
-  <project timestamp="1647035149416" name="All files">
+<coverage generated="1647038423553" clover="3.2.0">
+  <project timestamp="1647038423553" name="All files">
     <metrics statements="161" coveredstatements="161" conditionals="12" coveredconditionals="12" methods="34" coveredmethods="34" elements="207" coveredelements="207" complexity="0" loc="161" ncloc="161" packages="1" files="9" classes="9"/>
-    <file name="CommentHandler.js" path="C:\Users\nickz\Downloads\_CSC 308\CSC 308 Project\blog-website\backend\models\CommentHandler.js">
+    <file name="CommentHandler.js" path="/Users/admin/Desktop/FinalPresentation/blog-website/backend/models/CommentHandler.js">
       <metrics statements="30" coveredstatements="30" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="6"/>
       <line num="1" count="1" type="stmt"/>
       <line num="2" count="1" type="stmt"/>
@@ -35,7 +35,7 @@
       <line num="70" count="1" type="stmt"/>
       <line num="73" count="1" type="stmt"/>
     </file>
-    <file name="CommentSchema.js" path="C:\Users\nickz\Downloads\_CSC 308\CSC 308 Project\blog-website\backend\models\CommentSchema.js">
+    <file name="CommentSchema.js" path="/Users/admin/Desktop/FinalPresentation/blog-website/backend/models/CommentSchema.js">
       <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
       <line num="1" count="1" type="stmt"/>
       <line num="4" count="1" type="stmt"/>
@@ -43,7 +43,7 @@
       <line num="23" count="11" type="stmt"/>
       <line num="35" count="1" type="stmt"/>
     </file>
-    <file name="DatabaseHandler.js" path="C:\Users\nickz\Downloads\_CSC 308\CSC 308 Project\blog-website\backend\models\DatabaseHandler.js">
+    <file name="DatabaseHandler.js" path="/Users/admin/Desktop/FinalPresentation/blog-website/backend/models/DatabaseHandler.js">
       <metrics statements="11" coveredstatements="11" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
       <line num="1" count="5" type="stmt"/>
       <line num="2" count="5" type="stmt"/>
@@ -57,7 +57,7 @@
       <line num="22" count="40" type="stmt"/>
       <line num="25" count="5" type="stmt"/>
     </file>
-    <file name="PostHandler.js" path="C:\Users\nickz\Downloads\_CSC 308\CSC 308 Project\blog-website\backend\models\PostHandler.js">
+    <file name="PostHandler.js" path="/Users/admin/Desktop/FinalPresentation/blog-website/backend/models/PostHandler.js">
       <metrics statements="41" coveredstatements="41" conditionals="10" coveredconditionals="10" methods="7" coveredmethods="7"/>
       <line num="1" count="1" type="stmt"/>
       <line num="2" count="1" type="stmt"/>
@@ -101,7 +101,7 @@
       <line num="121" count="2" type="stmt"/>
       <line num="126" count="1" type="stmt"/>
     </file>
-    <file name="PostSchema.js" path="C:\Users\nickz\Downloads\_CSC 308\CSC 308 Project\blog-website\backend\models\PostSchema.js">
+    <file name="PostSchema.js" path="/Users/admin/Desktop/FinalPresentation/blog-website/backend/models/PostSchema.js">
       <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
       <line num="1" count="2" type="stmt"/>
       <line num="4" count="2" type="stmt"/>
@@ -109,7 +109,7 @@
       <line num="72" count="35" type="stmt"/>
       <line num="104" count="2" type="stmt"/>
     </file>
-    <file name="TagHandler.js" path="C:\Users\nickz\Downloads\_CSC 308\CSC 308 Project\blog-website\backend\models\TagHandler.js">
+    <file name="TagHandler.js" path="/Users/admin/Desktop/FinalPresentation/blog-website/backend/models/TagHandler.js">
       <metrics statements="28" coveredstatements="28" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="6"/>
       <line num="1" count="1" type="stmt"/>
       <line num="2" count="1" type="stmt"/>
@@ -140,13 +140,13 @@
       <line num="65" count="1" type="stmt"/>
       <line num="68" count="1" type="stmt"/>
     </file>
-    <file name="TagSchema.js" path="C:\Users\nickz\Downloads\_CSC 308\CSC 308 Project\blog-website\backend\models\TagSchema.js">
+    <file name="TagSchema.js" path="/Users/admin/Desktop/FinalPresentation/blog-website/backend/models/TagSchema.js">
       <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <line num="1" count="1" type="stmt"/>
       <line num="4" count="1" type="stmt"/>
       <line num="16" count="1" type="stmt"/>
     </file>
-    <file name="UserHandler.js" path="C:\Users\nickz\Downloads\_CSC 308\CSC 308 Project\blog-website\backend\models\UserHandler.js">
+    <file name="UserHandler.js" path="/Users/admin/Desktop/FinalPresentation/blog-website/backend/models/UserHandler.js">
       <metrics statements="32" coveredstatements="32" conditionals="0" coveredconditionals="0" methods="7" coveredmethods="7"/>
       <line num="1" count="2" type="stmt"/>
       <line num="2" count="2" type="stmt"/>
@@ -181,7 +181,7 @@
       <line num="83" count="1" type="stmt"/>
       <line num="86" count="2" type="stmt"/>
     </file>
-    <file name="UserSchema.js" path="C:\Users\nickz\Downloads\_CSC 308\CSC 308 Project\blog-website\backend\models\UserSchema.js">
+    <file name="UserSchema.js" path="/Users/admin/Desktop/FinalPresentation/blog-website/backend/models/UserSchema.js">
       <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
       <line num="1" count="2" type="stmt"/>
       <line num="2" count="2" type="stmt"/>

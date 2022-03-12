@@ -66,6 +66,20 @@ async function updatePostById(id, newInfo) {
 	return post;
 }
 
+// UPDATE /post/comment/{id}
+async function addCommentByPostId(id, newComment) {
+	const db = await DatabaseHandler.getDbConnection();
+	const postModel = db.model('Post', PostSchema);
+
+	const post = await postModel.findOneAndUpdate(
+		{ _id: id }, 
+		{ $push: { comments: newComment  } }
+	);
+  
+	return post;
+}
+
+
 // DELETE /post/{id}
 async function deletePostById(id) {
 	const db = await DatabaseHandler.getDbConnection();
@@ -130,4 +144,5 @@ module.exports = {
 	updatePostById,
 	deletePostById,
 	votePost,
+	addCommentByPostId
 }

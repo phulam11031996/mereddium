@@ -99,6 +99,7 @@ export default function MiniDrawer(props) {
   var user;
   if(document.cookie) {
     user = parseCookie(document.cookie).userId;
+    console.log(user);
   }
 
   if(user === "null") {
@@ -162,7 +163,7 @@ export default function MiniDrawer(props) {
           }
 
           {state.login &&
-          <CreateButton userId = {state.userId} handleSubmit={props.updateList} />
+          <CreateButton userId={user} handleSubmit={props.updateList} />
           }
 
           {state.login &&

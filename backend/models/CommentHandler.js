@@ -1,4 +1,5 @@
 const DatabaseHandler = require("./DatabaseHandler");
+const PostHandler = require("./PostHandler");
 const CommentSchema = require("./CommentSchema");
 const PostSchema = require("./PostSchema");
 const { v4: uuidv4 } = require('uuid');
@@ -35,7 +36,11 @@ async function createComment(comment) {
 		}
 	);
 	
-	const result = await newComment.save();
+	const result = await newComment.save(function (err) {
+	});
+
+	await PostHandler.addCommentByPostId(comment.postId, newComment);
+
 	return result;
 }
 

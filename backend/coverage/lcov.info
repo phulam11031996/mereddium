@@ -1,5 +1,5 @@
 TN:
-SF:models\CommentHandler.js
+SF:models/CommentHandler.js
 FN:6,(anonymous_0)
 FN:11,getAllComments
 FN:20,createComment
@@ -50,7 +50,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:models\CommentSchema.js
+SF:models/CommentSchema.js
 FN:19,(anonymous_0)
 FN:23,(anonymous_1)
 FNF:2
@@ -68,7 +68,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:models\DatabaseHandler.js
+SF:models/DatabaseHandler.js
 FN:8,setConnection
 FN:13,getDbConnection
 FNF:2
@@ -94,7 +94,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:models\PostHandler.js
+SF:models/PostHandler.js
 FN:6,(anonymous_0)
 FN:11,getAllPosts
 FN:19,createPost
@@ -168,7 +168,7 @@ BRF:10
 BRH:10
 end_of_record
 TN:
-SF:models\PostSchema.js
+SF:models/PostSchema.js
 FN:15,(anonymous_0)
 FN:72,(anonymous_1)
 FNF:2
@@ -186,7 +186,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:models\TagHandler.js
+SF:models/TagHandler.js
 FN:6,(anonymous_0)
 FN:11,getAllTags
 FN:20,createTag
@@ -235,7 +235,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:models\TagSchema.js
+SF:models/TagSchema.js
 FNF:0
 FNH:0
 DA:1,1
@@ -247,7 +247,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:models\UserHandler.js
+SF:models/UserHandler.js
 FN:5,(anonymous_0)
 FN:10,getAllUsers
 FN:18,createUser
@@ -302,7 +302,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:models\UserSchema.js
+SF:models/UserSchema.js
 FN:44,(anonymous_0)
 FN:72,(anonymous_1)
 FNF:2
