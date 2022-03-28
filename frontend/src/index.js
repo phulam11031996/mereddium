@@ -68,6 +68,7 @@ function MyApp() {
               <Route exact path="/popular" element={postList("popular", state.posts)} />
               <Route exact path="/recent" element={postList("recent", state.posts)} />
               <Route exact path="/trending" element={postList("trending", state.posts)} />
+              <Route exact path="/search" element={postList("", state.posts)} />
               <Route path="/search/:query" element={<PostSearch posts={state.posts} />} />
               <Route exact path="/login" element={<Signin />} />
               <Route exact path="/signup" element={<Signup />} />
