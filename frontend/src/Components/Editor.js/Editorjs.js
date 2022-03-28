@@ -157,5 +157,4 @@ const  ReactEditor = () => {
     );
 };
 
-
 export default ReactEditor;
