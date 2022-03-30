@@ -6,12 +6,8 @@ import MuiDrawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 
 import WhatshotIcon from "@mui/icons-material/Whatshot";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
@@ -25,7 +21,6 @@ import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
 import LogoutButton from '../Login/logoutButton';
 
 import { ReactComponent as Logo } from '../../Images/logo.svg';
-import Typography from '@mui/material/Typography';
 
 import { parseCookie } from '../../Helper/cookieParser';
 
@@ -52,15 +47,6 @@ const closedMixin = (theme) => ({
   }
 });
 
-const StyledBadge = styled(Badge)(({ theme }) => ({
-  "& .MuiBadge-badge": {
-    right: 0,
-    top: 0,
-    background: "black",
-    padding: "0 1px",
-    fontSize: "10px"
-  }
-}));
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -109,13 +95,6 @@ export default function MiniDrawer(props) {
     state.login = true;
   }
 
-  const handleDrawer = () => {
-		if(open === true) {
-			setOpen(false);
-		} else {
-			setOpen(true);
-		}
-  };
 
 
   return (
@@ -132,19 +111,19 @@ export default function MiniDrawer(props) {
        
         </DrawerHeader>
         <List >
-          <ListItem button key="Popular" onClick={() => { window.location.href = "/popular"; }}>
+          <ListItem button key="Popular" onClick={props.sortByVote}>
             <ListItemIcon style={{ marginLeft: "20px"}}>
               <WhatshotIcon color="primary" />
             </ListItemIcon>
           </ListItem>
 
-          <ListItem button key="Recent" onClick={() => { window.location.href = "/recent"; }}>
+          <ListItem button key="Recent" onClick={props.sortByTime}>
             <ListItemIcon style={{ marginLeft: "20px"}}>
               <AccessTimeOutlinedIcon color="secondary" />
             </ListItemIcon>
           </ListItem>
 
-          <ListItem button key="Trending" onClick={() => { window.location.href = "/trending"; }}>
+          <ListItem button key="Trending" onClick={props.sortByTrend}>
             <ListItemIcon style={{ marginLeft: "20px"}}>
               <TrendingUpOutlinedIcon color="secondary" />
             </ListItemIcon>
