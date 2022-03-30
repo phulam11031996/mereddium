@@ -18,7 +18,6 @@ function getDbConnection() {
 			useNewUrlParser: true
 		});
 	}
-	console.log("Successfully Connected to CSC309 DataBase");
 	return dbConnection;
 }
 
