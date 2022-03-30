@@ -9,9 +9,7 @@ const tagSchema = new mongoose.Schema({
 	name: {
 	  type: String,
 	  required: [true, 'Please, specify Tag Name'],
-	}
-		
-  });
+	}	
+});
 
 module.exports = tagSchema;
-
