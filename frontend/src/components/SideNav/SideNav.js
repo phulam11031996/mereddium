@@ -8,20 +8,19 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import { Logo } from '../../../images/Logo';
+
+import { Logo } from '../../images/Logo';
+import { CreatePost, CreatePostEditor } from '../index';
 
 import WhatshotIcon from '@mui/icons-material/Whatshot';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
 import TrendingUpOutlinedIcon from '@mui/icons-material/TrendingUpOutlined';
 
-import CreateButton from '../Post/createPostButton';
-import CreateButton2 from '../Post/createPostButton2';
-
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
-import { LogOut } from '../Login';
+import { LogOut } from '../../app/pages';
 
-import { parseCookie } from '../../../utils';
+import { parseCookie } from '../../utils';
 
 const drawerWidth = 200;
 
@@ -72,7 +71,7 @@ const Drawer = styled(MuiDrawer, {
     })
 }));
 
-export default function MiniDrawer(props) {
+export const SideNav = (props) => {
     const [open, setOpen] = React.useState(false);
     const [state] = React.useState({
         userId: '',
@@ -138,14 +137,14 @@ export default function MiniDrawer(props) {
                     )}
 
                     {state.login && (
-                        <CreateButton
+                        <CreatePost
                             userId={user}
                             handleSubmit={props.updateList}
                         />
                     )}
 
                     {state.login && (
-                        <CreateButton2
+                        <CreatePostEditor
                             userId={state.userId}
                             handleSubmit={props.updateList}
                         />
@@ -176,4 +175,4 @@ export default function MiniDrawer(props) {
             </Drawer>
         </Box>
     );
-}
+};

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import DisplayComment from '../../app/pages/Comments/commentPage';
+import { Comment } from '../index';
 
 export const Comments = (props) => {
     const [comment, setComments] = useState({
@@ -9,7 +9,7 @@ export const Comments = (props) => {
     });
 
     const listPosts = comment.comments.map((comment, index) => {
-        return DisplayComment(index, comment);
+        return Comment(index, comment);
     });
 
     return (

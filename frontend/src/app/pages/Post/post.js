@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PostPage from './PostPage';
-import SideBar from '../Sidebar/sidebar';
+import { SideNav } from '../../../components';
 import { AppHeader } from '../../../components';
 import Box from '@mui/material/Box';
 import axios from 'axios';
@@ -98,7 +98,7 @@ export default function PostList() {
                 <AppHeader searchByKey={handleSearch} />
             </div>
             <div className="SideBar">
-                <SideBar
+                <SideNav
                     sortByTime={handleSortByTime}
                     sortByVote={handleSortByVote}
                     sortByTrend={handleSortByTrending}

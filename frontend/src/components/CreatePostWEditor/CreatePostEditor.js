@@ -10,14 +10,14 @@ import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
-import EditorJs from '../../../components/Editor.js/Editorjs';
+import EditorJs from '../Editor.js/Editorjs';
 import { Box } from '@material-ui/core';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog(props) {
+export const CreatePostEditor = (props) => {
     const [open, setOpen] = React.useState(false);
 
     const [post, setPost] = React.useState({
@@ -87,4 +87,4 @@ export default function FullScreenDialog(props) {
             </Dialog>
         </div>
     );
-}
+};
