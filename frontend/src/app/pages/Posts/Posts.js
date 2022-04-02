@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import PostPage from './PostPage';
-import { SideNav } from '../../../components';
-import { AppHeader } from '../../../components';
+import { Post, SideNav, AppHeader } from '../../../components/';
 import Box from '@mui/material/Box';
 import axios from 'axios';
 
-export default function PostList() {
+export const Posts = (props) => {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
@@ -117,7 +115,7 @@ export default function PostList() {
                     {posts &&
                         posts.map((currentPost, index) => {
                             return (
-                                <PostPage
+                                <Post
                                     key={currentPost._id}
                                     property={currentPost}
                                 />
@@ -127,4 +125,4 @@ export default function PostList() {
             </Box>
         </Box>
     );
-}
+};

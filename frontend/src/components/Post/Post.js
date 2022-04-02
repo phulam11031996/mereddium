@@ -18,8 +18,8 @@ import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
-import { CommentReply, Comments } from '../../../components';
-import { parseCookie, deletePostById } from '../../../utils';
+import { CommentReply, Comments } from '..';
+import { parseCookie, deletePostById } from '../../utils';
 import axios from 'axios';
 
 const ExpandMore = styled((props) => {
@@ -33,7 +33,7 @@ const ExpandMore = styled((props) => {
     })
 }));
 
-export default function Posts(props) {
+export const Post = (props) => {
     const [expanded, setExpanded] = useState(false);
 
     const [user, setUser] = useState({
@@ -226,4 +226,4 @@ export default function Posts(props) {
             </Collapse>
         </Card>
     );
-}
+};
