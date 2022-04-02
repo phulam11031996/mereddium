@@ -1,0 +1,179 @@
+import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Badge from '@mui/material/Badge';
+import MuiDrawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import CssBaseline from '@mui/material/CssBaseline';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import { Logo } from '../../../images/Logo';
+
+import WhatshotIcon from '@mui/icons-material/Whatshot';
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
+import TrendingUpOutlinedIcon from '@mui/icons-material/TrendingUpOutlined';
+
+import CreateButton from '../Post/createPostButton';
+import CreateButton2 from '../Post/createPostButton2';
+
+import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
+import { LogOut } from '../Login';
+
+import { parseCookie } from '../../../utils';
+
+const drawerWidth = 200;
+
+const openedMixin = (theme) => ({
+    width: drawerWidth,
+    transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen
+    }),
+    overflowX: 'hidden'
+});
+
+const closedMixin = (theme) => ({
+    transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen
+    }),
+    overflowX: 'hidden',
+    width: `calc(${theme.spacing(12)} + 1px)`,
+    [theme.breakpoints.up('sm')]: {
+        width: `calc(${theme.spacing(12)} + 1px)`
+    }
+});
+
+const DrawerHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar
+}));
+
+const Drawer = styled(MuiDrawer, {
+    shouldForwardProp: (prop) => prop !== 'open'
+})(({ theme, open }) => ({
+    width: drawerWidth,
+    flexShrink: 0,
+    whiteSpace: 'nowrap',
+    boxSizing: 'border-box',
+    ...(open && {
+        ...openedMixin(theme),
+        '& .MuiDrawer-paper': openedMixin(theme)
+    }),
+    ...(!open && {
+        ...closedMixin(theme),
+        '& .MuiDrawer-paper': closedMixin(theme)
+    })
+}));
+
+export default function MiniDrawer(props) {
+    const [open, setOpen] = React.useState(false);
+    const [state] = React.useState({
+        userId: '',
+        login: false
+    });
+
+    var user;
+    if (document.cookie) {
+        user = parseCookie(document.cookie).userId;
+        console.log(user);
+    }
+
+    if (user === 'null') {
+        state.login = false;
+    } else {
+        state.userId = user;
+        state.login = true;
+    }
+
+    return (
+        <Box sx={{ display: 'flex' }}>
+            <CssBaseline />
+
+            <Drawer variant="permanent" open={open}>
+                <DrawerHeader style={{ marginRight: 18 }}>
+                    <Logo />
+                </DrawerHeader>
+                <List>
+                    <ListItem button key="Popular" onClick={props.sortByVote}>
+                        <ListItemIcon style={{ marginLeft: '20px' }}>
+                            <WhatshotIcon color="primary" />
+                        </ListItemIcon>
+                    </ListItem>
+
+                    <ListItem button key="Recent" onClick={props.sortByTime}>
+                        <ListItemIcon style={{ marginLeft: '20px' }}>
+                            <AccessTimeOutlinedIcon color="secondary" />
+                        </ListItemIcon>
+                    </ListItem>
+
+                    <ListItem button key="Trending" onClick={props.sortByTrend}>
+                        <ListItemIcon style={{ marginLeft: '20px' }}>
+                            <TrendingUpOutlinedIcon color="secondary" />
+                        </ListItemIcon>
+                    </ListItem>
+
+                    {state.login && (
+                        <Divider
+                            style={{ marginTop: '10px', marginBottom: '10px' }}
+                        />
+                    )}
+
+                    {state.login && (
+                        <ListItem button key="Saved">
+                            <ListItemIcon style={{ marginLeft: '20px' }}>
+                                <Badge color="primary" variant="dot">
+                                    <BookmarkBorderOutlinedIcon
+                                        style={{ color: 'orange' }}
+                                    />
+                                </Badge>
+                            </ListItemIcon>
+                        </ListItem>
+                    )}
+
+                    {state.login && (
+                        <CreateButton
+                            userId={user}
+                            handleSubmit={props.updateList}
+                        />
+                    )}
+
+                    {state.login && (
+                        <CreateButton2
+                            userId={state.userId}
+                            handleSubmit={props.updateList}
+                        />
+                    )}
+
+                    <Divider
+                        style={{ marginTop: '10px', marginBottom: '10px' }}
+                    />
+
+                    {!state.login && (
+                        <ListItem
+                            button
+                            key="login"
+                            onClick={() => {
+                                window.location.href = '/login';
+                            }}
+                        >
+                            <ListItemIcon style={{ marginLeft: '20px' }}>
+                                <LoginOutlinedIcon
+                                    color="secondary"
+                                    style={{ color: 'blue' }}
+                                />
+                            </ListItemIcon>
+                        </ListItem>
+                    )}
+                    {state.login && <LogOut />}
+                </List>
+            </Drawer>
+        </Box>
+    );
+}

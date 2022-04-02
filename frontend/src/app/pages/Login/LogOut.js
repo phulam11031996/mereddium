@@ -1,0 +1,28 @@
+import * as React from 'react';
+import axios from 'axios';
+
+import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+
+export const LogOut = () => {
+    const handLogOut = async (event) => {
+        await axios.get('http://localhost:3030/auth/logout');
+        document.cookie = 'jwt=null';
+        document.cookie = 'userId=null';
+        window.location = '/';
+    };
+
+    return (
+        <div>
+            <ListItem onClick={handLogOut} button key="login">
+                <ListItemIcon style={{ marginLeft: '20px' }}>
+                    <LoginOutlinedIcon
+                        color="secondary"
+                        style={{ color: 'red' }}
+                    />
+                </ListItemIcon>
+            </ListItem>
+        </div>
+    );
+};
