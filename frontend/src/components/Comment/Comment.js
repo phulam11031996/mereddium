@@ -1,77 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, Grid, Paper } from '@material-ui/core';
+import { monthToString } from '../../utils';
 import axios from 'axios';
 
 export const Comment = (index, comment) => {
-    const [user, setUser] = useState({
-        userName: '',
-        userId: ''
-    });
+    const [firstName, setFirstName] = useState('');
 
     useEffect(() => {
         axios
             .get('http://localhost:3030/user/' + comment.userId)
             .then((user) => {
-                setUser({ ...user, userName: user.data.data.user.firstName });
+                setFirstName(user.data.data.user.firstName);
             })
             .catch((error) => {
                 console.log(error);
             });
-    }, [comment.userId]);
+    }, []);
 
     const imgLink =
         'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260';
-    var timeStamp = comment.timeStamp;
-    var year = timeStamp.slice(0, 4);
-    var month = timeStamp.slice(5, 7);
-    var day = timeStamp.slice(8, 10);
-    var hour = timeStamp.slice(11, 13);
-    var minute = timeStamp.slice(14, 16);
 
-    switch (month) {
-        case '01':
-            month = 'Jan';
-            break;
-        case '02':
-            month = 'Feb';
-            break;
-        case '03':
-            month = 'Mar';
-            break;
-        case '04':
-            month = 'Apr';
-            break;
-        case '05':
-            month = 'May';
-            break;
-        case '06':
-            month = 'Jun';
-            break;
-        case '07':
-            month = 'Jul';
-            break;
-        case '08':
-            month = 'Aug';
-            break;
-        case '09':
-            month = 'Sep';
-            break;
-        case '10':
-            month = 'Oct';
-            break;
-        case '11':
-            month = 'Nov';
-            break;
-        case '12':
-            month = 'Dec';
-            break;
-        default:
-            month = '';
-            break;
-    }
+    let timeStamp = comment.timeStamp;
+
+    let year = timeStamp.slice(0, 4);
+    let month = timeStamp.slice(5, 7);
+    let day = timeStamp.slice(8, 10);
+    let hour = timeStamp.slice(11, 13);
+    let minute = timeStamp.slice(14, 16);
+
+    month = monthToString(month);
 
     return (
-        <Paper key={index} style={{ padding: '40px 20px' }}>
+        <Paper key={index} style={{ padding: '40px 20px', marginTop: '10px' }}>
             <Grid container wrap="nowrap" spacing={2}>
                 <Grid item>
                     <Avatar alt="Remy Sharp" src={imgLink} />
@@ -79,7 +39,7 @@ export const Comment = (index, comment) => {
                 <Grid item xs zeroMinWidth>
                     <div>
                         <h4 style={{ margin: 0, textAlign: 'left' }}>
-                            {user.userName}
+                            {firstName}
                         </h4>
                     </div>
                     <p

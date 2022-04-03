@@ -8,40 +8,29 @@ const INITIAL_HEIGHT = 46;
 export const CommentReply = (props) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [commentValue, setCommentValue] = useState('');
+    const [userId, setUserId] = useState('null');
+    const [firstName, setFirstName] = useState('');
 
     const postId = props.postId;
-
-    const [user, setUser] = useState({
-        userName: '',
-        userId: ''
-    });
-
-    var userTemp;
-
-    if (document.cookie) {
-        userTemp = parseCookie(document.cookie).userId;
-    }
-
-    if (userTemp === 'null') {
-        user.userId = null;
-    } else {
-        user.userId = userTemp;
-    }
-
-    useEffect(() => {
-        axios
-            .get('http://localhost:3030/user/' + user.userId)
-            .then((user) => {
-                setUser({ ...user, userName: user.data.data.user.firstName });
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }, [user.userId]);
-
     const outerHeight = useRef(INITIAL_HEIGHT);
     const textRef = useRef(null);
     const containerRef = useRef(null);
+
+    useEffect(() => {
+        if (document.cookie) {
+            let getUser = parseCookie(document.cookie).userId;
+            if (getUser !== 'null') {
+                setUserId(getUser);
+                axios
+                    .get('http://localhost:3030/user/' + getUser)
+                    .then((user) => {
+                        setFirstName(user.data.data.user.firstName);
+                    });
+            }
+        } else {
+            setUserId(null);
+        }
+    }, []);
 
     useDynamicHeightField(textRef, commentValue);
 
@@ -65,15 +54,13 @@ export const CommentReply = (props) => {
         e.preventDefault();
 
         const newComment = {
-            userId: user.userId,
+            userId: userId,
             postId: postId,
             message: commentValue,
             upVote: 1
         };
-        console.log(newComment);
 
         createComment(newComment);
-
         setCommentValue('');
         setIsExpanded(false);
     };
@@ -98,7 +85,7 @@ export const CommentReply = (props) => {
                             src="https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/df/df7789f313571604c0e4fb82154f7ee93d9989c6.jpg"
                             alt="User avatar"
                         />
-                        <span>{user.userName}</span>
+                        <span>{firstName}</span>
                     </div>
                 </div>
                 <label htmlFor="comment" className="replyLabel">
