@@ -39,18 +39,21 @@ export const Post = (props) => {
     const [firstName, setFirstName] = useState('');
     const [login, setLogin] = useState(false);
     const [userMatch, setUserMatch] = useState(false);
-
-    const [state, setState] = useState({
-        postUserId: props.property.userId,
-        postId: props.property._id,
-        title: props.property.title,
-        message: props.property.message,
-        turnOnComments: props.property.turnOnComments,
-        subTitle: props.property.message.slice(0, 350),
-        comments: props.property.comments,
-        upVoteUsers: props.property.upVoteUsers,
-        downVoteUsers: props.property.downVoteUsers
-    });
+    const [postUserId, setPostUsedId] = useState(props.property.userId);
+    const [postId, setPostId] = useState(props.property._id);
+    const [title, setTitle] = useState(props.property.title);
+    const [message, setMessage] = useState(props.property.message);
+    const [turnOnComments, setTurnOffComments] = useState(
+        props.property.turnOnComments
+    );
+    const [subTitle, setSubtitle] = useState(
+        props.property.message.slice(0, 350)
+    );
+    const [comments, setComments] = useState(props.property.comments);
+    const [upVoteUsers, setUpvoteUsers] = useState(props.property.upVoteUsers);
+    const [downVoteUsers, setDownVoteUsers] = useState(
+        props.property.downVoteUsers
+    );
 
     useEffect(() => {
         axios
@@ -68,7 +71,7 @@ export const Post = (props) => {
             if (getUser !== 'null') {
                 setUserId(getUser);
                 setLogin(true);
-                if (getUser === state.postUserId) {
+                if (getUser === postUserId) {
                     setUserMatch(true);
                 }
                 axios
@@ -92,13 +95,12 @@ export const Post = (props) => {
             makeVoteCall(userId, postId, value).then((response) => {
                 if (response.status === 200) {
                     console.log('Sucessfully Voted!');
-                    setState({
-                        ...state,
-                        upVoteUsers:
-                            response.data.data.upVoteUsers[0].upVoteUsers,
-                        downVoteUsers:
-                            response.data.data.downVoteUsers[0].downVoteUsers
-                    });
+                    setUpvoteUsers(
+                        response.data.data.upVoteUsers[0].upVoteUsers
+                    );
+                    setDownVoteUsers(
+                        response.data.data.downVoteUsers[0].downVoteUsers
+                    );
                 }
             });
         } else {
@@ -155,14 +157,14 @@ export const Post = (props) => {
                     color="text.secondary"
                     style={{ color: 'black', fontSize: 24 }}
                 >
-                    {state.title}
+                    {title}
                 </Typography>
-                <Typography paragraph>{state.subTitle + ' ...'}</Typography>
+                <Typography paragraph>{subTitle + ' ...'}</Typography>
             </CardContent>
 
             <CardActions disableSpacing style={{ marginLeft: 20 }}>
-                <IconButton onClick={() => votePost(userId, state.postId, 1)}>
-                    {state.upVoteUsers.find((ele) => ele.userId === userId) !==
+                <IconButton onClick={() => votePost(userId, postId, 1)}>
+                    {upVoteUsers.find((ele) => ele.userId === userId) !==
                     undefined ? (
                         <ThumbUpAltIcon
                             style={{ color: '#0077b6' }}
@@ -177,13 +179,12 @@ export const Post = (props) => {
                 </IconButton>
 
                 <Typography style={{ padding: 10, fontSize: 14 }}>
-                    {state.upVoteUsers.length - state.downVoteUsers.length}
+                    {upVoteUsers.length - downVoteUsers.length}
                 </Typography>
 
-                <IconButton onClick={() => votePost(userId, state.postId, -1)}>
-                    {state.downVoteUsers.find(
-                        (ele) => ele.userId === userId
-                    ) !== undefined ? (
+                <IconButton onClick={() => votePost(userId, postId, -1)}>
+                    {downVoteUsers.find((ele) => ele.userId === userId) !==
+                    undefined ? (
                         <ThumbDownAltIcon
                             style={{ color: '#ee6c4d' }}
                             fontSize="small"
@@ -208,10 +209,10 @@ export const Post = (props) => {
 
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
-                    <Typography paragraph>{state.message}</Typography>
+                    <Typography paragraph>{message}</Typography>
                 </CardContent>
 
-                {state.turnOnComments && <Comments comments={state.comments} />}
+                {turnOnComments && <Comments comments={comments} />}
 
                 {login && <CommentReply postId={props.property._id} />}
             </Collapse>
