@@ -100,19 +100,37 @@ export const SideNav = (props) => {
                     <Logo />
                 </DrawerHeader>
                 <List>
-                    <ListItem button key="Popular" onClick={props.sortByVote}>
+                    <ListItem
+                        button
+                        key="Popular"
+                        onClick={(e) => {
+                            props.sortBy('Popular');
+                        }}
+                    >
                         <ListItemIcon style={{ marginLeft: '20px' }}>
                             <WhatshotIcon color="primary" />
                         </ListItemIcon>
                     </ListItem>
 
-                    <ListItem button key="Recent" onClick={props.sortByTime}>
+                    <ListItem
+                        button
+                        key="Recent"
+                        onClick={(e) => {
+                            props.sortBy('Recent');
+                        }}
+                    >
                         <ListItemIcon style={{ marginLeft: '20px' }}>
                             <AccessTimeOutlinedIcon color="secondary" />
                         </ListItemIcon>
                     </ListItem>
 
-                    <ListItem button key="Trending" onClick={props.sortByTrend}>
+                    <ListItem
+                        button
+                        key="Trending"
+                        onClick={(e) => {
+                            props.sortBy('Trending');
+                        }}
+                    >
                         <ListItemIcon style={{ marginLeft: '20px' }}>
                             <TrendingUpOutlinedIcon color="secondary" />
                         </ListItemIcon>

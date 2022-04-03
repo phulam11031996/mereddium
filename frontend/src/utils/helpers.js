@@ -61,3 +61,85 @@ export const makePostDeleteCall = async (id) => {
         return false;
     }
 };
+
+export const createPost = async (post) => {
+    try {
+        const response = await axios.post('http://localhost:3030/post', post);
+        return response;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+};
+
+export const handleSortByTime = async () => {
+    try {
+        const response = await axios.get(`http://localhost:3030/post/`);
+        let result = response.data.data;
+        let filtered = result.sort((p1, p2) => {
+            if (p1.createdAt < p2.createdAt) {
+                return 1;
+            } else {
+                return -1;
+            }
+        });
+
+        return filtered;
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+export const handleSortByVote = async () => {
+    try {
+        const response = await axios.get(`http://localhost:3030/post/`);
+        let result = response.data.data;
+        let filtered = result.sort((p1, p2) => {
+            let p1Vote = p1.upVoteUsers.length - p1.downVoteUsers.length;
+            let p2Vote = p2.upVoteUsers.length - p2.downVoteUsers.length;
+            if (p1Vote < p2Vote) {
+                return 1;
+            } else if (p1Vote === p2Vote) {
+                return 0;
+            } else {
+                return -1;
+            }
+        });
+
+        return filtered;
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+export const handleSortByTrending = async () => {
+    try {
+        const response = await axios.get(`http://localhost:3030/post/`);
+        let result = response.data.data;
+        let filtered = result.sort((p1, p2) => {
+            if (p1.createdAt < p2.createdAt) {
+                return 1;
+            } else {
+                return -1;
+            }
+        });
+
+        return filtered;
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+export const handleSearch = async (searchKey) => {
+    try {
+        const response = await axios.get(`http://localhost:3030/post/`);
+        let result = response.data.data;
+        let filtered = result.filter((post) => {
+            return post.title.toLowerCase().match(searchKey.toLowerCase());
+        });
+
+        return filtered;
+    } catch (e) {
+        console.log(e);
+    }
+};

@@ -3,11 +3,17 @@ import { Post, SideNav, AppHeader } from '../../../components/';
 import Box from '@mui/material/Box';
 import axios from 'axios';
 
+import {
+    handleSearch,
+    handleSortByTime,
+    handleSortByVote,
+    handleSortByTrending
+} from '../../../utils';
+
 export const Posts = (props) => {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
-        console.log('hello');
         axios
             .get(`http://localhost:3030/post/`)
             .then((response) => {
@@ -19,88 +25,30 @@ export const Posts = (props) => {
             });
     }, []);
 
-    async function handleSortByTime() {
-        try {
-            const response = await axios.get(`http://localhost:3030/post/`);
-            let result = response.data.data;
-            let filtered = result.sort((p1, p2) => {
-                if (p1.createdAt < p2.createdAt) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            });
-
-            setPosts(filtered);
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
-    async function handleSortByVote() {
-        try {
-            const response = await axios.get(`http://localhost:3030/post/`);
-            let result = response.data.data;
-            let filtered = result.sort((p1, p2) => {
-                let p1Vote = p1.upVoteUsers.length - p1.downVoteUsers.length;
-                let p2Vote = p2.upVoteUsers.length - p2.downVoteUsers.length;
-                if (p1Vote < p2Vote) {
-                    return 1;
-                } else if (p1Vote === p2Vote) {
-                    return 0;
-                } else {
-                    return -1;
-                }
-            });
-
-            setPosts(filtered);
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
-    async function handleSortByTrending() {
-        try {
-            const response = await axios.get(`http://localhost:3030/post/`);
-            let result = response.data.data;
-            let filtered = result.sort((p1, p2) => {
-                if (p1.createdAt < p2.createdAt) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            });
-
-            setPosts(filtered);
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
-    async function handleSearch(searchKey) {
-        try {
-            const response = await axios.get(`http://localhost:3030/post/`);
-            let result = response.data.data;
-            let filtered = result.filter((post) => {
-                return post.title.toLowerCase().match(searchKey.toLowerCase());
-            });
-            setPosts(filtered);
-        } catch (e) {
-            console.log(e);
+    async function filterFunc(key) {
+        let result = [];
+        if (key === 'Popular') {
+            result = await handleSortByVote();
+            setPosts(result);
+        } else if (key === 'Recent') {
+            result = await handleSortByTime();
+            setPosts(result);
+        } else if (key === 'Trending') {
+            result = await handleSortByTrending();
+            setPosts(result);
+        } else {
+            result = await handleSearch(key);
+            setPosts(result);
         }
     }
 
     return (
         <Box>
             <div className="NavBar">
-                <AppHeader searchByKey={handleSearch} />
+                <AppHeader searchByKey={filterFunc} />
             </div>
             <div className="SideBar">
-                <SideNav
-                    sortByTime={handleSortByTime}
-                    sortByVote={handleSortByVote}
-                    sortByTrend={handleSortByTrending}
-                />
+                <SideNav sortBy={filterFunc} />
             </div>
             <Box
                 sx={{ flexGrow: 1 }}

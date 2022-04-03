@@ -1,5 +1,4 @@
 import * as React from 'react';
-import axios from 'axios';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import ListItem from '@mui/material/ListItem';
@@ -13,6 +12,8 @@ import Slide from '@mui/material/Slide';
 import TextField from '@mui/material/TextField';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
+
+import { createPost } from '../../utils';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -57,21 +58,8 @@ export const CreatePost = (props) => {
         }
     };
 
-    async function makePostCall(post) {
-        try {
-            const response = await axios.post(
-                'http://localhost:3030/post',
-                post
-            );
-            return response;
-        } catch (error) {
-            console.log(error);
-            return false;
-        }
-    }
-
     const handleOnSubmit = (event) => {
-        makePostCall(post).then((result) => {
+        createPost(post).then((result) => {
             if (result.status === 201) {
                 console.log(result.data.result);
                 window.location = '/';
