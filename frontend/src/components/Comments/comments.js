@@ -3,8 +3,8 @@ import { Comment } from '../index';
 
 export const Comments = (props) => {
     const [comments, setComments] = useState(props.comments);
-    const listPosts = comments.map((comment, index) => {
-        return Comment(index, comment);
+    const listPosts = comments.map((comment) => {
+        return Comment(comment);
     });
 
     return (

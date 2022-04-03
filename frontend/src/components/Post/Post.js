@@ -214,7 +214,12 @@ export const Post = (props) => {
 
                 {turnOnComments && <Comments comments={comments} />}
 
-                {login && <CommentReply postId={props.property._id} />}
+                {login && (
+                    <CommentReply
+                        addComment={props.addComment}
+                        postId={props.property._id}
+                    />
+                )}
             </Collapse>
         </Card>
     );

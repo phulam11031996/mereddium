@@ -24,20 +24,15 @@ async function createComment(comment) {
 
     comment._id = uniqueID().slice(0, 6);
 
-    const newComment = new commentModel({
-        _id: comment._id,
-        userId: comment.userId,
-        postId: comment.postId,
-        message: comment.message,
-        upVote: comment.upVote
-    });
+    const newComment = new commentModel(comment);
 
-    const result = await newComment.save();
+    await newComment.save();
 
-    const resultPush = await PostHandler.addCommentByPostId(
+    const result = await PostHandler.addCommentByPostId(
         comment.postId,
         newComment
     );
+
     return result;
 }
 

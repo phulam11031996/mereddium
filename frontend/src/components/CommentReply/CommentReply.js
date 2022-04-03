@@ -60,9 +60,10 @@ export const CommentReply = (props) => {
             upVote: 1
         };
 
-        const result = makeCommentCall(newComment);
+        const result = await makeCommentCall(newComment);
         if (result !== false) {
             console.log('Comment Created!');
+            props.addComment(result.data.data);
         }
         setCommentValue('');
         setIsExpanded(false);

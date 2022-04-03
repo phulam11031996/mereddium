@@ -14,7 +14,7 @@ export const Posts = (props) => {
 
     useEffect(() => {
         filterFunc('Popular');
-    }, []);
+    }, [posts.length]);
 
     async function filterFunc(key) {
         let result = [];
@@ -35,6 +35,10 @@ export const Posts = (props) => {
 
     const addPost = (newPost) => {
         setPosts([...posts, newPost]);
+    };
+
+    const addComment = (newPost) => {
+        setPosts([newPost]);
     };
 
     return (
@@ -61,6 +65,7 @@ export const Posts = (props) => {
                                 <Post
                                     key={currentPost._id}
                                     property={currentPost}
+                                    addComment={addComment}
                                 />
                             );
                         })}

@@ -73,9 +73,9 @@ async function addCommentByPostId(id, newComment) {
 
     const post = await postModel.findOneAndUpdate(
         { _id: id },
-        { $push: { comments: newComment } }
+        { $push: { comments: newComment } },
+        { new: true }
     );
-
     return post;
 }
 

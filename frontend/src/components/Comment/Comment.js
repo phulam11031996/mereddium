@@ -3,7 +3,7 @@ import { Avatar, Grid, Paper } from '@material-ui/core';
 import { monthToString } from '../../utils';
 import axios from 'axios';
 
-export const Comment = (index, comment) => {
+export const Comment = (comment) => {
     const [firstName, setFirstName] = useState('');
 
     useEffect(() => {
@@ -31,7 +31,10 @@ export const Comment = (index, comment) => {
     month = monthToString(month);
 
     return (
-        <Paper key={index} style={{ padding: '40px 20px', marginTop: '10px' }}>
+        <Paper
+            key={comment._id}
+            style={{ padding: '40px 20px', marginTop: '10px' }}
+        >
             <Grid container wrap="nowrap" spacing={2}>
                 <Grid item>
                     <Avatar alt="Remy Sharp" src={imgLink} />
