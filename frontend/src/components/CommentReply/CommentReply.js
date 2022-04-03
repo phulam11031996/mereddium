@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import cn from 'classnames';
 import { parseCookie, useDynamicHeightField } from '../../utils';
 import axios from 'axios';
-import { createComment } from '../../utils';
+import { makeCommentCall } from '../../utils';
 const INITIAL_HEIGHT = 46;
 
 export const CommentReply = (props) => {
@@ -50,7 +50,7 @@ export const CommentReply = (props) => {
         setIsExpanded(false);
     };
 
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault();
 
         const newComment = {
@@ -60,7 +60,10 @@ export const CommentReply = (props) => {
             upVote: 1
         };
 
-        createComment(newComment);
+        const result = makeCommentCall(newComment);
+        if (result !== false) {
+            console.log('Comment Created!');
+        }
         setCommentValue('');
         setIsExpanded(false);
     };

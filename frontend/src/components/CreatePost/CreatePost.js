@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import ListItem from '@mui/material/ListItem';
@@ -13,21 +13,18 @@ import TextField from '@mui/material/TextField';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
 
-import { createPost } from '../../utils';
+import { makePostCall } from '../../utils';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export const CreatePost = (props) => {
-    const [open, setOpen] = React.useState(false);
-
-    const [post, setPost] = React.useState({
-        userId: props.userId,
-        title: '',
-        message: '',
-        imageURL: ''
-    });
+    const [open, setOpen] = useState(false);
+    const [userId, setUserId] = useState(props.userId);
+    const [title, setTitle] = useState();
+    const [message, setMessage] = useState();
+    const [image, setImage] = useState('');
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -35,39 +32,29 @@ export const CreatePost = (props) => {
 
     const handleOnChange = (event) => {
         if (event.target.id === 'title') {
-            setPost({
-                userId: post.userId,
-                title: event.target.value,
-                message: post.message,
-                imageURL: post.imageURL
-            });
+            setTitle(event.target.value);
         } else if (event.target.id === 'message') {
-            setPost({
-                userId: post.userId,
-                title: post.title,
-                message: event.target.value,
-                imageURL: post.imageURL
-            });
+            setMessage(event.target.value);
         } else if (event.target.id === 'imageURL') {
-            setPost({
-                userId: post.userId,
-                title: post.title,
-                message: post.message,
-                imageURL: event.target.value
-            });
+            setImage(event.target.value);
         }
     };
 
     const handleOnSubmit = (event) => {
-        createPost(post).then((result) => {
+        event.preventDefault();
+        let post = {
+            userId: userId,
+            title: title,
+            message: message,
+            imageURL: image
+        };
+
+        makePostCall(post).then((result) => {
             if (result.status === 201) {
-                console.log(result.data.result);
-                window.location = '/';
+                props.addPost(result.data.post);
+                handleClose();
             }
         });
-
-        handleClose();
-        event.preventDefault();
     };
 
     const handleClose = () => {
@@ -128,7 +115,7 @@ export const CreatePost = (props) => {
                             label="Title"
                             variant="standard"
                             id="title"
-                            value={post.title}
+                            value={title}
                             onChange={handleOnChange}
                         />
                     </ListItem>
@@ -139,7 +126,7 @@ export const CreatePost = (props) => {
                             label="Message"
                             variant="standard"
                             id="message"
-                            value={post.message}
+                            value={message}
                             onChange={handleOnChange}
                         />
                     </ListItem>
@@ -150,7 +137,7 @@ export const CreatePost = (props) => {
                             label="ImageURL"
                             variant="standard"
                             id="imageURL"
-                            value={post.imageURL}
+                            value={image}
                             onChange={handleOnChange}
                         />
                     </ListItem>

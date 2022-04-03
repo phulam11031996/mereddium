@@ -33,13 +33,17 @@ export const Posts = (props) => {
         }
     }
 
+    const addPost = (newPost) => {
+        setPosts([...posts, newPost]);
+    };
+
     return (
         <Box>
             <div className="NavBar">
                 <AppHeader searchByKey={filterFunc} />
             </div>
             <div className="SideBar">
-                <SideNav sortBy={filterFunc} />
+                <SideNav sortBy={filterFunc} addPost={addPost} />
             </div>
             <Box
                 sx={{ flexGrow: 1 }}

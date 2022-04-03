@@ -21,16 +21,6 @@ export const parseCookie = (str) =>
             return acc;
         }, {});
 
-export const createComment = (newComment) => {
-    makeCommentCall(newComment).then((response) => {
-        if (response.status === 200) {
-            // this.componentDidMount();
-        } else {
-            console.log('Failed to create comment');
-        }
-    });
-};
-
 export const makeCommentCall = async (newComment) => {
     try {
         const response = await axios.post(
@@ -62,7 +52,7 @@ export const makePostDeleteCall = async (id) => {
     }
 };
 
-export const createPost = async (post) => {
+export const makePostCall = async (post) => {
     try {
         const response = await axios.post('http://localhost:3030/post', post);
         return response;

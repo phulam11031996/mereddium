@@ -108,10 +108,7 @@ export const SideNav = (props) => {
                     )}
 
                     {login && (
-                        <CreatePost
-                            userId={userId}
-                            handleSubmit={props.updateList}
-                        />
+                        <CreatePost userId={userId} addPost={props.addPost} />
                     )}
 
                     {login && (

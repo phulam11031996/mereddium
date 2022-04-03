@@ -35,19 +35,16 @@ const ExpandMore = styled((props) => {
 
 export const Post = (props) => {
     const [expanded, setExpanded] = useState(false);
-
-    const [user, setUser] = useState({
-        userId: '',
-        postOwnerName: ''
-    });
+    const [userId, setUserId] = useState('null');
+    const [firstName, setFirstName] = useState('');
+    const [login, setLogin] = useState(false);
+    const [userMatch, setUserMatch] = useState(false);
 
     const [state, setState] = useState({
         postUserId: props.property.userId,
         postId: props.property._id,
         title: props.property.title,
         message: props.property.message,
-        login: false,
-        userMatch: false,
         turnOnComments: props.property.turnOnComments,
         subTitle: props.property.message.slice(0, 350),
         comments: props.property.comments,
@@ -55,36 +52,35 @@ export const Post = (props) => {
         downVoteUsers: props.property.downVoteUsers
     });
 
-    var userCheck;
-    if (document.cookie) {
-        userCheck = parseCookie(document.cookie).userId;
-    }
-
-    if (userCheck === 'null') {
-        user.userId = null;
-        state.login = false;
-    } else {
-        user.userId = userCheck;
-        state.login = true;
-
-        if (state.postUserId === userCheck) {
-            state.userMatch = true;
-        }
-    }
-
     useEffect(() => {
         axios
             .get('http://localhost:3030/user/' + props.property.userId)
             .then((user) => {
-                setUser({
-                    userId: user.userId,
-                    postOwnerName: user.data.data.user.firstName
-                });
+                setUserId(user.userId);
+                setFirstName(user.data.data.user.firstName);
             })
             .catch((error) => {
                 console.log(error);
             });
-    }, [props.property.userId]);
+
+        if (document.cookie) {
+            let getUser = parseCookie(document.cookie).userId;
+            if (getUser !== 'null') {
+                setUserId(getUser);
+                setLogin(true);
+                if (getUser === state.postUserId) {
+                    setUserMatch(true);
+                }
+                axios
+                    .get('http://localhost:3030/user/' + getUser)
+                    .then((user) => {
+                        setFirstName(user.data.data.user.firstName);
+                    });
+            }
+        } else {
+            setUserId(null);
+        }
+    }, []);
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
@@ -128,19 +124,19 @@ export const Post = (props) => {
             <CardHeader
                 avatar={
                     <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                        {user.postOwnerName.slice(0, 2)}
+                        {firstName.slice(0, 2)}
                     </Avatar>
                 }
                 action={
                     <IconButton
                         onClick={() => deletePostById(props.property._id)}
                     >
-                        {state.userMatch && (
+                        {userMatch && (
                             <DeleteOutlineIcon style={{ color: '#ee6c4d' }} />
                         )}
                     </IconButton>
                 }
-                title={user.postOwnerName}
+                title={firstName}
                 subheader={props.property.createdAt.slice(0, 10)}
             />
 
@@ -165,12 +161,9 @@ export const Post = (props) => {
             </CardContent>
 
             <CardActions disableSpacing style={{ marginLeft: 20 }}>
-                <IconButton
-                    onClick={() => votePost(user.userId, state.postId, 1)}
-                >
-                    {state.upVoteUsers.find(
-                        (ele) => ele.userId === user.userId
-                    ) !== undefined ? (
+                <IconButton onClick={() => votePost(userId, state.postId, 1)}>
+                    {state.upVoteUsers.find((ele) => ele.userId === userId) !==
+                    undefined ? (
                         <ThumbUpAltIcon
                             style={{ color: '#0077b6' }}
                             fontSize="small"
@@ -187,11 +180,9 @@ export const Post = (props) => {
                     {state.upVoteUsers.length - state.downVoteUsers.length}
                 </Typography>
 
-                <IconButton
-                    onClick={() => votePost(user.userId, state.postId, -1)}
-                >
+                <IconButton onClick={() => votePost(userId, state.postId, -1)}>
                     {state.downVoteUsers.find(
-                        (ele) => ele.userId === user.userId
+                        (ele) => ele.userId === userId
                     ) !== undefined ? (
                         <ThumbDownAltIcon
                             style={{ color: '#ee6c4d' }}
@@ -222,7 +213,7 @@ export const Post = (props) => {
 
                 {state.turnOnComments && <Comments comments={state.comments} />}
 
-                {state.login && <CommentReply postId={props.property._id} />}
+                {login && <CommentReply postId={props.property._id} />}
             </Collapse>
         </Card>
     );
