@@ -10,23 +10,18 @@ import SearchIcon from '@mui/icons-material/Search';
 const Search = styled('div')(({ theme }) => ({
     position: 'fixed',
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    '&:hover': {
-        backgroundColor: alpha(theme.palette.common.white, 0.25)
-    },
-    marginLeft: 40,
     right: 25,
-    width: '200px'
+    width: '150px',
+    backgroundColor: 'white',
+    border: '1px solid lightBlue'
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
+    color: 'black',
     '& .MuiInputBase-input': {
         padding: theme.spacing(1, 1, 1, 1),
         // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(3)})`,
-        transition: theme.transitions.create('width'),
-        width: '80%'
+        paddingLeft: `calc(1em + ${theme.spacing(3)})`
     }
 }));
 
@@ -35,12 +30,7 @@ export const AppHeader = (props) => {
         <Box>
             <AppBar position="fixed" style={{ backgroundColor: '#fff4e2' }}>
                 <Toolbar>
-                    <Search
-                        style={{
-                            backgroundColor: 'white',
-                            border: '1px solid grey'
-                        }}
-                    >
+                    <Search>
                         <IconButton
                             style={{
                                 height: '100%',
@@ -56,7 +46,6 @@ export const AppHeader = (props) => {
                             onChange={(e) => {
                                 props.searchByKey(e.target.value);
                             }}
-                            style={{ color: 'black' }}
                         />
                     </Search>
                 </Toolbar>

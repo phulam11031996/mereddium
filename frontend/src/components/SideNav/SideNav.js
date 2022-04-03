@@ -1,10 +1,9 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Badge from '@mui/material/Badge';
 import MuiDrawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
-import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -22,84 +21,38 @@ import { LogOut } from '../../app/pages';
 
 import { parseCookie } from '../../utils';
 
-const drawerWidth = 200;
-
-const openedMixin = (theme) => ({
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen
-    }),
-    overflowX: 'hidden'
-});
-
-const closedMixin = (theme) => ({
-    transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen
-    }),
-    overflowX: 'hidden',
-    width: `calc(${theme.spacing(12)} + 1px)`,
-    [theme.breakpoints.up('sm')]: {
-        width: `calc(${theme.spacing(12)} + 1px)`
-    }
-});
-
-const DrawerHeader = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar
+const DrawerHeader = styled('div')(() => ({
+    position: 'relative',
+    top: 15,
+    left: 30
 }));
 
-const Drawer = styled(MuiDrawer, {
-    shouldForwardProp: (prop) => prop !== 'open'
-})(({ theme, open }) => ({
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-    boxSizing: 'border-box',
-    ...(open && {
-        ...openedMixin(theme),
-        '& .MuiDrawer-paper': openedMixin(theme)
-    }),
-    ...(!open && {
-        ...closedMixin(theme),
-        '& .MuiDrawer-paper': closedMixin(theme)
-    })
-}));
+const Drawer = styled(MuiDrawer)(({ theme, open }) => ({}));
 
 export const SideNav = (props) => {
-    const [open, setOpen] = React.useState(false);
-    const [state] = React.useState({
-        userId: '',
-        login: false
-    });
+    const [userId, setUserId] = useState('null');
+    const [login, setLogin] = useState(false);
 
-    var user;
-    if (document.cookie) {
-        user = parseCookie(document.cookie).userId;
-        console.log(user);
-    }
-
-    if (user === 'null') {
-        state.login = false;
-    } else {
-        state.userId = user;
-        state.login = true;
-    }
+    useEffect(() => {
+        if (document.cookie) {
+            let getUser = parseCookie(document.cookie).userId;
+            if (getUser !== 'null') {
+                setUserId(getUser);
+                setLogin(true);
+            }
+        } else {
+            setUserId(null);
+            setLogin(false);
+        }
+    }, [login]);
 
     return (
-        <Box sx={{ display: 'flex' }}>
-            <CssBaseline />
-
-            <Drawer variant="permanent" open={open}>
-                <DrawerHeader style={{ marginRight: 18 }}>
+        <Box>
+            <Drawer variant="permanent">
+                <DrawerHeader>
                     <Logo />
                 </DrawerHeader>
-                <List>
+                <List style={{ marginTop: 10 }}>
                     <ListItem
                         button
                         key="Popular"
@@ -136,13 +89,13 @@ export const SideNav = (props) => {
                         </ListItemIcon>
                     </ListItem>
 
-                    {state.login && (
+                    {login && (
                         <Divider
                             style={{ marginTop: '10px', marginBottom: '10px' }}
                         />
                     )}
 
-                    {state.login && (
+                    {login && (
                         <ListItem button key="Saved">
                             <ListItemIcon style={{ marginLeft: '20px' }}>
                                 <Badge color="primary" variant="dot">
@@ -154,16 +107,16 @@ export const SideNav = (props) => {
                         </ListItem>
                     )}
 
-                    {state.login && (
+                    {login && (
                         <CreatePost
-                            userId={user}
+                            userId={userId}
                             handleSubmit={props.updateList}
                         />
                     )}
 
-                    {state.login && (
+                    {login && (
                         <CreatePostEditor
-                            userId={state.userId}
+                            userId={userId}
                             handleSubmit={props.updateList}
                         />
                     )}
@@ -172,7 +125,7 @@ export const SideNav = (props) => {
                         style={{ marginTop: '10px', marginBottom: '10px' }}
                     />
 
-                    {!state.login && (
+                    {!login && (
                         <ListItem
                             button
                             key="login"
@@ -188,7 +141,7 @@ export const SideNav = (props) => {
                             </ListItemIcon>
                         </ListItem>
                     )}
-                    {state.login && <LogOut />}
+                    {login && <LogOut />}
                 </List>
             </Drawer>
         </Box>

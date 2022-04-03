@@ -17,14 +17,12 @@ import axios from 'axios';
 const theme = createTheme();
 
 export const LogIn = () => {
-    const [user, setUser] = useState({
-        email: '',
-        password: ''
-    });
+    const [email, setEmail] = useState();
+    const [password, setPassword] = useState();
 
     const [error, setError] = useState('');
 
-    async function logInCall(user) {
+    const logInCall = async (user) => {
         try {
             const response = await axios.post(
                 'http://localhost:3030/auth/login',
@@ -35,14 +33,18 @@ export const LogIn = () => {
             console.log(error);
             return false;
         }
-    }
+    };
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        // eslint-disable-next-line no-console
-        user.email = data.get('email');
-        user.password = data.get('password');
+        setEmail(data.get('email'));
+        setPassword(data.get('password'));
+
+        let user = {
+            email: email,
+            password: password
+        };
 
         logInCall(user).then((jwt) => {
             if (jwt.status === 200) {

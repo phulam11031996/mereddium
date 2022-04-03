@@ -143,3 +143,16 @@ export const handleSearch = async (searchKey) => {
         console.log(e);
     }
 };
+
+export const makeSignUpCall = async (user) => {
+    try {
+        const response = await axios.post(
+            'http://localhost:3030/auth/signup',
+            user
+        );
+        return response;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+};

@@ -12,45 +12,36 @@ import { Logo } from '../../../images/Logo';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import axios from 'axios';
+import { makeSignUpCall } from '../../../utils';
 const theme = createTheme();
 
 export const SignUp = () => {
     const [error, setError] = useState('');
-    const [user, setUser] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        password_confirm: ''
-    });
-
-    async function signUp(user) {
-        try {
-            const response = await axios.post(
-                'http://localhost:3030/auth/signup',
-                user
-            );
-            return response;
-        } catch (error) {
-            console.log(error);
-            return false;
-        }
-    }
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [passwordConfirm, setPasswordConfirm] = useState('');
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        // eslint-disable-next-line no-console
-        user.firstName = data.get('firstName');
-        user.lastName = data.get('lastName');
-        user.email = data.get('email');
-        user.password = data.get('password');
-        user.password_confirm = data.get('password_confirm');
 
-        console.log(user);
+        setFirstName(data.get('firstName'));
+        setLastName(data.get('lastName'));
+        setEmail(data.get('email'));
+        setPassword(data.get('password'));
+        setPasswordConfirm(data.get('password_confirm'));
 
-        signUp(user).then((jwt) => {
+        let user = {
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            password: password,
+            password_confirm: passwordConfirm
+        };
+
+        makeSignUpCall(user).then((jwt) => {
             if (jwt.status === 201) {
                 document.cookie = `jwt=${jwt.data.token}`;
                 document.cookie = `userId=${jwt.data.data.user._id}`;

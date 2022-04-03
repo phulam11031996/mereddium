@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Post, SideNav, AppHeader } from '../../../components/';
 import Box from '@mui/material/Box';
-import axios from 'axios';
 
 import {
     handleSearch,
@@ -14,15 +13,7 @@ export const Posts = (props) => {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
-        axios
-            .get(`http://localhost:3030/post/`)
-            .then((response) => {
-                setPosts(response.data.data);
-                console.log('Fetching again!');
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        filterFunc('Popular');
     }, []);
 
     async function filterFunc(key) {
