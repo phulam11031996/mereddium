@@ -37,10 +37,6 @@ export const Posts = (props) => {
         setPosts([...posts, newPost]);
     };
 
-    const addComment = (newPost) => {
-        setPosts([newPost]);
-    };
-
     return (
         <Box>
             <div className="NavBar">
@@ -65,7 +61,6 @@ export const Posts = (props) => {
                                 <Post
                                     key={currentPost._id}
                                     property={currentPost}
-                                    addComment={addComment}
                                 />
                             );
                         })}

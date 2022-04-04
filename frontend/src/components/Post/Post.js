@@ -59,7 +59,7 @@ export const Post = (props) => {
         axios
             .get('http://localhost:3030/user/' + props.property.userId)
             .then((user) => {
-                setUserId(user.userId);
+                setPostUsedId(user.userId);
                 setFirstName(user.data.data.user.firstName);
             })
             .catch((error) => {
@@ -74,14 +74,9 @@ export const Post = (props) => {
                 if (getUser === postUserId) {
                     setUserMatch(true);
                 }
-                axios
-                    .get('http://localhost:3030/user/' + getUser)
-                    .then((user) => {
-                        setFirstName(user.data.data.user.firstName);
-                    });
+            } else {
+                setUserId(null);
             }
-        } else {
-            setUserId(null);
         }
     }, []);
 
@@ -212,13 +207,8 @@ export const Post = (props) => {
                     <Typography paragraph>{message}</Typography>
                 </CardContent>
 
-                {turnOnComments && <Comments comments={comments} />}
-
-                {login && (
-                    <CommentReply
-                        addComment={props.addComment}
-                        postId={props.property._id}
-                    />
+                {turnOnComments && (
+                    <Comments comments={comments} postId={postId} />
                 )}
             </Collapse>
         </Card>
