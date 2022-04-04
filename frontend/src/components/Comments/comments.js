@@ -6,14 +6,14 @@ export const Comments = (props) => {
     const [postId, setPostId] = useState(props.postId);
 
     const addComment = (newComments) => {
-        console.log(newComments);
+        setComments(newComments);
     };
 
     return (
         <>
             <div style={{ padding: 14 }} className="App">
                 {comments.map((comment) => {
-                    return Comment(comment);
+                    return <Comment comment={comment} />;
                 })}
             </div>
 

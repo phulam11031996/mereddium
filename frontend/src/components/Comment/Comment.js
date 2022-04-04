@@ -3,8 +3,9 @@ import { Avatar, Grid, Paper } from '@material-ui/core';
 import { monthToString } from '../../utils';
 import axios from 'axios';
 
-export const Comment = (comment) => {
+export const Comment = (props) => {
     const [firstName, setFirstName] = useState('');
+    const [comment, setComment] = useState(props.comment);
 
     useEffect(() => {
         axios
