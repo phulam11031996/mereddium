@@ -1,56 +1,71 @@
-const UserHandler = require('../models/UserHandler');
-const catchAsync = require('../utils/catchAsync');
+const { validationResult } = require("express-validator");
+
+const UserHandler = require("../models/UserHandler");
+const catchAsync = require("../utils/catchAsync");
+const HttpError = require("../utils/http-error");
 
 // GET /user/
 exports.getAllUsers = catchAsync(async (req, res) => {
-	const allUsers = await UserHandler.getAllUsers();
-	res.status(200).json({
-	  status: 'success',
-	  data: allUsers
-	});
+  const allUsers = await UserHandler.getAllUsers();
+  res.status(200).json({
+    status: "success",
+    data: allUsers,
+  });
 });
 
 // POST /user/
 exports.createUser = catchAsync(async (req, res) => {
-	let result;
-	
-	try {	
-		result = await UserHandler.createUser(req.body);
-	} catch (err) {
-		console.log(err);
-	}
-	if(result === undefined) {
-		res.status(404).json({
-			"Status": "Failed to create user!"
-		});
-	} else {
-		res.status(201).json({
-			result
-		});
-	}
+  let result = await UserHandler.createUser(req.body);
+
+  if (result instanceof HttpError) {
+    res.status(result.code).json({
+      message: result.message,
+    });
+  } else {
+    res.status(201).json({
+      result,
+    });
+  }
 });
 
 // GET /user/{id}
 exports.getUserById = catchAsync(async (req, res) => {
-	const user = await UserHandler.getUserById(req.params.id);
-	res.status(200).json({
-	  status: 'success',
-	  data: { user }
-	});
+  const user = await UserHandler.getUserById(req.params.id);
+  res.status(200).json({
+    status: "success",
+    data: { user },
+  });
 });
 
 // UPDATE /user/{id}
 exports.updateUserById = catchAsync(async (req, res) => {
-	const user = await UserHandler.updateUserById(req.params.id, req.body);
-  
-	res.status(200).json({
-	  	status: 'success',
-	  	data: { user }
-	});
+  const user = await UserHandler.updateUserById(req.params.id, req.body);
+
+  res.status(200).json({
+    status: "success",
+    data: { user },
+  });
 });
 
 // DELETE /user/{id}
 exports.deleteUserById = catchAsync(async (req, res) => {
-	await UserHandler.deleteUserById(req.params.id);
-  	res.status(200).send(req.params.id).end();
+  await UserHandler.deleteUserById(req.params.id);
+  res.status(200).send(req.params.id).end();
+});
+
+// UPDATE /user/image/{id}
+exports.updateUserImageById = catchAsync(async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError("Invalid file type, please check your data.", 422)
+    );
+  }
+
+  const image = await UserHandler.updateUserImageById(
+    req.params.id,
+    req.file.path
+  );
+
+  res.status(200).json({ message: "Updated Image." });
 });
