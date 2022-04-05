@@ -1,93 +1,167 @@
+const { v4: uuidv4 } = require("uuid");
+const bcrypt = require("bcryptjs");
+
 const DatabaseHandler = require("./DatabaseHandler");
 const UserSchema = require("./UserSchema");
-const { v4: uuidv4 } = require('uuid');
+const HttpError = require("../utils/http-error");
 
 const uniqueID = () => {
-	return uuidv4();
-}
+  return uuidv4();
+};
 
 // GET /user/
 async function getAllUsers() {
-	const db = await DatabaseHandler.getDbConnection();
-	const userModel = db.model('User', UserSchema);
-	let result = await userModel.find();
-	return result;
-};
+  const db = await DatabaseHandler.getDbConnection();
+  const userModel = db.model("User", UserSchema);
+  let result = await userModel.find();
+  return result;
+}
 
 // POST /user/
 async function createUser(user) {
-	const db = await DatabaseHandler.getDbConnection();
-	const userModel = db.model('User', UserSchema);
-	
-	var token = uniqueID();
-	
-	const newUser = 
-		new userModel(
-			{ 
-				_id: uniqueID().slice(0,6), 
-				firstName: user.firstName, 
-				lastName: user.lastName,
-				email: user.email, 
-				role: user.role,
-				photo: "default.jpg", 
-				password: user.password,
-				password_confirm: user.password_confirm, 
-				passwordChangedAt: Date.now(),
-				reset_token: token, 
-				reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
-				blocked: false,
-				interestedIn: user.interestedIn
-			}
-	);
-	
-	const result = await newUser.save();
-	return result;
+  const db = await DatabaseHandler.getDbConnection();
+  const userModel = db.model("User", UserSchema);
+  const {
+    firstName,
+    lastName,
+    email,
+    role,
+    password,
+    password_confirm,
+    interestedIn,
+  } = user;
+
+  if (firstName == "" || lastName == "" || password == "" || email == "") {
+    const error = new HttpError("Please fill out all the information.", 422);
+    return error;
+  }
+
+  let existingUser;
+  try {
+    existingUser = await userModel.findOne({ email });
+  } catch (err) {
+    const error = new HttpError(
+      "Signing up failed, please try again later.",
+      500
+    );
+    return error;
+  }
+
+  if (existingUser) {
+    const error = new HttpError(
+      "User exists already, please login instead.",
+      422
+    );
+    return error;
+  }
+
+  if (password != password_confirm) {
+    const error = new HttpError("Passwords do not match.", 406);
+    return error;
+  }
+
+  let hashedPassword;
+  try {
+    hashedPassword = await bcrypt.hash(user.password, 12);
+  } catch (err) {
+    const error = new HttpError(
+      "Could not hash user's password, please try again.",
+      500
+    );
+    return error;
+  }
+
+  var token = uniqueID();
+
+  const newUser = new userModel({
+    _id: uniqueID().slice(0, 6),
+    firstName,
+    lastName,
+    email,
+    role,
+    password,
+    password_confirm,
+    interestedIn,
+    password_bcrypt: hashedPassword,
+    photo: "uploads/images/default.png",
+    passwordChangedAt: Date.now(),
+    reset_token: token,
+    reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
+    blocked: false,
+  });
+
+  let result;
+  try {
+    result = await newUser.save();
+  } catch (err) {
+    const error = new HttpError(
+      "Could not create user, please try again.",
+      500
+    );
+    return error;
+  }
+
+  return result;
 }
 
 // GET /user/{id}
 async function getUserById(id) {
-	const db = await DatabaseHandler.getDbConnection();
-	const userModel = db.model('User', UserSchema);
-	
-	const user = await userModel.findById({'_id': id});
-	return user;  
+  const db = await DatabaseHandler.getDbConnection();
+  const userModel = db.model("User", UserSchema);
+
+  const user = await userModel.findById({ _id: id });
+  return user;
 }
 
 // UPDATE /user/{id}
 async function updateUserById(id, newUser) {
-	const db = await DatabaseHandler.getDbConnection();
-	const userModel = db.model('User', UserSchema);
+  const db = await DatabaseHandler.getDbConnection();
+  const userModel = db.model("User", UserSchema);
 
-	const user = await userModel.updateOne({'_id': id}, {
-		$set: newUser,
-	});
-  
-	return user;
+  const user = await userModel.updateOne(
+    { _id: id },
+    {
+      $set: newUser,
+    }
+  );
+
+  return user;
 }
 
 // DELETE /user/{id}
 async function deleteUserById(id) {
-	const db = await DatabaseHandler.getDbConnection();
-	const userModel = db.model('User', UserSchema);
+  const db = await DatabaseHandler.getDbConnection();
+  const userModel = db.model("User", UserSchema);
 
-	await userModel.deleteOne({ _id: id });
-	return 0;
+  await userModel.deleteOne({ _id: id });
+  return 0;
 }
 
 // GET /user/{email}
 async function getUserByEmail(email) {
-	const db = await DatabaseHandler.getDbConnection();
-	const userModel = db.model('User', UserSchema);
+  const db = await DatabaseHandler.getDbConnection();
+  const userModel = db.model("User", UserSchema);
 
-	const user = await userModel.findOne({"email": email});
-	return user;
+  const user = await userModel.findOne({ email: email });
+  return user;
+}
+
+// UPDATE /user/image/{id}
+async function updateUserImageById(id, photoPath) {
+  const db = await DatabaseHandler.getDbConnection();
+  const userModel = db.model("User", UserSchema);
+
+  const user = await userModel.updateOne({ _id: id }, { photo: photoPath });
+
+  return user;
 }
 
 module.exports = {
-	getAllUsers,
-	createUser,
-	getUserById,
-	updateUserById,
-	deleteUserById,
-	getUserByEmail
-}
+  getAllUsers,
+  createUser,
+  getUserById,
+  updateUserById,
+  deleteUserById,
+  getUserByEmail,
+  updateUserImageById,
+};
