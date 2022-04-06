@@ -92,7 +92,7 @@ export const CommentReply = (props) => {
                         {photo !== '' && (
                             <Avatar src={`http://localhost:3030/${photo}`} />
                         )}
-                        <span>{firstName}</span>
+                        <span style={{ marginLeft: 10 }}>{firstName}</span>
                     </div>
                 </div>
                 <label htmlFor="comment" className="replyLabel">

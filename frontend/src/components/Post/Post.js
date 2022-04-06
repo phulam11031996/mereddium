@@ -17,7 +17,7 @@ import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
-import { Comments } from '..';
+import { Comments } from '../index';
 import { parseCookie, deletePostById } from '../../utils';
 import axios from 'axios';
 
@@ -118,7 +118,7 @@ export const Post = (props) => {
     }
 
     return (
-        <Card style={{ marginTop: 25 }}>
+        <Card style={{ marginTop: 50 }}>
             <CardHeader
                 avatar={
                     photo !== '' && (
