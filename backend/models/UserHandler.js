@@ -83,11 +83,37 @@ async function getUserByEmail(email) {
 	return user;
 }
 
+// POST /user/saved/{id}
+async function addSavedPost(userId, postId) {
+	const db = await DatabaseHandler.getDbConnection();
+	const userModel = db.model('User', UserSchema);
+
+	const result = await userModel.updateOne({_id: userId}, {
+		$push: {savedPosts: {postId: postId}},
+	});
+	
+	return result['ok'];
+}
+
+// DELETE /user/saved/{id}
+async function deleteSavedPost(userId, postId) {
+	const db = await DatabaseHandler.getDbConnection();
+	const userModel = db.model('User', UserSchema);
+
+	const result = await userModel.updateOne({_id: userId}, {
+		$pull: {savedPosts: {postId: postId}},
+	});
+	
+	return result['ok'];
+}
+
 module.exports = {
 	getAllUsers,
 	createUser,
 	getUserById,
 	updateUserById,
 	deleteUserById,
-	getUserByEmail
+	getUserByEmail,
+	addSavedPost,
+	deleteSavedPost
 }

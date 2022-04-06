@@ -54,3 +54,66 @@ exports.deleteUserById = catchAsync(async (req, res) => {
 	await UserHandler.deleteUserById(req.params.id);
   	res.status(200).send(req.params.id).end();
 });
+
+// GET /user/saved/{id}
+exports.getSavedPosts = catchAsync(async (req, res) => {
+	const userId = req.params.id;
+	const user = await UserHandler.getUserById(userId);
+	
+	if(user === null) {
+		res.status(401).json({ status: "Must login first!" });
+	} else {
+		let savedPosts = user['savedPosts'];
+
+		savedPosts = savedPosts.sort((p1, p2) => {
+			if(p1.dateSaved < p2.dateSaved)
+				return 1;
+			else
+				return -1;
+		});
+		
+		let savedPostList = Array();
+		savedPosts.forEach(function(obj) {
+			savedPostList.push(
+				PostHandler.getPostById(obj.postId));
+		});
+
+		res.status(200).json({
+			status: 'success',
+			data: { savedPosts }
+		});
+	}
+});
+
+// POST /user/saved/{id}
+exports.addSavedPost = catchAsync(async (req, res) => {
+	const userId = req.params.id;
+	const postId = req.body.postId;
+	const result = await UserHandler.addSavedPost(userId, postId);
+	
+	if(result === 0) {
+		res.status(401).json({ status: "Must login first!" });
+	} else {
+		res.status(201).json({
+			status: 'success',
+			data: { postId }
+		});
+	}
+});
+
+// DELETE /user/saved/{id}
+exports.deleteSavedPost = catchAsync(async (req, res) => {
+	const userId = req.params.id;
+	const postId = req.body.postId;
+	const result = await UserHandler.deleteSavedPost(userId, postId);
+
+	if(result === 0) {
+		res.status(401).json({ status: "Must login first!" });
+	} else {
+		const savedPosts = result;
+		res.status(200).json({
+			status: 'success',
+			data: savedPosts
+		});
+	}
+});

@@ -6,7 +6,8 @@ import {
     handleSearch,
     handleSortByTime,
     handleSortByVote,
-    handleSortByTrending
+    handleSortByTrending,
+    handleSavedPosts
 } from '../../../utils';
 
 export const Posts = (props) => {
@@ -33,6 +34,11 @@ export const Posts = (props) => {
         }
     }
 
+    async function savedPosts(userId) {
+        let result = await handleSavedPosts(userId);
+        setPosts(result);
+    }
+
     const addPost = (newPost) => {
         setPosts([...posts, newPost]);
     };
@@ -43,7 +49,7 @@ export const Posts = (props) => {
                 <AppHeader searchByKey={filterFunc} />
             </div>
             <div className="SideBar">
-                <SideNav sortBy={filterFunc} addPost={addPost} />
+                <SideNav sortBy={filterFunc} savedPosts={savedPosts} addPost={addPost} />
             </div>
             <Box
                 sx={{ flexGrow: 1 }}

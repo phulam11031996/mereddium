@@ -66,6 +66,18 @@ const userSchema = new mongoose.Schema({
 			}
 		}
 	],
+	savedPosts: [
+		{
+			dateSaved: {
+				type: Date,
+				default: function() { return Date.now() }
+			},
+			postId: {
+				type: Number,
+				required: [true, 'Please enter valid postID']
+			}
+		}
+	]
 	},
 	{
 		toJSON: {
