@@ -16,7 +16,7 @@ export const LogOut = () => {
     return (
         <div>
             <ListItem onClick={handLogOut} button key="login">
-                <ListItemIcon style={{ marginLeft: '20px' }}>
+                <ListItemIcon>
                     <LoginOutlinedIcon
                         color="secondary"
                         style={{ color: 'red' }}

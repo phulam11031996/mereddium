@@ -64,7 +64,7 @@ export const CreatePost = (props) => {
     return (
         <div>
             <ListItem onClick={handleClickOpen} button key="Key">
-                <ListItemIcon style={{ marginLeft: '20px' }}>
+                <ListItemIcon>
                     <PostAddOutlinedIcon color="secondary" />
                 </ListItemIcon>
             </ListItem>

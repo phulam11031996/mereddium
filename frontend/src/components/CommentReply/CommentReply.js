@@ -3,13 +3,16 @@ import cn from 'classnames';
 import { parseCookie, useDynamicHeightField } from '../../utils';
 import axios from 'axios';
 import { makeCommentCall } from '../../utils';
-const INITIAL_HEIGHT = 46;
+import { Avatar } from '@material-ui/core';
+
+const INITIAL_HEIGHT = 60;
 
 export const CommentReply = (props) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [commentValue, setCommentValue] = useState('');
     const [userId, setUserId] = useState('null');
     const [firstName, setFirstName] = useState('');
+    const [photo, setPhoto] = useState('');
 
     const postId = props.postId;
     const outerHeight = useRef(INITIAL_HEIGHT);
@@ -25,6 +28,7 @@ export const CommentReply = (props) => {
                     .get('http://localhost:3030/user/' + getUser)
                     .then((user) => {
                         setFirstName(user.data.data.user.firstName);
+                        setPhoto(user.data.data.user.photo);
                     });
             }
         } else {
@@ -85,11 +89,10 @@ export const CommentReply = (props) => {
             >
                 <div className="header">
                     <div className="user">
-                        <img
-                            src="https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/df/df7789f313571604c0e4fb82154f7ee93d9989c6.jpg"
-                            alt="User avatar"
-                        />
-                        <span>{firstName}</span>
+                        {photo !== '' && (
+                            <Avatar src={`http://localhost:3030/${photo}`} />
+                        )}
+                        <p className="AvatarName"> {firstName}</p>
                     </div>
                 </div>
                 <label htmlFor="comment" className="replyLabel">
@@ -101,7 +104,7 @@ export const CommentReply = (props) => {
                     onFocus={onExpand}
                     onChange={onChange}
                     className="comment-field"
-                    placeholder="I know you want to comment"
+                    placeholder="Leave a comment"
                     value={commentValue}
                     name="comment"
                     id="comment"

@@ -8,7 +8,7 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 
 const Search = styled('div')(({ theme }) => ({
-    position: 'fixed',
+    position: 'absolute',
     borderRadius: theme.shape.borderRadius,
     right: 25,
     width: '150px',
@@ -28,7 +28,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export const AppHeader = (props) => {
     return (
         <Box>
-            <AppBar position="fixed" style={{ backgroundColor: '#fff4e2' }}>
+            <AppBar style={{ backgroundColor: '#fff4e2' }}>
                 <Toolbar>
                     <Search>
                         <IconButton

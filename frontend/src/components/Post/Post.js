@@ -37,6 +37,7 @@ export const Post = (props) => {
     const [expanded, setExpanded] = useState(false);
     const [userId, setUserId] = useState('null');
     const [firstName, setFirstName] = useState('');
+    const [photo, setPhoto] = useState('');
     const [login, setLogin] = useState(false);
     const [userMatch, setUserMatch] = useState(false);
     const [postUserId, setPostUsedId] = useState(props.property.userId);
@@ -61,6 +62,7 @@ export const Post = (props) => {
             .then((user) => {
                 setPostUsedId(user.userId);
                 setFirstName(user.data.data.user.firstName);
+                setPhoto(user.data.data.user.photo);
             })
             .catch((error) => {
                 console.log(error);
@@ -117,12 +119,12 @@ export const Post = (props) => {
     }
 
     return (
-        <Card sx={{ maxWidth: 800 }} style={{ marginTop: 50 }}>
+        <Card style={{ marginTop: '20px' }}>
             <CardHeader
                 avatar={
-                    <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                        {firstName.slice(0, 2)}
-                    </Avatar>
+                    photo !== '' && (
+                        <Avatar src={`http://localhost:3030/${photo}`} />
+                    )
                 }
                 action={
                     <IconButton

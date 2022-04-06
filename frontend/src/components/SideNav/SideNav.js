@@ -10,6 +10,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 
 import { Logo } from '../../images/Logo';
 import { CreatePost, CreatePostEditor } from '../index';
+import { Dashboard } from '../Dashboard';
 
 import WhatshotIcon from '@mui/icons-material/Whatshot';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
@@ -22,9 +23,8 @@ import { LogOut } from '../../app/pages';
 import { parseCookie } from '../../utils';
 
 const DrawerHeader = styled('div')(() => ({
-    position: 'relative',
-    top: 15,
-    left: 30
+    display: 'block',
+    margin: 'auto'
 }));
 
 const Drawer = styled(MuiDrawer)(({ theme, open }) => ({}));
@@ -60,7 +60,7 @@ export const SideNav = (props) => {
                             props.sortBy('Popular');
                         }}
                     >
-                        <ListItemIcon style={{ marginLeft: '20px' }}>
+                        <ListItemIcon>
                             <WhatshotIcon color="primary" />
                         </ListItemIcon>
                     </ListItem>
@@ -72,7 +72,7 @@ export const SideNav = (props) => {
                             props.sortBy('Recent');
                         }}
                     >
-                        <ListItemIcon style={{ marginLeft: '20px' }}>
+                        <ListItemIcon>
                             <AccessTimeOutlinedIcon color="secondary" />
                         </ListItemIcon>
                     </ListItem>
@@ -84,7 +84,7 @@ export const SideNav = (props) => {
                             props.sortBy('Trending');
                         }}
                     >
-                        <ListItemIcon style={{ marginLeft: '20px' }}>
+                        <ListItemIcon>
                             <TrendingUpOutlinedIcon color="secondary" />
                         </ListItemIcon>
                     </ListItem>
@@ -97,7 +97,7 @@ export const SideNav = (props) => {
 
                     {login && (
                         <ListItem button key="Saved">
-                            <ListItemIcon style={{ marginLeft: '20px' }}>
+                            <ListItemIcon>
                                 <Badge color="primary" variant="dot">
                                     <BookmarkBorderOutlinedIcon
                                         style={{ color: 'orange' }}
@@ -118,6 +118,8 @@ export const SideNav = (props) => {
                         />
                     )}
 
+                    {login && <Dashboard userId={userId} />}
+
                     <Divider
                         style={{ marginTop: '10px', marginBottom: '10px' }}
                     />
@@ -130,7 +132,7 @@ export const SideNav = (props) => {
                                 window.location.href = '/login';
                             }}
                         >
-                            <ListItemIcon style={{ marginLeft: '20px' }}>
+                            <ListItemIcon>
                                 <LoginOutlinedIcon
                                     color="secondary"
                                     style={{ color: 'blue' }}
@@ -138,6 +140,7 @@ export const SideNav = (props) => {
                             </ListItemIcon>
                         </ListItem>
                     )}
+
                     {login && <LogOut />}
                 </List>
             </Drawer>

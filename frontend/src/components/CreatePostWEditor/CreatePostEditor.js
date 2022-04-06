@@ -40,7 +40,7 @@ export const CreatePostEditor = (props) => {
     return (
         <div>
             <ListItem onClick={handleClickOpen} button key="Key">
-                <ListItemIcon style={{ marginLeft: '20px' }}>
+                <ListItemIcon>
                     <PostAddOutlinedIcon style={{ color: 'black' }} />
                 </ListItemIcon>
             </ListItem>
