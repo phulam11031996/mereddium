@@ -9,7 +9,6 @@ import Collapse from '@mui/material/Collapse';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
@@ -18,7 +17,7 @@ import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
-import { CommentReply, Comments } from '..';
+import { Comments } from '..';
 import { parseCookie, deletePostById } from '../../utils';
 import axios from 'axios';
 
@@ -119,7 +118,7 @@ export const Post = (props) => {
     }
 
     return (
-        <Card style={{ marginTop: '20px' }}>
+        <Card style={{ marginTop: 25 }}>
             <CardHeader
                 avatar={
                     photo !== '' && (

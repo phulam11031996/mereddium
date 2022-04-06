@@ -92,7 +92,7 @@ export const CommentReply = (props) => {
                         {photo !== '' && (
                             <Avatar src={`http://localhost:3030/${photo}`} />
                         )}
-                        <p className="AvatarName"> {firstName}</p>
+                        <span>{firstName}</span>
                     </div>
                 </div>
                 <label htmlFor="comment" className="replyLabel">
@@ -104,7 +104,7 @@ export const CommentReply = (props) => {
                     onFocus={onExpand}
                     onChange={onChange}
                     className="comment-field"
-                    placeholder="Leave a comment"
+                    placeholder="I know you want to comment"
                     value={commentValue}
                     name="comment"
                     id="comment"

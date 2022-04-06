@@ -44,7 +44,7 @@ export const UploadImage = (props) => {
                 </Button>
             )}
             <DropzoneDialog
-                dropzoneClass="dropzone-dialog"
+                dropzoneClass="dropzone"
                 dropzoneParagraphClass="dropzone-p"
                 open={isOpen}
                 onSave={handleSave}
