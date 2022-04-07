@@ -1,4 +1,5 @@
 const UserHandler = require('../models/UserHandler');
+const PostHandler = require("./PostHandler");
 const catchAsync = require('../utils/catchAsync');
 
 // GET /user/
@@ -58,31 +59,18 @@ exports.deleteUserById = catchAsync(async (req, res) => {
 // GET /user/saved/{id}
 exports.getSavedPosts = catchAsync(async (req, res) => {
 	const userId = req.params.id;
-	const user = await UserHandler.getUserById(userId);
-	
-	if(user === null) {
-		res.status(401).json({ status: "Must login first!" });
-	} else {
-		let savedPosts = user['savedPosts'];
+	const savedPosts = await UserHandler.getSavedPosts(userId);
 
-		savedPosts = savedPosts.sort((p1, p2) => {
-			if(p1.dateSaved < p2.dateSaved)
-				return 1;
-			else
-				return -1;
-		});
-		
-		let savedPostList = Array();
-		savedPosts.forEach(function(obj) {
-			savedPostList.push(
-				PostHandler.getPostById(obj.postId));
-		});
+	let savedPostList = Array();
+	await savedPosts.forEach(async function(obj) {
+		let post = await PostHandler.getPostById(obj.postId);
+		savedPostList.push(post);
+	});
 
-		res.status(200).json({
-			status: 'success',
-			data: { savedPosts }
-		});
-	}
+	res.status(200).json({
+		status: 'success',
+		data: { savedPostList }
+	});
 });
 
 // POST /user/saved/{id}

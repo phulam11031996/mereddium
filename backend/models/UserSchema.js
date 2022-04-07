@@ -73,7 +73,7 @@ const userSchema = new mongoose.Schema({
 				default: function() { return Date.now() }
 			},
 			postId: {
-				type: Number,
+				type: String,
 				required: [true, 'Please enter valid postID']
 			}
 		}

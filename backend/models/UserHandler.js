@@ -83,16 +83,36 @@ async function getUserByEmail(email) {
 	return user;
 }
 
-// POST /user/saved/{id}
-async function addSavedPost(userId, postId) {
+// GET /user/saved/{id}
+async function getSavedPosts(userId) {
 	const db = await DatabaseHandler.getDbConnection();
 	const userModel = db.model('User', UserSchema);
 
+	const user = await userModel.findOne({ _id: userId });
+	let savedPosts = user.savedPosts.sort((p1, p2) => {
+		return p2.dateSaved - p1.dateSaved;
+	});
+
+	return savedPosts;
+}
+
+// POST /user/saved/{id}
+async function addSavedPost(userId, _postId) {
+	const db = await DatabaseHandler.getDbConnection();
+	const userModel = db.model('User', UserSchema);
+
+	const user = await userModel.findOne({ _id: userId });
+	let savedPosts = user.savedPosts;
+	let duplicate = savedPosts.find( ({ postId }) => postId === _postId );
+	if(duplicate !== undefined) {
+		return 1;
+	}
+
 	const result = await userModel.updateOne({_id: userId}, {
-		$push: {savedPosts: {postId: postId}},
+		$push: {savedPosts: {postId: _postId}},
 	});
 	
-	return result['ok'];
+	return result.modifiedCount;
 }
 
 // DELETE /user/saved/{id}
@@ -104,7 +124,7 @@ async function deleteSavedPost(userId, postId) {
 		$pull: {savedPosts: {postId: postId}},
 	});
 	
-	return result['ok'];
+	return result.modifiedCount;
 }
 
 module.exports = {
@@ -114,6 +134,7 @@ module.exports = {
 	updateUserById,
 	deleteUserById,
 	getUserByEmail,
+	getSavedPosts,
 	addSavedPost,
 	deleteSavedPost
 }
