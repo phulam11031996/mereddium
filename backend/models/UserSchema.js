@@ -68,13 +68,16 @@ const userSchema = new mongoose.Schema({
 	],
 	savedPosts: [
 		{
-			dateSaved: {
-				type: Date,
-				default: function() { return Date.now() }
+			_id: {
+				type: String
 			},
 			postId: {
 				type: String,
 				required: [true, 'Please enter valid postID']
+			},
+			dateSaved: {
+				type: Date,
+				default: function() { return Date.now() }
 			}
 		}
 	]

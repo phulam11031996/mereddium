@@ -89,6 +89,10 @@ async function getSavedPosts(userId) {
 	const userModel = db.model('User', UserSchema);
 
 	const user = await userModel.findOne({ _id: userId });
+	if(user === null) {
+		return 0;
+	}
+
 	let savedPosts = user.savedPosts.sort((p1, p2) => {
 		return p2.dateSaved - p1.dateSaved;
 	});
@@ -102,17 +106,20 @@ async function addSavedPost(userId, _postId) {
 	const userModel = db.model('User', UserSchema);
 
 	const user = await userModel.findOne({ _id: userId });
-	let savedPosts = user.savedPosts;
-	let duplicate = savedPosts.find( ({ postId }) => postId === _postId );
-	if(duplicate !== undefined) {
-		return 1;
+	if(user === null) {
+		return 0;
+	}
+
+	let duplicate = user.savedPosts.find( ({ postId }) => postId === _postId );
+	if(duplicate !== undefined && duplicate !== null) {
+		return null;
 	}
 
 	const result = await userModel.updateOne({_id: userId}, {
-		$push: {savedPosts: {postId: _postId}},
+		$push: {savedPosts: { postId: _postId} }
 	});
 	
-	return result.modifiedCount;
+	return result;
 }
 
 // DELETE /user/saved/{id}
@@ -121,10 +128,10 @@ async function deleteSavedPost(userId, postId) {
 	const userModel = db.model('User', UserSchema);
 
 	const result = await userModel.updateOne({_id: userId}, {
-		$pull: {savedPosts: {postId: postId}},
+		$pull: {savedPosts: { postId: postId} }
 	});
 	
-	return result.modifiedCount;
+	return result;
 }
 
 module.exports = {

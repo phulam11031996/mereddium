@@ -215,11 +215,9 @@ export const Post = (props) => {
                     )}
                 </IconButton>
 
-                {userMatch && (
-                    <IconButton onClick={() => savePost(userId, postId)}>
-                        <BookmarkBorderOutlinedIcon style={{ color: "orange" }} />
-                    </IconButton>
-                )}
+                <IconButton onClick={() => savePost(userId, postId)}>
+                    <BookmarkBorderOutlinedIcon style={{ color: "orange" }} />
+                </IconButton>
 
                 <ExpandMore
                     expand={expanded}

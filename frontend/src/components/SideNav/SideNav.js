@@ -96,7 +96,7 @@ export const SideNav = (props) => {
                     )}
 
                     {login && (
-                        <ListItem button key="Saved" onClick={props.savedPosts(userId)}>
+                        <ListItem button key="Saved" onClick={() => props.savedPosts(userId)}>
                             <ListItemIcon style={{ marginLeft: '20px' }}>
                                 <Badge color="primary" variant="dot">
                                     <BookmarkBorderOutlinedIcon
