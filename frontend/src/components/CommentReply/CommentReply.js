@@ -74,7 +74,10 @@ export const CommentReply = (props) => {
     };
 
     return (
-        <div className="container">
+        <div
+            className="container"
+            style={{ display: 'block', margin: 'auto', width: '90%' }}
+        >
             <form
                 onSubmit={onSubmit}
                 ref={containerRef}
@@ -95,16 +98,13 @@ export const CommentReply = (props) => {
                         <span style={{ marginLeft: 10 }}>{firstName}</span>
                     </div>
                 </div>
-                <label htmlFor="comment" className="replyLabel">
-                    What are your thoughts?
-                </label>
                 <textarea
                     ref={textRef}
                     onClick={onExpand}
                     onFocus={onExpand}
                     onChange={onChange}
                     className="comment-field"
-                    placeholder="I know you want to comment"
+                    placeholder="Leave a comment"
                     value={commentValue}
                     name="comment"
                     id="comment"

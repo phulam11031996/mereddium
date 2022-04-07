@@ -17,7 +17,7 @@ import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
-import { Comments } from '../index';
+import { Comments } from '../';
 import { parseCookie, deletePostById } from '../../utils';
 import axios from 'axios';
 
@@ -86,7 +86,7 @@ export const Post = (props) => {
     };
 
     // votes posts
-    function votePost(userId, postId, value) {
+    const votePost = (userId, postId, value) => {
         if (userId !== null) {
             makeVoteCall(userId, postId, value).then((response) => {
                 if (response.status === 200) {
@@ -102,9 +102,9 @@ export const Post = (props) => {
         } else {
             console.log('Must login first!');
         }
-    }
+    };
 
-    async function makeVoteCall(userId, postId, value) {
+    const makeVoteCall = async (userId, postId, value) => {
         try {
             const response = await axios.post(
                 `http://localhost:3030/post/vote/${postId}`,
@@ -115,16 +115,12 @@ export const Post = (props) => {
             console.log(error);
             return false;
         }
-    }
+    };
 
     return (
-        <Card style={{ marginTop: 50 }}>
+        <Card style={{ marginTop: 25 }}>
             <CardHeader
-                avatar={
-                    photo !== '' && (
-                        <Avatar src={`http://localhost:3030/${photo}`} />
-                    )
-                }
+                avatar={photo !== '' && <Avatar />}
                 action={
                     <IconButton
                         onClick={() => deletePostById(props.property._id)}

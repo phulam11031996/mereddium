@@ -17,9 +17,6 @@ import axios from 'axios';
 const theme = createTheme();
 
 export const LogIn = () => {
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
-
     const [error, setError] = useState('');
 
     const logInCall = async (user) => {
@@ -35,17 +32,8 @@ export const LogIn = () => {
         }
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        setEmail(data.get('email'));
-        setPassword(data.get('password'));
-
-        let user = {
-            email: email,
-            password: password
-        };
-
+    const makeLogInCall = (user) => {
+        console.log(user);
         logInCall(user).then((jwt) => {
             if (jwt.status === 200) {
                 document.cookie = `jwt=${jwt.data.token}`;
@@ -57,6 +45,18 @@ export const LogIn = () => {
                 );
             }
         });
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+
+        let user = {
+            email: data.get('email'),
+            password: data.get('password')
+        };
+
+        makeLogInCall(user);
     };
 
     return (

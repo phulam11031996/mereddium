@@ -25,7 +25,7 @@ export const Posts = (props) => {
 
     useEffect(() => {
         filterFunc('Popular');
-    }, [posts.length]);
+    }, []);
 
     async function filterFunc(key) {
         let result = [];
@@ -67,7 +67,7 @@ export const Posts = (props) => {
                     <Item>
                         <ul>
                             {posts &&
-                                posts.map((currentPost, index) => {
+                                posts.map((currentPost) => {
                                     return (
                                         <Post
                                             key={currentPost._id}
