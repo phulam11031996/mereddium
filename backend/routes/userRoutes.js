@@ -17,6 +17,14 @@ router
   .patch(userController.updateUserById)
   .delete(userController.deleteUserById);
 
+// /user/saved/:id
+router
+  .route('/saved/:id')
+  .get(userController.getSavedPosts)
+  .post(userController.addSavedPost)
+  .delete(userController.deleteSavedPost)
+
+// /user/image/:id
 router
   .route("/image/:id")
   .patch(imageUpload.single("image"), userController.updateUserImageById);

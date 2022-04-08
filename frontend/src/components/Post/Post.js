@@ -17,6 +17,7 @@ import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
 import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 
 import { CommentReply, Comments } from "..";
 import { parseCookie, deletePostById } from "../../utils";
@@ -114,6 +115,28 @@ export const Post = (props) => {
     }
   }
 
+    // save post
+    function savePost(userId, postId) {
+        if(userId !== null) {
+            makeSaveCall(userId, postId).then(response => {
+                if(response.status === 200)
+                    console.log("Successfully Saved Post!");
+            });
+        } else {
+            console.log("Must login first!");
+        }
+    }
+
+    async function makeSaveCall(userId, postId) {
+        try {
+            const response = await axios.post(`http://localhost:3030/user/saved/${userId}`, { postId: postId });
+            return response;
+        } catch(error) {
+            console.log(error);
+            return false;
+        }
+    }
+  
   return (
     <Card sx={{ maxWidth: 800 }} style={{ marginTop: 50 }}>
       <CardHeader
@@ -174,6 +197,10 @@ export const Post = (props) => {
               fontSize="small"
             />
           )}
+        </IconButton>
+        
+        <IconButton onClick={() => savePost(userId, postId)}>
+          <BookmarkBorderOutlinedIcon style={{ color: "orange" }} />
         </IconButton>
 
         <ExpandMore

@@ -31,109 +31,118 @@ const DrawerHeader = styled("div")(() => ({
 const Drawer = styled(MuiDrawer)(({ theme, open }) => ({}));
 
 export const SideNav = (props) => {
-  const [userId, setUserId] = useState("null");
-  const [login, setLogin] = useState(false);
+    const [userId, setUserId] = useState('null');
+    const [login, setLogin] = useState(false);
 
-  useEffect(() => {
-    if (document.cookie) {
-      let getUser = parseCookie(document.cookie).userId;
-      if (getUser !== "null") {
-        setUserId(getUser);
-        setLogin(true);
-      }
-    } else {
-      setUserId(null);
-      setLogin(false);
-    }
-  }, [login]);
+    useEffect(() => {
+        if (document.cookie) {
+            let getUser = parseCookie(document.cookie).userId;
+            if (getUser !== 'null') {
+                setUserId(getUser);
+                setLogin(true);
+            }
+        } else {
+            setUserId(null);
+            setLogin(false);
+        }
+    }, [login]);
 
-  return (
-    <Box>
-      <Drawer variant="permanent">
-        <DrawerHeader>
-          <Logo />
-        </DrawerHeader>
-        <List style={{ marginTop: 10 }}>
-          <ListItem
-            button
-            key="Popular"
-            onClick={(e) => {
-              props.sortBy("Popular");
-            }}
-          >
-            <ListItemIcon style={{ marginLeft: "20px" }}>
-              <WhatshotIcon color="primary" />
-            </ListItemIcon>
-          </ListItem>
+    return (
+        <Box>
+            <Drawer variant="permanent">
+                <DrawerHeader>
+                    <Logo />
+                </DrawerHeader>
+                <List style={{ marginTop: 10 }}>
+                    <ListItem
+                        button
+                        key="Popular"
+                        onClick={(e) => {
+                            props.sortBy('Popular');
+                        }}
+                    >
+                        <ListItemIcon style={{ marginLeft: '20px' }}>
+                            <WhatshotIcon color="primary" />
+                        </ListItemIcon>
+                    </ListItem>
 
-          <ListItem
-            button
-            key="Recent"
-            onClick={(e) => {
-              props.sortBy("Recent");
-            }}
-          >
-            <ListItemIcon style={{ marginLeft: "20px" }}>
-              <AccessTimeOutlinedIcon color="secondary" />
-            </ListItemIcon>
-          </ListItem>
+                    <ListItem
+                        button
+                        key="Recent"
+                        onClick={(e) => {
+                            props.sortBy('Recent');
+                        }}
+                    >
+                        <ListItemIcon style={{ marginLeft: '20px' }}>
+                            <AccessTimeOutlinedIcon color="secondary" />
+                        </ListItemIcon>
+                    </ListItem>
 
-          <ListItem
-            button
-            key="Trending"
-            onClick={(e) => {
-              props.sortBy("Trending");
-            }}
-          >
-            <ListItemIcon style={{ marginLeft: "20px" }}>
-              <TrendingUpOutlinedIcon color="secondary" />
-            </ListItemIcon>
-          </ListItem>
+                    <ListItem
+                        button
+                        key="Trending"
+                        onClick={(e) => {
+                            props.sortBy('Trending');
+                        }}
+                    >
+                        <ListItemIcon style={{ marginLeft: '20px' }}>
+                            <TrendingUpOutlinedIcon color="secondary" />
+                        </ListItemIcon>
+                    </ListItem>
 
-          {login && (
-            <Divider style={{ marginTop: "10px", marginBottom: "10px" }} />
-          )}
+                    {login && (
+                        <Divider
+                            style={{ marginTop: '10px', marginBottom: '10px' }}
+                        />
+                    )}
 
-          {login && (
-            <ListItem button key="Saved">
-              <ListItemIcon style={{ marginLeft: "20px" }}>
-                <Badge color="primary" variant="dot">
-                  <BookmarkBorderOutlinedIcon style={{ color: "orange" }} />
-                </Badge>
-              </ListItemIcon>
-            </ListItem>
-          )}
+                    {login && (
+                        <ListItem button key="Saved" onClick={() => props.savedPosts(userId)}>
+                            <ListItemIcon style={{ marginLeft: '20px' }}>
+                                <Badge color="primary" variant="dot">
+                                    <BookmarkBorderOutlinedIcon
+                                        style={{ color: 'orange' }}
+                                    />
+                                </Badge>
+                            </ListItemIcon>
+                        </ListItem>
+                    )}
 
-          {login && <CreatePost userId={userId} addPost={props.addPost} />}
+                    {login && (
+                        <CreatePost userId={userId} addPost={props.addPost} />
+                    )}
 
-          {login && (
-            <CreatePostEditor userId={userId} handleSubmit={props.updateList} />
-          )}
+                    {login && (
+                        <CreatePostEditor
+                            userId={userId}
+                            handleSubmit={props.updateList}
+                        />
+                    )}
 
-          <Divider style={{ marginTop: "10px", marginBottom: "10px" }} />
+                    <Divider
+                        style={{ marginTop: '10px', marginBottom: '10px' }}
+                    />
 
-          {!login && (
-            <ListItem
-              button
-              key="login"
-              onClick={() => {
-                window.location.href = "/login";
-              }}
-            >
-              <ListItemIcon style={{ marginLeft: "20px" }}>
-                <LoginOutlinedIcon
-                  color="secondary"
-                  style={{ color: "blue" }}
-                />
-              </ListItemIcon>
-            </ListItem>
-          )}
-
-          {login && <Dashboard userId={userId} addPost={props.addPost} />}
-
-          {login && <LogOut />}
-        </List>
-      </Drawer>
-    </Box>
-  );
+                    {!login && (
+                        <ListItem
+                            button
+                            key="login"
+                            onClick={() => {
+                                window.location.href = '/login';
+                            }}
+                        >
+                            <ListItemIcon style={{ marginLeft: '20px' }}>
+                                <LoginOutlinedIcon
+                                    color="secondary"
+                                    style={{ color: 'blue' }}
+                                />
+                            </ListItemIcon>
+                        </ListItem>
+                    )}
+                    {login && <Dashboard userId={userId} addPost={props.addPost} />}
+                    {login && <LogOut />}
+                </List>
+            </Drawer>
+        </Box>
+    );
 };

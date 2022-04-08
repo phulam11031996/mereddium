@@ -132,6 +132,15 @@ export const handleSearch = async (searchKey) => {
   }
 };
 
+export const handleSavedPosts = async (userId) => {
+    try {
+        const response = await axios.get(`http://localhost:3030/user/saved/${userId}`);
+        return response.data.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 export const makeSignUpCall = async (user) => {
   try {
     const response = await axios.post(

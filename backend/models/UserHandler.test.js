@@ -151,6 +151,110 @@ test("Adding user -- already existing", async () => {
     .toThrow("E11000 duplicate key error collection: test.users index: email_1 dup key: { email: \"marco@polo.com\" }");
 });
 
+test("Fetching saved posts", async () => {
+    const userId = "abc123";
+    const postId = "def456";
+
+    await userModel.updateOne({ _id: userId }, {
+        $push: { savedPosts: { postId: postId } },
+    });
+  
+    const result = await UserHandler.getSavedPosts(userId);
+
+    expect(result).toBeDefined();
+    expect(result.length).toBe(1);
+    expect(result[0].postId).toBe(postId);
+});
+
+test("Fetching saved posts -- user has two saved posts", async () => {
+    const userId = "abc123";
+    const postId = "def456";
+    const postId2 = "ghi789";
+
+    await userModel.updateOne({ _id: userId }, {
+        $push: { savedPosts: { postId: postId } },
+    });
+    await userModel.updateOne({ _id: userId }, {
+        $push: { savedPosts: { postId: postId2 } },
+    });
+
+    const result = await UserHandler.getSavedPosts(userId);
+
+    expect(result).toBeDefined();
+    expect(result.length).toBe(2);
+    expect(result[0].postId).toBe(postId2);
+    expect(result[1].postId).toBe(postId);
+});
+
+test("Fetching saved posts -- user has no posts saved", async () => {
+    const userId = "abc123";
+    const result = await UserHandler.getSavedPosts(userId);
+
+    expect(result).toBeDefined();
+    expect(result.length).toBe(0);
+});
+
+test("Fetching saved posts -- invalid user", async () => {
+    const userId = "xyz000";
+    const result = await UserHandler.getSavedPosts(userId);
+
+    expect(result).toBe(0);
+});
+
+test("Adding saved post", async () => {
+    const userId = "abc123";
+    const postId = "def456";
+
+    const result = await UserHandler.addSavedPost(userId, postId);
+    expect(result).toBeDefined();
+    expect(result.modifiedCount).toBe(1);
+
+    const user = await userModel.findOne({ _id: userId });
+    expect(user).toBeDefined();
+    expect(user.savedPosts.length).toBe(1);
+    expect(user.savedPosts[0].postId).toBe(postId);
+});
+
+test("Adding saved post -- duplicate entry", async () => {
+    const userId = "abc123";
+    const postId = "def456";
+
+    await UserHandler.addSavedPost(userId, postId);
+    const result = await UserHandler.addSavedPost(userId, postId);
+    expect(result).toBe(null);
+
+    const user = await userModel.findOne({ _id: userId });
+    expect(user).toBeDefined();
+    expect(user.savedPosts.length).toBe(1);
+    expect(user.savedPosts[0].postId).toBe(postId);
+});
+
+test("Adding saved post -- invalid user", async () => {
+  const userId = "xyz000";
+  const postId = "def456";
+
+  const result = await UserHandler.addSavedPost(userId, postId);
+  expect(result).toBe(0);
+
+  const user = await userModel.findOne({ _id: userId });
+  expect(user).toBe(null);
+});
+
+test("Deleting saved post", async () => {
+    const userId = "abc123";
+    const postId = "def456";
+
+    await userModel.updateOne({ _id: userId }, {
+        $push: { savedPosts: { postId: postId } },
+    });
+
+    const result = await UserHandler.deleteSavedPost(userId, postId);
+    expect(result.modifiedCount).toBe(1);
+
+    const user = await userModel.findOne({ _id: userId });
+    expect(user.savedPosts.length).toBe(0);
+});
+
 test("Print user JSON", async () => {
     const id = "abc123";
     const user = await UserHandler.getUserById(id);
