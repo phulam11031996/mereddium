@@ -1,17 +1,18 @@
-const express = require('express');
-const userController = require('../controllers/UserController');
-
+const express = require("express");
 const router = express.Router();
+
+const imageUpload = require("../middleware/imageUpload");
+const userController = require("../controllers/UserController");
 
 // /user/
 router
-  .route('/')
+  .route("/")
   .get(userController.getAllUsers)
   .post(userController.createUser);
 
 // /user/:id
 router
-  .route('/:id')
+  .route("/:id")
   .get(userController.getUserById)
   .patch(userController.updateUserById)
   .delete(userController.deleteUserById);
@@ -22,5 +23,10 @@ router
   .get(userController.getSavedPosts)
   .post(userController.addSavedPost)
   .delete(userController.deleteSavedPost)
+
+// /user/image/:id
+router
+  .route("/image/:id")
+  .patch(imageUpload.single("image"), userController.updateUserImageById);
 
 module.exports = router;

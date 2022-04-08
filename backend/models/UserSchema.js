@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const validator = require('validator');
+const validator = require("validator");
 
 // Creating User Schema
 const userSchema = new mongoose.Schema({
@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
 	lastName: {
 		type: String,
 		required: [true, 'A person should have Last Name'],
-	  },
+	},
 	email: {
 	  type: String,
 	  required: [true, 'Please enter email address'],
@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
 	},
 	photo: {
 	  type: String,
-	  default: 'default.jpg',
+	  default: "uploads/images/default.png",
 	},
 	password: {
 	  type: String,
@@ -48,6 +48,10 @@ const userSchema = new mongoose.Schema({
 	  },
 	  select: false
 	},
+  password_bcrypt: {
+    type: String,
+    required: [true, "Please enter valid password"],
+  },
 	passwordChangedAt: {
 	  type: Date,
 	},
@@ -91,7 +95,6 @@ const userSchema = new mongoose.Schema({
 			}
 		}
 	}
-
 );
 
 module.exports = userSchema;

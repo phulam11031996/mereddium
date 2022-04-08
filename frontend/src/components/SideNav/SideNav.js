@@ -1,30 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Badge from '@mui/material/Badge';
-import MuiDrawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
+import React, { useState, useEffect } from "react";
+import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Badge from "@mui/material/Badge";
+import MuiDrawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
+import Divider from "@mui/material/Divider";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
 
-import { Logo } from '../../images/Logo';
-import { CreatePost, CreatePostEditor } from '../index';
+import { Logo } from "../../images/Logo";
+import { CreatePost, CreatePostEditor } from "../index";
+import { Dashboard } from "../Dashboard";
 
-import WhatshotIcon from '@mui/icons-material/Whatshot';
-import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
-import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
-import TrendingUpOutlinedIcon from '@mui/icons-material/TrendingUpOutlined';
+import WhatshotIcon from "@mui/icons-material/Whatshot";
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
+import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 
-import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
-import { LogOut } from '../../app/pages';
+import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
+import { LogOut } from "../../app/pages";
 
-import { parseCookie } from '../../utils';
+import { parseCookie } from "../../utils";
 
-const DrawerHeader = styled('div')(() => ({
-    position: 'relative',
-    top: 15,
-    left: 30
+const DrawerHeader = styled("div")(() => ({
+  position: "relative",
+  top: 15,
+  left: 30,
 }));
 
 const Drawer = styled(MuiDrawer)(({ theme, open }) => ({}));
@@ -138,6 +139,7 @@ export const SideNav = (props) => {
                             </ListItemIcon>
                         </ListItem>
                     )}
+                    {login && <Dashboard userId={userId} addPost={props.addPost} />}
                     {login && <LogOut />}
                 </List>
             </Drawer>
