@@ -39,6 +39,7 @@
     "react-editor-js": "latest",
     "react-router-dom": "^6.2.1",
     "react-scripts": "^5.0.0",
+    "react-spinners": "^0.11.0",
     "semantic-ui-react": "latest",
     "styled-components": "^5.3.5",
     "throttle-debounce": "^3.0.1",

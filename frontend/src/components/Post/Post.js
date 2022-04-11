@@ -27,9 +27,7 @@ const ExpandMore = styled((props) => {
 })(({ theme, expand }) => ({
     transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
     marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-        duration: theme.transitions.duration.shortest
-    })
+    transitionDuration: '0.1s'
 }));
 
 export const Post = (props) => {
@@ -120,7 +118,11 @@ export const Post = (props) => {
     return (
         <Card style={{ marginTop: 25 }}>
             <CardHeader
-                avatar={photo !== '' && <Avatar />}
+                avatar={
+                    photo !== '' && (
+                        <Avatar src={`http://localhost:3030/${photo}`} />
+                    )
+                }
                 action={
                     <IconButton
                         onClick={() => deletePostById(props.property._id)}
@@ -205,7 +207,11 @@ export const Post = (props) => {
                 </CardContent>
 
                 {turnOnComments && (
-                    <Comments comments={comments} postId={postId} />
+                    <Comments
+                        comments={comments}
+                        postId={postId}
+                        userId={userId}
+                    />
                 )}
             </Collapse>
         </Card>
