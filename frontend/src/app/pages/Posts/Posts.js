@@ -34,18 +34,7 @@ const override = css`
 `;
 
 const theme = createTheme({
-    components: {
-        // Name of the component
-        MuiButton: {
-            styleOverrides: {
-                // Name of the slot
-                root: {
-                    // Some CSS
-                    fontSize: '1rem'
-                }
-            }
-        }
-    }
+    fontSize: '9px'
 });
 
 export const Posts = (props) => {
@@ -115,23 +104,39 @@ export const Posts = (props) => {
                 item
                 lg={3}
                 md={2}
-                xs={12}
-                display={{ md: 'block', lg: 'block' }}
+                display={{ md: 'block', lg: 'block', xs: 'none' }}
             >
-                <Box marginTop="50px" theme={theme}>
-                    <Item>
+                <Box marginTop="50px">
+                    <Item style={{ fontSize: '10px' }}>
                         Search By Tags
                         <Stack
                             direction={{ lg: 'row', md: 'column', xs: 'none' }}
                             spacing={{ lg: 1 }}
-                            md={{
-                                fontSize: '9px'
-                            }}
                         >
-                            <Button variant="outlined">Tech</Button>
-                            <Button variant="outlined">Finance</Button>
-                            <Button variant="outlined">Medicine</Button>
-                            <Button variant="outlined">Music</Button>
+                            <Button
+                                style={{ fontSize: '10px' }}
+                                variant="outlined"
+                            >
+                                Tech
+                            </Button>
+                            <Button
+                                style={{ fontSize: '10px' }}
+                                variant="outlined"
+                            >
+                                Finance
+                            </Button>
+                            <Button
+                                style={{ fontSize: '10px' }}
+                                variant="outlined"
+                            >
+                                Medicine
+                            </Button>
+                            <Button
+                                style={{ fontSize: '10px' }}
+                                variant="outlined"
+                            >
+                                Music
+                            </Button>
                         </Stack>
                     </Item>
                 </Box>
