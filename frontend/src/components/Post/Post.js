@@ -150,9 +150,11 @@ export const Post = (props) => {
           )
         }
         action={
-          <IconButton onClick={() => deletePostById(props.property._id)}>
-            {userMatch && <DeleteOutlineIcon style={{ color: "#ee6c4d" }} />}
-          </IconButton>
+          userMatch && (
+            <IconButton onClick={() => deletePostById(props.property._id)}>
+              <DeleteOutlineIcon style={{ color: "#ee6c4d" }} />
+            </IconButton>
+          )
         }
         title={firstName}
         subheader={props.property.createdAt.slice(0, 10)}
