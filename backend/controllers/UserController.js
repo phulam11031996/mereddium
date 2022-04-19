@@ -54,23 +54,6 @@ exports.deleteUserById = catchAsync(async (req, res) => {
   res.status(200).send(req.params.id).end();
 });
 
-// UPDATE /user/image/{id}
-exports.updateUserImageById = catchAsync(async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return next(
-      new HttpError("Invalid file type, please check your data.", 422)
-    );
-  }
-
-  const image = await UserHandler.updateUserImageById(
-    req.params.id,
-    req.file.path
-  );
-
-  res.status(200).json({ message: "Updated Image." });
-});
-
 // GET /user/saved/{id}
 exports.getSavedPosts = catchAsync(async (req, res) => {
 	const userId = req.params.id;

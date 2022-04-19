@@ -115,38 +115,46 @@ export const Post = (props) => {
     }
   }
 
-    // save post
-    function savePost(userId, postId) {
-        if(userId !== null) {
-            makeSaveCall(userId, postId).then(response => {
-                if(response.status === 200)
-                    console.log("Successfully Saved Post!");
-            });
-        } else {
-            console.log("Must login first!");
-        }
+  // save post
+  function savePost(userId, postId) {
+    if (userId !== null) {
+      makeSaveCall(userId, postId).then((response) => {
+        if (response.status === 200) console.log("Successfully Saved Post!");
+      });
+    } else {
+      console.log("Must login first!");
     }
+  }
 
-    async function makeSaveCall(userId, postId) {
-        try {
-            const response = await axios.post(`http://localhost:3030/user/saved/${userId}`, { postId: postId });
-            return response;
-        } catch(error) {
-            console.log(error);
-            return false;
-        }
+  async function makeSaveCall(userId, postId) {
+    try {
+      const response = await axios.post(
+        `http://localhost:3030/user/saved/${userId}`,
+        { postId: postId }
+      );
+      return response;
+    } catch (error) {
+      console.log(error);
+      return false;
     }
-  
+  }
+
   return (
     <Card sx={{ maxWidth: 800 }} style={{ marginTop: 50 }}>
       <CardHeader
         avatar={
-          photo !== "" && <Avatar src={`http://localhost:3030/${photo}`} />
+          photo !== "" && (
+            <Avatar
+              src={`https://res.cloudinary.com/${process.env.REACT_APP_CLOUD_NAME}/image/upload/c_crop,g_custom/${photo}`}
+            />
+          )
         }
         action={
-          <IconButton onClick={() => deletePostById(props.property._id)}>
-            {userMatch && <DeleteOutlineIcon style={{ color: "#ee6c4d" }} />}
-          </IconButton>
+          userMatch && (
+            <IconButton onClick={() => deletePostById(props.property._id)}>
+              <DeleteOutlineIcon style={{ color: "#ee6c4d" }} />
+            </IconButton>
+          )
         }
         title={firstName}
         subheader={props.property.createdAt.slice(0, 10)}
@@ -198,7 +206,7 @@ export const Post = (props) => {
             />
           )}
         </IconButton>
-        
+
         <IconButton onClick={() => savePost(userId, postId)}>
           <BookmarkBorderOutlinedIcon style={{ color: "orange" }} />
         </IconButton>

@@ -30,6 +30,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.24.0",
     "classnames": "2.2.6",
+    "dotenv": "^16.0.0",
     "editorjs-inline-image": "^1.0.2",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",

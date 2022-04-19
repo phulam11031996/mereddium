@@ -40,7 +40,11 @@ export const Comment = (props) => {
     >
       <Grid container wrap="nowrap" spacing={2}>
         <Grid item>
-          {photo !== "" && <Avatar src={`http://localhost:3030/${photo}`} />}
+          {photo !== "" && (
+            <Avatar
+              src={`https://res.cloudinary.com/${process.env.REACT_APP_CLOUD_NAME}/image/upload/c_crop,g_custom/${photo}`}
+            />
+          )}
         </Grid>
         <Grid item xs zeroMinWidth>
           <div>
