@@ -153,16 +153,6 @@ export const makeSignUpCall = async (user) => {
   }
 };
 
-export const updateUserImage = async (image, userId) => {
-  try {
-    const response = await axios.patch(
-      `http://localhost:3030/user/image/${userId}`,
-      image
-    );
-    return response;
-  } catch (error) {}
-};
-
 export const monthToString = (month) => {
   switch (month) {
     case "01":

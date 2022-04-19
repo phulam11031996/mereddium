@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -12,9 +13,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-import UploadImage from "./UploadImage";
-
-import { updateUserImage } from "../../utils";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -22,29 +22,68 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export const Dashboard = (props) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [fileName, setFileName] = useState(null);
+  const [path, setPath] = useState(null);
+  const [delToken, setDelToken] = useState(null);
 
-  const [file, setFile] = useState({
-    image: null,
-  });
-
-  const getImage = (image) => {
-    setFile({ image });
+  const handleOnSubmit = async () => {
+    await axios
+      .patch(`http://localhost:3030/user/${props.userId}`, { photo: path })
+      .then((res) => {
+        setIsOpen(false);
+        window.location = "/";
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
-  const handleOnSubmitImage = async (event) => {
-    event.preventDefault();
-    const image = new FormData();
-    file.image && image.append("image", file.image);
+  const handleDeleteImage = async () => {
+    await axios
+      .post(
+        `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUD_NAME}/delete_by_token`,
+        { token: delToken }
+      )
+      .then(() => {
+        setPath(null);
+        setFileName(null);
+        setDelToken(null);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
-    await updateUserImage(image, props.userId).then((response) => {
-      if (response) {
-        console.log(response.data.message);
-        // setIsOpen(false);
-        window.location = "/";
-      } else {
-        console.log("Can't upload image.");
+  const handleOpenWidget = () => {
+    window.cloudinary.openUploadWidget(
+      {
+        cloudName: process.env.REACT_APP_CLOUD_NAME,
+        uploadPreset: process.env.REACT_APP_UPLOAD_PRESET,
+        sources: [
+          "local",
+          "url",
+          "image_search",
+          "google_drive",
+          "facebook",
+          "dropbox",
+          "instagram",
+        ],
+        googleApiKey: process.env.REACT_APP_GOOGLEAPI,
+        showAdvancedOptions: true,
+        cropping: true,
+        multiple: false,
+        max_files: 5000000,
+        client_allowed_formats: ["png", "bmp", "jpeg", "gif"],
+      },
+      (err, info) => {
+        if (info.event === "success") {
+          setDelToken(info.info.delete_token);
+          setPath(info.info.path);
+          setFileName(info.info.original_filename);
+          console.log(info);
+        }
       }
-    });
+    );
   };
 
   return (
@@ -88,10 +127,10 @@ export const Dashboard = (props) => {
               User Dashboard
             </Typography>
             <Button
-              disabled={file.image ? false : true}
+              disabled={fileName ? false : true}
               autoFocus
               color="inherit"
-              onClick={handleOnSubmitImage}
+              onClick={handleOnSubmit}
               style={{
                 border: "1px solid white",
                 color: "white",
@@ -103,7 +142,28 @@ export const Dashboard = (props) => {
         </AppBar>
         <List>
           <ListItem>
-            <UploadImage getImage={getImage} />
+            <Button
+              onClick={handleOpenWidget}
+              size="small"
+              style={{
+                border: "2px solid black",
+                color: "black",
+              }}
+            >
+              <UploadFileIcon />
+              {fileName ? `${fileName}` : `Upload Image`}
+            </Button>
+            {fileName && (
+              <Button
+                onClick={handleDeleteImage}
+                size="small"
+                style={{
+                  color: "black",
+                }}
+              >
+                <ClearIcon />
+              </Button>
+            )}
           </ListItem>
         </List>
       </Dialog>
