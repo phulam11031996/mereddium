@@ -11,17 +11,17 @@ import { Avatar } from "@material-ui/core";
 
 export const Comment = (props) => {
   const [comment, setComment] = useState(props.comment);
+  const [userId, setUserId] = useState(null);
   const [firstName, setFirstName] = useState("");
   const [photo, setPhoto] = useState("");
-  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     axios
       .get("http://localhost:3030/user/" + comment.userId)
       .then((user) => {
+        setUserId(user.data.data.user._id);
         setFirstName(user.data.data.user.firstName);
         setPhoto(user.data.data.user.photo);
-        setUserId(user.data.data.user._id);
       })
       .catch((error) => {
         console.log(error);
@@ -29,8 +29,19 @@ export const Comment = (props) => {
   }, []);
 
   const handleDeleteComment = async () => {
-    await axios.delete().then().catch();
-  }
+    console.log(comment.postId);
+    const postId = comment.postId;
+    await axios
+      .delete(`http://localhost:3030/comment/${comment._id}`, {
+        data: { postId: comment.postId },
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   return (
     <Card key={comment._id} style={{ padding: "5px 5px", marginTop: "5px" }}>

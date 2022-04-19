@@ -9,11 +9,22 @@ export const Comments = (props) => {
     setComments(newComments);
   };
 
+  const deleteComment = (newComments) => {
+    setComments(newComments);
+  };
+
   return (
     <>
       <div style={{ padding: 14 }} className="App">
         {comments.map((comment) => {
-          return <Comment key={comment._id} comment={comment} userId={props.userId}/>;
+          return (
+            <Comment
+              key={comment._id}
+              comment={comment}
+              userId={props.userId}
+              deleteComment={deleteComment}
+            />
+          );
         })}
       </div>
 
