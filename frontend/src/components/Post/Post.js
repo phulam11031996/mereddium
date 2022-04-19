@@ -162,7 +162,6 @@ export const Post = (props) => {
 
       {props.property.imageURL !== "" ? (
         <CardMedia
-          component="img"
           height="500"
           image={props.property.imageURL}
           alt="Paella dish"
@@ -226,7 +225,7 @@ export const Post = (props) => {
           <Typography paragraph>{message}</Typography>
         </CardContent>
 
-        {turnOnComments && <Comments comments={comments} postId={postId} />}
+        {turnOnComments && <Comments comments={comments} postId={postId} userId={userId}/>}
       </Collapse>
     </Card>
   );

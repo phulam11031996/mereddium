@@ -13,11 +13,11 @@ export const Comments = (props) => {
     <>
       <div style={{ padding: 14 }} className="App">
         {comments.map((comment) => {
-          return <Comment key={comment._id} comment={comment} />;
+          return <Comment key={comment._id} comment={comment} userId={props.userId}/>;
         })}
       </div>
 
-      <CommentReply postId={postId} addComment={addComment} />
+      {props.userId && <CommentReply postId={postId} addComment={addComment} />}
     </>
   );
 };
