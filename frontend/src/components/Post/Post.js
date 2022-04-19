@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -9,7 +10,6 @@ import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { red } from "@mui/material/colors";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
@@ -162,7 +162,6 @@ export const Post = (props) => {
 
       {props.property.imageURL !== "" ? (
         <CardMedia
-          component="img"
           height="500"
           image={props.property.imageURL}
           alt="Paella dish"
@@ -226,7 +225,9 @@ export const Post = (props) => {
           <Typography paragraph>{message}</Typography>
         </CardContent>
 
-        {turnOnComments && <Comments comments={comments} postId={postId} />}
+        {turnOnComments && (
+          <Comments comments={comments} postId={postId} userId={userId} />
+        )}
       </Collapse>
     </Card>
   );

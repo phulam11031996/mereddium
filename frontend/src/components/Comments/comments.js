@@ -9,15 +9,29 @@ export const Comments = (props) => {
     setComments(newComments);
   };
 
+  const deleteComment = (commentId) => {
+    let updatedComments = comments.filter((comment) => {
+      return comment._id != commentId;
+    })
+    setComments(updatedComments);
+  };
+
   return (
     <>
       <div style={{ padding: 14 }} className="App">
         {comments.map((comment) => {
-          return <Comment key={comment._id} comment={comment} />;
+          return (
+            <Comment
+              key={comment._id}
+              comment={comment}
+              userId={props.userId}
+              deleteComment={deleteComment}
+            />
+          );
         })}
       </div>
 
-      <CommentReply postId={postId} addComment={addComment} />
+      {props.userId && <CommentReply postId={postId} addComment={addComment} />}
     </>
   );
 };

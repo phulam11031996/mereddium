@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Grid, Paper } from "@material-ui/core";
-import { monthToString } from "../../utils";
 import axios from "axios";
 
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardContent from "@mui/material/CardContent";
+import IconButton from "@mui/material/IconButton";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import Typography from "@mui/material/Typography";
+import { Avatar } from "@material-ui/core";
+
 export const Comment = (props) => {
+  const [comment, setComment] = useState(props.comment);
+  const [userId, setUserId] = useState(null);
   const [firstName, setFirstName] = useState("");
   const [photo, setPhoto] = useState("");
-  const [comment, setComment] = useState(props.comment);
 
   useEffect(() => {
     axios
       .get("http://localhost:3030/user/" + comment.userId)
       .then((user) => {
+        setUserId(user.data.data.user._id);
         setFirstName(user.data.data.user.firstName);
         setPhoto(user.data.data.user.photo);
       })
@@ -20,49 +28,43 @@ export const Comment = (props) => {
       });
   }, []);
 
-  const imgLink =
-    "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260";
-
-  let timeStamp = comment.timeStamp;
-
-  let year = timeStamp.slice(0, 4);
-  let month = timeStamp.slice(5, 7);
-  let day = timeStamp.slice(8, 10);
-  let hour = timeStamp.slice(11, 13);
-  let minute = timeStamp.slice(14, 16);
-
-  month = monthToString(month);
+  const handleDeleteComment = async () => {
+    const postId = comment.postId;
+    await axios
+      .delete(`http://localhost:3030/comment/${comment._id}`, {
+        data: { postId: comment.postId },
+      })
+      .then((res) => {
+        props.deleteComment(res.data.commentId);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   return (
-    <Paper
-      key={comment._id}
-      style={{ padding: "40px 20px", marginTop: "10px" }}
-    >
-      <Grid container wrap="nowrap" spacing={2}>
-        <Grid item>
-          {photo !== "" && (
+    <Card key={comment._id} style={{ padding: "5px 5px", marginTop: "5px" }}>
+      <CardHeader
+        avatar={
+          photo !== "" && (
             <Avatar
               src={`https://res.cloudinary.com/${process.env.REACT_APP_CLOUD_NAME}/image/upload/c_crop,g_custom/${photo}`}
             />
-          )}
-        </Grid>
-        <Grid item xs zeroMinWidth>
-          <div>
-            <h4 style={{ margin: 0, textAlign: "left" }}>{firstName}</h4>
-          </div>
-          <p
-            style={{
-              textAlign: "left",
-              marginTop: "0px",
-              color: "grey",
-              fontSize: "10px",
-            }}
-          >
-            {year}, {month} - {day} at {hour}:{minute}
-          </p>
-          <p style={{ textAlign: "left" }}>{comment.message}</p>
-        </Grid>
-      </Grid>
-    </Paper>
+          )
+        }
+        action={
+          props.userId == userId && (
+            <IconButton onClick={handleDeleteComment}>
+              <DeleteOutlineIcon style={{ color: "#ee6c4d" }} />
+            </IconButton>
+          )
+        }
+        title={firstName}
+        subheader={comment.lastModifiedAt.slice(0, 10)}
+      />
+      <CardContent>
+        <Typography paragraph>{comment.message}</Typography>
+      </CardContent>
+    </Card>
   );
 };
