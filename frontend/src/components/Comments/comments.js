@@ -9,8 +9,11 @@ export const Comments = (props) => {
     setComments(newComments);
   };
 
-  const deleteComment = (newComments) => {
-    setComments(newComments);
+  const deleteComment = (commentId) => {
+    let updatedComments = comments.filter((comment) => {
+      return comment._id != commentId;
+    })
+    setComments(updatedComments);
   };
 
   return (

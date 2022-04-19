@@ -29,14 +29,13 @@ export const Comment = (props) => {
   }, []);
 
   const handleDeleteComment = async () => {
-    console.log(comment.postId);
     const postId = comment.postId;
     await axios
       .delete(`http://localhost:3030/comment/${comment._id}`, {
         data: { postId: comment.postId },
       })
       .then((res) => {
-        console.log(res);
+        props.deleteComment(res.data.commentId);
       })
       .catch((err) => {
         console.error(err);
