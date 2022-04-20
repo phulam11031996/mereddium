@@ -12,7 +12,7 @@ export const Comments = (props) => {
   const deleteComment = (commentId) => {
     let updatedComments = comments.filter((comment) => {
       return comment._id != commentId;
-    })
+    });
     setComments(updatedComments);
   };
 
