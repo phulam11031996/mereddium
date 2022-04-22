@@ -77,26 +77,26 @@ exports.getSavedPosts = catchAsync(async (req, res) => {
   const savedPosts = await UserHandler.getSavedPosts(userId);
 
   if (savedPosts === 0) {
-	res.status(401).json({ status: "Invalid user!" });
+	  res.status(401).json({ status: "Invalid user!" });
   } else {
-	const savedPostList = await Promise.all(
-	  savedPosts.map(async ({ postId }) => {
-		let post = await PostHandler.getPostById(postId);
-		if (post === null) {
-		  return { removeSavedPost: postId };
-		} else {
-		  return post;
-		}
-	  })
-	);
+	  const savedPostList = await Promise.all(
+	    savedPosts.map(async ({ postId }) => {
+		    let post = await PostHandler.getPostById(postId);
+		    if (post === null) {
+		      return { removeSavedPost: postId };
+		    } else {
+		      return post;
+		    }
+	    })
+	  );
 
-	let postsToRemove = savedPostList.filter((post) => "removeSavedPost" in post);
-	postsToRemove.map(async ({ removeSavedPost }) => await UserHandler.deleteSavedPost(userId, removeSavedPost));
+	  let postsToRemove = savedPostList.filter((post) => "removeSavedPost" in post);
+	  postsToRemove.map(async ({ removeSavedPost }) => await UserHandler.deleteSavedPost(userId, removeSavedPost));
 
-	res.status(200).json({
-	  status: 'success',
-	  data: savedPostList.filter((post) => !("removeSavedPost" in post))
-	});
+	  res.status(200).json({
+	    status: 'success',
+	    data: savedPostList.filter((post) => !("removeSavedPost" in post))
+	  });
   }
 });
 
@@ -107,19 +107,19 @@ exports.addSavedPost = catchAsync(async (req, res) => {
   const result = await UserHandler.addSavedPost(userId, postId);
 
   if (result === 0) {
-	res.status(401).json({
-	  status: "Must login first!"
-	});
+	  res.status(401).json({
+	    status: "Must login first!"
+	  });
   } else if (result === null) {
-	res.status(200).json({
-	  status: 'post already saved',
-	  data: { postId }
-	});
+	  res.status(200).json({
+	    status: 'post already saved',
+	    data: { postId }
+	  });
   } else {
-	res.status(201).json({
-	  status: 'success',
-	  data: result
-	});
+	  res.status(201).json({
+	    status: 'success',
+	    data: result
+	  });
   }
 });
 
@@ -130,11 +130,11 @@ exports.deleteSavedPost = catchAsync(async (req, res) => {
   const result = await UserHandler.deleteSavedPost(userId, postId);
 
   if (result === null) {
-	res.status(401).json({ status: "Must login first!" });
+	  res.status(401).json({ status: "Must login first!" });
   } else {
-	res.status(200).json({
-	  status: 'success',
-	  data: result
-	});
+    res.status(200).json({
+	    status: 'success',
+	    data: result
+	  });
   }
 });

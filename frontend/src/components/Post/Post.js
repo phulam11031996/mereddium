@@ -127,28 +127,21 @@ export const Post = (props) => {
   }
 
   // save post
-  function savePost(userId, postId) {
-    if (userId !== null) {
-      makeSaveCall(userId, postId).then(response => {
-        if (response.status === 200 && response.data === { postId }) {
-          console.log("Post Already Saved!");
-        } else if (response.status === 200) {
-          console.log("Successfully Unsaved Post!");
-        } else if (response.status === 201) {
-          console.log("Successfully Saved Post!");
-        }
-      });
-
-      axios
-        .get("http://localhost:3030/user/" + userId)
-        .then((user) => {
-          setUserSavedPosts(user.data.data.user.savedPosts);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } else {
+ async function savePost(userId, postId) {
+    if (userId === "null") {
       console.log("Must login first!");
+    } else {
+     const response = await makeSaveCall(userId, postId);
+    if (response.status === 200 && response.data === { postId }) {
+        console.log("Post Already Saved!");
+      } else if (response.status === 200) {
+        console.log("Successfully Unsaved Post!");
+      } else if (response.status === 201) {
+        console.log("Successfully Saved Post!");
+      }
+
+      const user = await axios.get("http://localhost:3030/user/" + userId);
+      setUserSavedPosts(user.data.data.user.savedPosts);
     }
   }
 
@@ -156,12 +149,10 @@ export const Post = (props) => {
     try {
       const userSaved = userSavedPosts.some((saved) => saved.postId === postId)
       if (userSaved) {
-        const response = await axios.delete(`http://localhost:3030/user/saved/${userId}`, { postId: postId });
-        console.log(response);
+        const response = await axios.delete(`http://localhost:3030/user/saved/${userId}`, { data: { postId: postId } });
         return response;
       } else {
         const response = await axios.post(`http://localhost:3030/user/saved/${userId}`, { postId: postId });
-        console.log("saved post");
         return response;
       }
     } catch (error) {
