@@ -9,6 +9,8 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import Typography from "@mui/material/Typography";
 import { Avatar } from "@material-ui/core";
 
+import { getCookie } from "../../utils";
+
 export const Comment = (props) => {
   const [comment, setComment] = useState(props.comment);
   const [userId, setUserId] = useState(null);
@@ -33,6 +35,7 @@ export const Comment = (props) => {
     await axios
       .delete(`http://localhost:3030/comment/${comment._id}`, {
         data: { postId: comment.postId },
+        headers: { Authorization: `Basic ${getCookie("jwt")}` },
       })
       .then((res) => {
         props.deleteComment(res.data.commentId);

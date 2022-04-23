@@ -21,6 +21,7 @@ import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlin
 
 import { CommentReply, Comments } from "..";
 import { parseCookie, deletePostById } from "../../utils";
+import { getCookie } from "../../utils";
 import axios from "axios";
 
 const ExpandMore = styled((props) => {
@@ -106,7 +107,8 @@ export const Post = (props) => {
     try {
       const response = await axios.post(
         `http://localhost:3030/post/vote/${postId}`,
-        { userId: userId, value: value }
+        { userId: userId, value: value },
+        { headers: { Authorization: `Basic ${getCookie("jwt")}` } }
       );
       return response;
     } catch (error) {

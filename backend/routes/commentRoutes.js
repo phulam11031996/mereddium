@@ -1,19 +1,20 @@
-const express = require('express');
-const commentController = require('../controllers/CommentController');
+const express = require("express");
+const commentController = require("../controllers/CommentController");
+const checkAuth = require("../middleware/check-auth");
 
 const router = express.Router();
 
 // /comment/
 router
-  .route('/')
+  .route("/")
   .get(commentController.getAllComments)
-  .post(commentController.createComment);
+  .post(checkAuth, commentController.createComment);
 
 // /comment/:id
 router
-  .route('/:id')
+  .route("/:id")
   .get(commentController.getCommentById)
-  .patch(commentController.updateCommentById)
-  .delete(commentController.deleteCommentById);
+  .patch(checkAuth, commentController.updateCommentById)
+  .delete(checkAuth, commentController.deleteCommentById);
 
 module.exports = router;

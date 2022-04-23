@@ -82,18 +82,3 @@ module.exports = {
   updateCommentById,
   deleteCommentById,
 };
-
-// try {
-//     const sess = await mongoose.startSession();
-//     sess.startTransaction();
-//     await place.remove({ session: sess });
-//     place.creator.places.pull(place);
-//     await place.creator.save({ session: sess });
-//     await sess.commitTransaction();
-//   } catch (err) {
-//     const error = new HttpError(
-//       'Something went wrong, could not delete place.',
-//       500
-//     );
-//     return next(error);
-//   }
