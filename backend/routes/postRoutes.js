@@ -1,24 +1,23 @@
-const express = require('express');
-const postController = require('../controllers/PostController');
+const express = require("express");
+const postController = require("../controllers/PostController");
+const checkAuth = require("../middleware/check-auth");
 
 const router = express.Router();
 
 // /post/
 router
-  .route('/')
+  .route("/")
   .get(postController.getAllPosts)
-  .post(postController.createPost); 
+  .post(checkAuth, postController.createPost);
 
 // /post/:id
 router
-  .route('/:id')
+  .route("/:id")
   .get(postController.getPostById)
-  .patch(postController.updatePostById)
-  .delete(postController.deletePostById);
+  .patch(checkAuth, postController.updatePostById)
+  .delete(checkAuth, postController.deletePostById);
 
 // /post/vote/:id
-router
-  .route('/vote/:id')
-  .post(postController.votePost);
+router.route("/vote/:id").post(checkAuth, postController.votePost);
 
 module.exports = router;
