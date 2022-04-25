@@ -18,6 +18,7 @@ import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 
 import { CommentReply, Comments } from "..";
 import { parseCookie, deletePostById } from "../../utils";
@@ -57,6 +58,7 @@ export const Post = (props) => {
   const [downVoteUsers, setDownVoteUsers] = useState(
     props.property.downVoteUsers
   );
+  const [userSavedPosts, setUserSavedPosts] = useState([]);
 
   useEffect(() => {
     axios
@@ -81,6 +83,15 @@ export const Post = (props) => {
       } else {
         setUserId(null);
       }
+
+      axios
+        .get("http://localhost:3030/user/" + getUser)
+        .then((user) => {
+          setUserSavedPosts(user.data.data.user.savedPosts);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   }, []);
 
@@ -118,23 +129,34 @@ export const Post = (props) => {
   }
 
   // save post
-  function savePost(userId, postId) {
-    if (userId !== null) {
-      makeSaveCall(userId, postId).then((response) => {
-        if (response.status === 200) console.log("Successfully Saved Post!");
-      });
-    } else {
+  async function savePost(userId, postId) {
+    if (userId === "null") {
       console.log("Must login first!");
+    } else {
+     const response = await makeSaveCall(userId, postId);
+    if (response.status === 200 && response.data === { postId }) {
+        console.log("Post Already Saved!");
+      } else if (response.status === 200) {
+        console.log("Successfully Unsaved Post!");
+      } else if (response.status === 201) {
+        console.log("Successfully Saved Post!");
+      }
+
+      const user = await axios.get("http://localhost:3030/user/" + userId);
+      setUserSavedPosts(user.data.data.user.savedPosts);
     }
   }
 
   async function makeSaveCall(userId, postId) {
     try {
-      const response = await axios.post(
-        `http://localhost:3030/user/saved/${userId}`,
-        { postId: postId }
-      );
-      return response;
+      const userSaved = userSavedPosts.some((saved) => saved.postId === postId)
+      if (userSaved) {
+        const response = await axios.delete(`http://localhost:3030/user/saved/${userId}`, { data: { postId: postId } });
+        return response;
+      } else {
+        const response = await axios.post(`http://localhost:3030/user/saved/${userId}`, { postId: postId });
+        return response;
+      }
     } catch (error) {
       console.log(error);
       return false;
@@ -209,7 +231,10 @@ export const Post = (props) => {
         </IconButton>
 
         <IconButton onClick={() => savePost(userId, postId)}>
-          <BookmarkBorderOutlinedIcon style={{ color: "orange" }} />
+          {userSavedPosts.some((saved) => saved.postId === postId) === false
+            && <BookmarkBorderOutlinedIcon style={{ color: "orange" }} />}
+          {userSavedPosts.some((saved) => saved.postId === postId) === true
+            && <BookmarkIcon style={{ color: "orange" }} />}
         </IconButton>
 
         <ExpandMore

@@ -151,7 +151,7 @@ async function getSavedPosts(userId) {
 	const userModel = db.model('User', UserSchema);
 
 	const user = await userModel.findOne({ _id: userId });
-	if(user === null) {
+	if (user === null) {
 		return 0;
 	}
 
@@ -163,22 +163,22 @@ async function getSavedPosts(userId) {
 }
 
 // POST /user/saved/{id}
-async function addSavedPost(userId, _postId) {
+async function addSavedPost(userId, postId) {
 	const db = await DatabaseHandler.getDbConnection();
 	const userModel = db.model('User', UserSchema);
 
 	const user = await userModel.findOne({ _id: userId });
-	if(user === null) {
+	if (user === null) {
 		return 0;
 	}
 
-	let duplicate = user.savedPosts.find( ({ postId }) => postId === _postId );
-	if(duplicate !== undefined && duplicate !== null) {
+	let duplicate = user.savedPosts.find( (post) => post.postId === postId );
+	if (duplicate !== undefined && duplicate !== null) {
 		return null;
 	}
 
 	const result = await userModel.updateOne({_id: userId}, {
-		$push: {savedPosts: { postId: _postId} }
+		$push: {savedPosts: { postId: postId} }
 	});
 	
 	return result;
