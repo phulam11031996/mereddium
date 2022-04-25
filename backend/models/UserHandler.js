@@ -83,7 +83,6 @@ async function createUser(user) {
     password_confirm,
     interestedIn,
     password_bcrypt: hashedPassword,
-    photo: "uploads/images/default.png",
     passwordChangedAt: Date.now(),
     reset_token: token,
     reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes

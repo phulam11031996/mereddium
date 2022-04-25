@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -9,7 +10,6 @@ import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { red } from "@mui/material/colors";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
@@ -22,6 +22,7 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 
 import { CommentReply, Comments } from "..";
 import { parseCookie, deletePostById } from "../../utils";
+import { getCookie } from "../../utils";
 import axios from "axios";
 
 const ExpandMore = styled((props) => {
@@ -117,7 +118,8 @@ export const Post = (props) => {
     try {
       const response = await axios.post(
         `http://localhost:3030/post/vote/${postId}`,
-        { userId: userId, value: value }
+        { userId: userId, value: value },
+        { headers: { Authorization: `Basic ${getCookie("jwt")}` } }
       );
       return response;
     } catch (error) {
@@ -127,7 +129,7 @@ export const Post = (props) => {
   }
 
   // save post
- async function savePost(userId, postId) {
+  async function savePost(userId, postId) {
     if (userId === "null") {
       console.log("Must login first!");
     } else {
@@ -160,17 +162,23 @@ export const Post = (props) => {
       return false;
     }
   }
-  
+
   return (
     <Card sx={{ maxWidth: 800 }} style={{ marginTop: 50 }}>
       <CardHeader
         avatar={
-          photo !== "" && <Avatar src={`http://localhost:3030/${photo}`} />
+          photo !== "" && (
+            <Avatar
+              src={`https://res.cloudinary.com/${process.env.REACT_APP_CLOUD_NAME}/image/upload/c_crop,g_custom/${photo}`}
+            />
+          )
         }
         action={
-          <IconButton onClick={() => deletePostById(props.property._id)}>
-            {userMatch && <DeleteOutlineIcon style={{ color: "#ee6c4d" }} />}
-          </IconButton>
+          userMatch && (
+            <IconButton onClick={() => deletePostById(props.property._id)}>
+              <DeleteOutlineIcon style={{ color: "#ee6c4d" }} />
+            </IconButton>
+          )
         }
         title={firstName}
         subheader={props.property.createdAt.slice(0, 10)}
@@ -178,7 +186,6 @@ export const Post = (props) => {
 
       {props.property.imageURL !== "" ? (
         <CardMedia
-          component="img"
           height="500"
           image={props.property.imageURL}
           alt="Paella dish"
@@ -222,7 +229,7 @@ export const Post = (props) => {
             />
           )}
         </IconButton>
-        
+
         <IconButton onClick={() => savePost(userId, postId)}>
           {userSavedPosts.some((saved) => saved.postId === postId) === false
             && <BookmarkBorderOutlinedIcon style={{ color: "orange" }} />}
@@ -245,7 +252,9 @@ export const Post = (props) => {
           <Typography paragraph>{message}</Typography>
         </CardContent>
 
-        {turnOnComments && <Comments comments={comments} postId={postId} />}
+        {turnOnComments && (
+          <Comments comments={comments} postId={postId} userId={userId} />
+        )}
       </Collapse>
     </Card>
   );

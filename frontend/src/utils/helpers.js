@@ -1,6 +1,20 @@
 import { useEffect } from "react";
 import axios from "axios";
 
+export const getCookie = (name) => {
+  var cookieArr = document.cookie.split(";");
+
+  for (var i = 0; i < cookieArr.length; i++) {
+    var cookiePair = cookieArr[i].split("=");
+
+    if (name == cookiePair[0].trim()) {
+      return decodeURIComponent(cookiePair[1]);
+    }
+  }
+
+  return null;
+};
+
 export const useDynamicHeightField = (element, value) => {
   useEffect(() => {
     if (!element) return;
@@ -23,7 +37,8 @@ export const makeCommentCall = async (newComment) => {
   try {
     const response = await axios.post(
       "http://localhost:3030/comment/",
-      newComment
+      newComment,
+      { headers: { Authorization: `Basic ${getCookie("jwt")}` } }
     );
     return response;
   } catch (error) {
@@ -42,7 +57,9 @@ export const deletePostById = (id) => {
 
 export const makePostDeleteCall = async (id) => {
   try {
-    const response = await axios.delete(`http://localhost:3030/post/${id}`);
+    const response = await axios.delete(`http://localhost:3030/post/${id}`, {
+      headers: { Authorization: `Basic ${getCookie("jwt")}` },
+    });
     return response;
   } catch (error) {
     console.log(error);
@@ -52,7 +69,9 @@ export const makePostDeleteCall = async (id) => {
 
 export const makePostCall = async (post) => {
   try {
-    const response = await axios.post("http://localhost:3030/post", post);
+    const response = await axios.post("http://localhost:3030/post", post, {
+      headers: { Authorization: `Basic ${getCookie("jwt")}` },
+    });
     return response;
   } catch (error) {
     console.log(error);
@@ -133,12 +152,14 @@ export const handleSearch = async (searchKey) => {
 };
 
 export const handleSavedPosts = async (userId) => {
-    try {
-        const response = await axios.get(`http://localhost:3030/user/saved/${userId}`);
-        return response.data.data;
-    } catch (error) {
-        console.log(error);
-    }
+  try {
+    const response = await axios.get(
+      `http://localhost:3030/user/saved/${userId}`
+    );
+    return response.data.data;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const makeSignUpCall = async (user) => {
@@ -151,16 +172,6 @@ export const makeSignUpCall = async (user) => {
   } catch (err) {
     return err;
   }
-};
-
-export const updateUserImage = async (image, userId) => {
-  try {
-    const response = await axios.patch(
-      `http://localhost:3030/user/image/${userId}`,
-      image
-    );
-    return response;
-  } catch (error) {}
 };
 
 export const monthToString = (month) => {

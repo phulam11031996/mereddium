@@ -87,7 +87,11 @@ export const CommentReply = (props) => {
       >
         <div className="header">
           <div className="user">
-            {photo !== "" && <Avatar src={`http://localhost:3030/${photo}`} />}
+            {photo !== "" && (
+              <Avatar
+                src={`https://res.cloudinary.com/${process.env.REACT_APP_CLOUD_NAME}/image/upload/c_crop,g_custom/${photo}`}
+              />
+            )}
             <span>{firstName}</span>
           </div>
         </div>
