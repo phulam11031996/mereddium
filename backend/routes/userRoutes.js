@@ -17,9 +17,9 @@ router
 
 // /user/saved/:id
 router
-  .route('/saved/:id')
+  .route("/saved/:id")
   .get(userController.getSavedPosts)
   .post(userController.addSavedPost)
-  .delete(userController.deleteSavedPost)
+  .delete(userController.deleteSavedPost);
 
 module.exports = router;

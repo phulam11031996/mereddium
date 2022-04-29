@@ -147,53 +147,59 @@ async function getUserByEmail(email) {
 
 // GET /user/saved/{id}
 async function getSavedPosts(userId) {
-	const db = await DatabaseHandler.getDbConnection();
-	const userModel = db.model('User', UserSchema);
+  const db = await DatabaseHandler.getDbConnection();
+  const userModel = db.model("User", UserSchema);
 
-	const user = await userModel.findOne({ _id: userId });
-	if (user === null) {
-		return 0;
-	}
+  const user = await userModel.findOne({ _id: userId });
+  if (user === null) {
+    return 0;
+  }
 
-	let savedPosts = user.savedPosts.sort((p1, p2) => {
-		return p2.dateSaved - p1.dateSaved;
-	});
+  let savedPosts = user.savedPosts.sort((p1, p2) => {
+    return p2.dateSaved - p1.dateSaved;
+  });
 
-	return savedPosts;
+  return savedPosts;
 }
 
 // POST /user/saved/{id}
 async function addSavedPost(userId, postId) {
-	const db = await DatabaseHandler.getDbConnection();
-	const userModel = db.model('User', UserSchema);
+  const db = await DatabaseHandler.getDbConnection();
+  const userModel = db.model("User", UserSchema);
 
-	const user = await userModel.findOne({ _id: userId });
-	if (user === null) {
-		return 0;
-	}
+  const user = await userModel.findOne({ _id: userId });
+  if (user === null) {
+    return 0;
+  }
 
-	let duplicate = user.savedPosts.find( (post) => post.postId === postId );
-	if (duplicate !== undefined && duplicate !== null) {
-		return null;
-	}
+  let duplicate = user.savedPosts.find((post) => post.postId === postId);
+  if (duplicate !== undefined && duplicate !== null) {
+    return null;
+  }
 
-	const result = await userModel.updateOne({_id: userId}, {
-		$push: {savedPosts: { postId: postId} }
-	});
-	
-	return result;
+  const result = await userModel.updateOne(
+    { _id: userId },
+    {
+      $push: { savedPosts: { postId: postId } },
+    }
+  );
+
+  return result;
 }
 
 // DELETE /user/saved/{id}
 async function deleteSavedPost(userId, postId) {
-	const db = await DatabaseHandler.getDbConnection();
-	const userModel = db.model('User', UserSchema);
+  const db = await DatabaseHandler.getDbConnection();
+  const userModel = db.model("User", UserSchema);
 
-	const result = await userModel.updateOne({_id: userId}, {
-		$pull: {savedPosts: { postId: postId} }
-	});
-	
-	return result;
+  const result = await userModel.updateOne(
+    { _id: userId },
+    {
+      $pull: { savedPosts: { postId: postId } },
+    }
+  );
+
+  return result;
 }
 
 // UPDATE /user/image/{id}
@@ -215,6 +221,6 @@ module.exports = {
   getUserByEmail,
   updateUserImageById,
   getSavedPosts,
-	addSavedPost,
-	deleteSavedPost
+  addSavedPost,
+  deleteSavedPost,
 };

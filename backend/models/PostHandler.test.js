@@ -4,11 +4,11 @@ const PostHandler = require("./PostHandler");
 const DatabaseHandler = require("./DatabaseHandler");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 
 const uniqueID = () => {
-	return uuidv4();
-}
+  return uuidv4();
+};
 
 let mongoServer;
 let conn;
@@ -35,90 +35,89 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-
-  let newPost = { 
-    _id: "abc123", 
-    userId: "qwe123", 
-    title: "dummy title 1", 
+  let newPost = {
+    _id: "abc123",
+    userId: "qwe123",
+    title: "dummy title 1",
     message: "dummy message 1",
-    comments: [], 
+    comments: [],
     turnOnComments: true,
-    published: true, 
+    published: true,
     stringify: "req.body.stringify",
     tags: [],
-    imageURL: "https://dummy1.url", 
+    imageURL: "https://dummy1.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0
-  }
+    upVote: 0,
+  };
   result = new postModel(newPost);
   await result.save();
 
-  newPost = { 
-    _id: uniqueID().slice(0,6), 
-    userId: "asd456", 
-    title: "dummy title 2", 
+  newPost = {
+    _id: uniqueID().slice(0, 6),
+    userId: "asd456",
+    title: "dummy title 2",
     message: "dummy message 2",
-    comments: [], 
+    comments: [],
     turnOnComments: true,
-    published: true, 
+    published: true,
     stringify: "req.body.stringify",
     tags: [],
-    imageURL: "https://dummy2.url", 
+    imageURL: "https://dummy2.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0
-  }
+    upVote: 0,
+  };
   result = new postModel(newPost);
   await result.save();
 
-  newPost = { 
-    _id: uniqueID().slice(0,6), 
-    userId: "zxc789", 
-    title: "dummy title 3", 
+  newPost = {
+    _id: uniqueID().slice(0, 6),
+    userId: "zxc789",
+    title: "dummy title 3",
     message: "dummy message 3",
-    comments: [], 
+    comments: [],
     turnOnComments: true,
-    published: true, 
+    published: true,
     stringify: "req.body.stringify",
     tags: [],
-    imageURL: "https://dummy3.url", 
+    imageURL: "https://dummy3.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0
-  }
+    upVote: 0,
+  };
   result = new postModel(newPost);
   await result.save();
-}); 
+});
 
 afterEach(async () => {
-    await postModel.deleteMany();
+  await postModel.deleteMany();
 });
 
 test("Fetching all users", async () => {
-    const posts = await PostHandler.getAllPosts();
-    expect(posts).toBeDefined();
-    expect(posts.length).toBeGreaterThan(0);
+  const posts = await PostHandler.getAllPosts();
+  expect(posts).toBeDefined();
+  expect(posts.length).toBeGreaterThan(0);
 });
 
 test("createPost -- successful path", async () => {
-  const newPost = { 
-    _id: uniqueID().slice(0,6), 
-    userId: "qsc123", 
-    title: "dummy title 4", 
+  const newPost = {
+    _id: uniqueID().slice(0, 6),
+    userId: "qsc123",
+    title: "dummy title 4",
     message: "dummy message 4",
-    comments: [], 
+    comments: [],
     turnOnComments: true,
-    published: true, 
+    published: true,
     stringify: "post.stringify",
     tags: [],
-    imageURL: "https://dummy4.url", 
+    imageURL: "https://dummy4.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 1
-  }
+    upVote: 1,
+  };
   const result = await PostHandler.createPost(newPost);
-  
+
   expect(result).toBeTruthy();
   expect(result).toHaveProperty("_id");
   expect(result.userId).toBe(newPost.userId);
@@ -136,21 +135,21 @@ test("createPost -- successful path", async () => {
 });
 
 test("getPostById -- successful path", async () => {
-  const newPost = { 
-    _id: uniqueID().slice(0,6), 
-    userId: "qsc123", 
-    title: "dummy title 4", 
+  const newPost = {
+    _id: uniqueID().slice(0, 6),
+    userId: "qsc123",
+    title: "dummy title 4",
     message: "dummy message 4",
-    comments: [], 
+    comments: [],
     turnOnComments: true,
-    published: true, 
+    published: true,
     stringify: "req.body.stringify",
     tags: [],
-    imageURL: "https://dummy4.url", 
+    imageURL: "https://dummy4.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0
-  }
+    upVote: 0,
+  };
   const result = new postModel(newPost);
   await result.save();
   const foundPost = await PostHandler.getPostById(newPost._id);
@@ -178,20 +177,20 @@ test("getPostById -- fail path", async () => {
 });
 
 test("Updating post -- successful path", async () => {
-  const newInfor = { 
-    userId: "qsc123", 
-    title: "dummy title 1", 
+  const newInfor = {
+    userId: "qsc123",
+    title: "dummy title 1",
     message: "dummy message 1",
-    comments: [], 
+    comments: [],
     turnOnComments: true,
-    published: true, 
+    published: true,
     stringify: "req.body.stringify",
     tags: [],
-    imageURL: "https://dummy1.url", 
+    imageURL: "https://dummy1.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0
-  }
+    upVote: 0,
+  };
   const newInforPost = await PostHandler.updatePostById("abc123", newInfor);
 
   expect(newInforPost.acknowledged).toBeTruthy();
@@ -202,20 +201,20 @@ test("Updating post -- successful path", async () => {
 });
 
 test("Updating post -- fail path", async () => {
-  const newInfor = { 
-    userId: "qsc123", 
-    title: "dummy title 1", 
+  const newInfor = {
+    userId: "qsc123",
+    title: "dummy title 1",
     message: "dummy message 1",
-    comments: [], 
+    comments: [],
     turnOnComments: true,
-    published: true, 
+    published: true,
     stringify: "req.body.stringify",
     tags: [],
-    imageURL: "https://dummy1.url", 
+    imageURL: "https://dummy1.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0
-  }
+    upVote: 0,
+  };
   const newInforPost = await PostHandler.updatePostById("invalidId", newInfor);
 
   expect(newInforPost.acknowledged).toBeTruthy();

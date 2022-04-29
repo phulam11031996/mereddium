@@ -4,11 +4,11 @@ const UserHandler = require("./UserHandler");
 const DatabaseHandler = require("./DatabaseHandler");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 
 const uniqueID = () => {
-	return uuidv4();
-}
+  return uuidv4();
+};
 
 let mongoServer;
 let conn;
@@ -37,46 +37,40 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  const newUser = 
-		new userModel(
-			{ 
-				_id: uniqueID().slice(0,6), 
-				firstName: "Nick", 
-				lastName: "Bayati",
-				email: "nb@email.com", 
-				role: "admin",
-				photo: "default.jpg", 
-				password: "password",
-				password_confirm: "password", 
-				passwordChangedAt: Date.now(),
-				reset_token: uniqueID(), 
-				reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
-				blocked: false,
-				interestedIn: []
-			}
-	);
+  const newUser = new userModel({
+    _id: uniqueID().slice(0, 6),
+    firstName: "Nick",
+    lastName: "Bayati",
+    email: "nb@email.com",
+    role: "admin",
+    photo: "default.jpg",
+    password: "password",
+    password_confirm: "password",
+    passwordChangedAt: Date.now(),
+    reset_token: uniqueID(),
+    reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
+    blocked: false,
+    interestedIn: [],
+  });
   await newUser.save();
 
-  const newUser2 = 
-		new userModel(
-			{ 
-				_id: "abc123", 
-				firstName: "Marco", 
-				lastName: "Polo",
-				email: "marco@polo.com", 
-				role: "admin",
-				photo: "default.jpg", 
-				password: "password",
-				password_confirm: "password", 
-				passwordChangedAt: Date.now(),
-				reset_token: uniqueID(), 
-				reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
-				blocked: false,
-				interestedIn: []
-			}
-	);
+  const newUser2 = new userModel({
+    _id: "abc123",
+    firstName: "Marco",
+    lastName: "Polo",
+    email: "marco@polo.com",
+    role: "admin",
+    photo: "default.jpg",
+    password: "password",
+    password_confirm: "password",
+    passwordChangedAt: Date.now(),
+    reset_token: uniqueID(),
+    reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
+    blocked: false,
+    interestedIn: [],
+  });
   await newUser2.save();
-}); 
+});
 
 afterEach(async () => {
   await userModel.deleteMany();
@@ -92,14 +86,14 @@ test("Fetching user by id", async () => {
   const id = "abc123";
   const user = await UserHandler.getUserById(id);
   expect(user).toBeDefined();
-  expect(user['id']).toBe(id);
+  expect(user["id"]).toBe(id);
 });
 
 test("Fetching user by email", async () => {
   const email = "marco@polo.com";
   const user = await UserHandler.getUserByEmail(email);
   expect(user).toBeDefined();
-  expect(user['email']).toBe(email);
+  expect(user["email"]).toBe(email);
 });
 
 test("Deleting user by id", async () => {
@@ -112,121 +106,128 @@ test("Deleting user by id", async () => {
 
 test("Updating user by id", async () => {
   const id = "abc123";
-  const user =
-    {
-      email: "abc@email.com",
-    };
+  const user = {
+    email: "abc@email.com",
+  };
   const result = await UserHandler.updateUserById(id, user);
   expect(result).toBeDefined();
-  expect(result['modifiedCount']).toBe(1);  // one document was updated
+  expect(result["modifiedCount"]).toBe(1); // one document was updated
 });
 
 test("Adding user", async () => {
-  const user =
-    {
-      firstName: "A",
-      lastName: "B",
-      email: "abc@email.com",
-      role: "admin",
-      password: "password",
-      password_confirm: "password",
-      interestedIn: []
-    };
+  const user = {
+    firstName: "A",
+    lastName: "B",
+    email: "abc@email.com",
+    role: "admin",
+    password: "password",
+    password_confirm: "password",
+    interestedIn: [],
+  };
   const result = await UserHandler.createUser(user);
   expect(result).toBeDefined();
 });
 
 test("Adding user -- already existing", async () => {
-  const user =
-    {
-      firstName: "Marco",
-      lastName: "Polo",
-      email: "marco@polo.com",
-      role: "admin",
-      password: "password",
-      password_confirm: "password", 
-      interestedIn: []
-    };
-  await expect(UserHandler.createUser(user)).rejects
-    .toThrow("E11000 duplicate key error collection: test.users index: email_1 dup key: { email: \"marco@polo.com\" }");
+  const user = {
+    firstName: "Marco",
+    lastName: "Polo",
+    email: "marco@polo.com",
+    role: "admin",
+    password: "password",
+    password_confirm: "password",
+    interestedIn: [],
+  };
+  await expect(UserHandler.createUser(user)).rejects.toThrow(
+    'E11000 duplicate key error collection: test.users index: email_1 dup key: { email: "marco@polo.com" }'
+  );
 });
 
 test("Fetching saved posts", async () => {
-    const userId = "abc123";
-    const postId = "def456";
+  const userId = "abc123";
+  const postId = "def456";
 
-    await userModel.updateOne({ _id: userId }, {
-        $push: { savedPosts: { postId: postId } },
-    });
-  
-    const result = await UserHandler.getSavedPosts(userId);
+  await userModel.updateOne(
+    { _id: userId },
+    {
+      $push: { savedPosts: { postId: postId } },
+    }
+  );
 
-    expect(result).toBeDefined();
-    expect(result.length).toBe(1);
-    expect(result[0].postId).toBe(postId);
+  const result = await UserHandler.getSavedPosts(userId);
+
+  expect(result).toBeDefined();
+  expect(result.length).toBe(1);
+  expect(result[0].postId).toBe(postId);
 });
 
 test("Fetching saved posts -- user has two saved posts", async () => {
-    const userId = "abc123";
-    const postId = "def456";
-    const postId2 = "ghi789";
+  const userId = "abc123";
+  const postId = "def456";
+  const postId2 = "ghi789";
 
-    await userModel.updateOne({ _id: userId }, {
-        $push: { savedPosts: { postId: postId } },
-    });
-    await userModel.updateOne({ _id: userId }, {
-        $push: { savedPosts: { postId: postId2 } },
-    });
+  await userModel.updateOne(
+    { _id: userId },
+    {
+      $push: { savedPosts: { postId: postId } },
+    }
+  );
+  await userModel.updateOne(
+    { _id: userId },
+    {
+      $push: { savedPosts: { postId: postId2 } },
+    }
+  );
 
-    const result = await UserHandler.getSavedPosts(userId);
+  const result = await UserHandler.getSavedPosts(userId);
 
-    expect(result).toBeDefined();
-    expect(result.length).toBe(2);
-    expect(result[0].postId).toBe(postId2);
-    expect(result[1].postId).toBe(postId);
+  expect(result).toBeDefined();
+  expect(result.length).toBe(2);
+  expect(result[0].postId).toBe(postId2);
+  expect(result[1].postId).toBe(postId);
 });
 
 test("Fetching saved posts -- user has no posts saved", async () => {
-    const userId = "abc123";
-    const result = await UserHandler.getSavedPosts(userId);
+  const userId = "abc123";
+  const result = await UserHandler.getSavedPosts(userId);
 
-    expect(result).toBeDefined();
-    expect(result.length).toBe(0);
+  expect(result).toBeDefined();
+  expect(result.length).toBe(0);
 });
 
 test("Fetching saved posts -- invalid user", async () => {
-    const userId = "xyz000";
-    const result = await UserHandler.getSavedPosts(userId);
+  const userId = "xyz000";
+  const result = await UserHandler.getSavedPosts(userId);
 
-    expect(result).toBe(0);
+  expect(result).toBe(0);
 });
 
 test("Adding saved post", async () => {
-    const userId = "abc123";
-    const postId = "def456";
+  const userId = "abc123";
+  const postId = "def456";
 
-    const result = await UserHandler.addSavedPost(userId, postId);
-    expect(result).toBeDefined();
-    expect(result.modifiedCount).toBe(1);
+  const result = await UserHandler.addSavedPost(userId, postId);
+  expect(result).toBeDefined();
+  expect(result.modifiedCount).toBe(1);
 
-    const user = await userModel.findOne({ _id: userId });
-    expect(user).toBeDefined();
-    expect(user.savedPosts.length).toBe(1);
-    expect(user.savedPosts[0].postId).toBe(postId);
+  const user = await userModel.findOne({ _id: userId });
+  expect(user).toBeDefined();
+  expect(user.savedPosts.length).toBe(1);
+  expect(user.savedPosts[0].postId).toBe(postId);
 });
 
 test("Adding saved post -- duplicate entry", async () => {
-    const userId = "abc123";
-    const postId = "def456";
+  const userId = "abc123";
+  const postId = "def456";
 
-    await UserHandler.addSavedPost(userId, postId);
-    const result = await UserHandler.addSavedPost(userId, postId);
-    expect(result).toBe(null);
+  await UserHandler.addSavedPost(userId, postId);
+  const result = await UserHandler.addSavedPost(userId, postId);
+  expect(result).toBe(null);
 
-    const user = await userModel.findOne({ _id: userId });
-    expect(user).toBeDefined();
-    expect(user.savedPosts.length).toBe(1);
-    expect(user.savedPosts[0].postId).toBe(postId);
+  const user = await userModel.findOne({ _id: userId });
+  expect(user).toBeDefined();
+  expect(user.savedPosts.length).toBe(1);
+  expect(user.savedPosts[0].postId).toBe(postId);
 });
 
 test("Adding saved post -- invalid user", async () => {
@@ -241,24 +242,27 @@ test("Adding saved post -- invalid user", async () => {
 });
 
 test("Deleting saved post", async () => {
-    const userId = "abc123";
-    const postId = "def456";
+  const userId = "abc123";
+  const postId = "def456";
 
-    await userModel.updateOne({ _id: userId }, {
-        $push: { savedPosts: { postId: postId } },
-    });
+  await userModel.updateOne(
+    { _id: userId },
+    {
+      $push: { savedPosts: { postId: postId } },
+    }
+  );
 
-    const result = await UserHandler.deleteSavedPost(userId, postId);
-    expect(result.modifiedCount).toBe(1);
+  const result = await UserHandler.deleteSavedPost(userId, postId);
+  expect(result.modifiedCount).toBe(1);
 
-    const user = await userModel.findOne({ _id: userId });
-    expect(user.savedPosts.length).toBe(0);
+  const user = await userModel.findOne({ _id: userId });
+  expect(user.savedPosts.length).toBe(0);
 });
 
 test("Print user JSON", async () => {
-    const id = "abc123";
-    const user = await UserHandler.getUserById(id);
+  const id = "abc123";
+  const user = await UserHandler.getUserById(id);
 
-    expect(user).toBeDefined();
-    expect(user.toJSON()).toBeDefined();
+  expect(user).toBeDefined();
+  expect(user.toJSON()).toBeDefined();
 });
