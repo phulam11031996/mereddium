@@ -7,7 +7,7 @@ export const getCookie = (name) => {
   for (var i = 0; i < cookieArr.length; i++) {
     var cookiePair = cookieArr[i].split("=");
 
-    if (name == cookiePair[0].trim()) {
+    if (name === cookiePair[0].trim()) {
       return decodeURIComponent(cookiePair[1]);
     }
   }
@@ -84,11 +84,9 @@ export const handleSortByTime = async () => {
     const response = await axios.get(`http://localhost:3030/post/`);
     let result = response.data.data;
     let filtered = result.sort((p1, p2) => {
-      if (p1.createdAt < p2.createdAt) {
-        return 1;
-      } else {
-        return -1;
-      }
+      const time1 = new Date(p1.createdAt);
+      const time2 = new Date(p2.createdAt);
+      return time2 - time1;
     });
 
     return filtered;
@@ -102,15 +100,8 @@ export const handleSortByVote = async () => {
     const response = await axios.get(`http://localhost:3030/post/`);
     let result = response.data.data;
     let filtered = result.sort((p1, p2) => {
-      let p1Vote = p1.upVoteUsers.length - p1.downVoteUsers.length;
-      let p2Vote = p2.upVoteUsers.length - p2.downVoteUsers.length;
-      if (p1Vote < p2Vote) {
-        return 1;
-      } else if (p1Vote === p2Vote) {
-        return 0;
-      } else {
-        return -1;
-      }
+      return (p2.upVoteUsers.length - p2.downVoteUsers.length)
+        - (p1.upVoteUsers.length - p1.downVoteUsers.length);
     });
 
     return filtered;
@@ -123,12 +114,14 @@ export const handleSortByTrending = async () => {
   try {
     const response = await axios.get(`http://localhost:3030/post/`);
     let result = response.data.data;
-    let filtered = result.sort((p1, p2) => {
-      if (p1.createdAt < p2.createdAt) {
-        return 1;
-      } else {
-        return -1;
-      }
+    let filtered = result.filter((post) => {
+      const time = new Date(post.createdAt);
+			var threshold = new Date();
+			threshold.setDate(threshold.getDate() - 30);
+			return time > threshold;
+    }).sort((p1, p2) => {
+      return (p2.upVoteUsers.length - p2.downVoteUsers.length)
+        - (p1.upVoteUsers.length - p1.downVoteUsers.length);
     });
 
     return filtered;

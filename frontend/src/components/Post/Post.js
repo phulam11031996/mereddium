@@ -236,12 +236,11 @@ export const Post = (props) => {
           )}
         </IconButton>
 
-        <IconButton onClick={() => savePost(userId, postId)}>
-          {userSavedPosts.some((saved) => saved.postId === postId) ===
-            false && <BookmarkBorderOutlinedIcon style={{ color: "orange" }} />}
-          {userSavedPosts.some((saved) => saved.postId === postId) === true && (
-            <BookmarkIcon style={{ color: "orange" }} />
-          )}
+        <IconButton style={{ marginLeft: 5 }} onClick={() => savePost(userId, postId)}>
+          {userSavedPosts.some((saved) => saved.postId === postId) === false
+            && <BookmarkBorderOutlinedIcon style={{ color: "orange" }} />}
+          {userSavedPosts.some((saved) => saved.postId === postId) === true
+            && <BookmarkIcon style={{ color: "orange" }} />}
         </IconButton>
 
         <ExpandMore

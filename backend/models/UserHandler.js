@@ -31,7 +31,7 @@ async function createUser(user) {
     interestedIn,
   } = user;
 
-  if (firstName == "" || lastName == "" || password == "" || email == "") {
+  if (firstName === "" || lastName === "" || password === "" || email === "") {
     const error = new HttpError("Please fill out all the information.", 422);
     return error;
   }
@@ -55,7 +55,7 @@ async function createUser(user) {
     return error;
   }
 
-  if (password != password_confirm) {
+  if (password !== password_confirm) {
     const error = new HttpError("Passwords do not match.", 406);
     return error;
   }
@@ -119,9 +119,7 @@ async function updateUserById(id, newUser) {
 
   const user = await userModel.updateOne(
     { _id: id },
-    {
-      $set: newUser,
-    }
+    { $set: newUser }
   );
 
   return user;
@@ -164,42 +162,38 @@ async function getSavedPosts(userId) {
 
 // POST /user/saved/{id}
 async function addSavedPost(userId, postId) {
-  const db = await DatabaseHandler.getDbConnection();
-  const userModel = db.model("User", UserSchema);
+	const db = await DatabaseHandler.getDbConnection();
+	const userModel = db.model('User', UserSchema);
 
-  const user = await userModel.findOne({ _id: userId });
-  if (user === null) {
-    return 0;
-  }
+	const user = await userModel.findOne({ _id: userId });
+	if (user === null) {
+		return 0;
+	}
 
-  let duplicate = user.savedPosts.find((post) => post.postId === postId);
-  if (duplicate !== undefined && duplicate !== null) {
-    return null;
-  }
+	let duplicate = user.savedPosts.find( (post) => post.postId === postId );
+	if (duplicate !== undefined && duplicate !== null) {
+		return null;
+	}
 
-  const result = await userModel.updateOne(
-    { _id: userId },
-    {
-      $push: { savedPosts: { postId: postId } },
-    }
+	const result = await userModel.updateOne(
+    {_id: userId},
+    { $push: {savedPosts: { postId: postId} } }
   );
-
-  return result;
+	
+	return result;
 }
 
 // DELETE /user/saved/{id}
 async function deleteSavedPost(userId, postId) {
-  const db = await DatabaseHandler.getDbConnection();
-  const userModel = db.model("User", UserSchema);
+	const db = await DatabaseHandler.getDbConnection();
+	const userModel = db.model('User', UserSchema);
 
-  const result = await userModel.updateOne(
-    { _id: userId },
-    {
-      $pull: { savedPosts: { postId: postId } },
-    }
+	const result = await userModel.updateOne(
+    {_id: userId},
+    { $pull: {savedPosts: { postId: postId} } }
   );
-
-  return result;
+	
+	return result;
 }
 
 // UPDATE /user/image/{id}
@@ -207,7 +201,10 @@ async function updateUserImageById(id, photoPath) {
   const db = await DatabaseHandler.getDbConnection();
   const userModel = db.model("User", UserSchema);
 
-  const user = await userModel.updateOne({ _id: id }, { photo: photoPath });
+  const user = await userModel.updateOne(
+    { _id: id },
+    { photo: photoPath }
+  );
 
   return user;
 }
