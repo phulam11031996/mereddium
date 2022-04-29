@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "prettier": "prettier --check",
+    "test": "prettier --check . && jest",
     "dev": "nodemon index.js",
     "start": "node index.js"
   },
