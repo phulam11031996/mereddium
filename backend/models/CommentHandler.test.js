@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const CommentSchema = require("./CommentSchema");
 const CommentHandler = require("./CommentHandler");
 const PostSchema = require("./PostSchema");
-const PostHandler = require("./PostHandler");
 const DatabaseHandler = require("./DatabaseHandler");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 

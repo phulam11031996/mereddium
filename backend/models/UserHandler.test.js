@@ -24,7 +24,7 @@ beforeAll(async () => {
     useUnifiedTopology: true,
   };
 
-  conn = await mongoose.createConnection(uri, mongooseOpts);
+  conn = mongoose.createConnection(uri, mongooseOpts);
 
   userModel = conn.model("User", UserSchema);
 
@@ -72,7 +72,10 @@ beforeEach(async () => {
     reset_token_ext: Date.now() + 60 * 60 * 1000,  // 60 minutes
     blocked: false,
     interestedIn: [],
-    savedPosts: []
+    savedPosts: [
+      { postId: "def456" },
+      { postId: "ghi789" }
+    ]
 	});
   await newUser2.save();
 }); 
@@ -155,7 +158,7 @@ test("Adding user -- already existing", async () => {
 
 test("Adding user -- missing info", async () => {
   const user = {
-    firstName: "",
+    firstName: "",  // some fields are empty strings
     lastName: "",
     email: "",
     role: "admin",
@@ -167,6 +170,22 @@ test("Adding user -- missing info", async () => {
 
   const result = await UserHandler.createUser(user);
   expect(result).toStrictEqual(new HttpError("Please fill out all the information."));
+});
+
+test("Adding user -- sign up failed", async () => {
+  const user = {
+    firstName: "A",
+    lastName: "B",
+    email: { n: "\n" },  // incorrectly formatted email entry
+    role: "admin",
+    password: "password",
+    password_confirm: "password",
+    interestedIn: [],
+    savedPosts: []
+  };
+
+  const result = await UserHandler.createUser(user);
+  expect(result).toStrictEqual(new HttpError("Signing up failed, please try again later."));
 });
 
 test("Adding user -- passwords don't match", async () => {
@@ -185,13 +204,29 @@ test("Adding user -- passwords don't match", async () => {
   expect(result).toStrictEqual(new HttpError("Passwords do not match."));
 });
 
+test("Adding user -- password couldn't be hashed", async () => {
+  const user = {
+    firstName: "A",
+    lastName: "B",
+    email: "abc@mail.com",
+    role: "admin",
+    password: null,  // null cannot be hashed
+    password_confirm: null,
+    interestedIn: [],
+    savedPosts: []
+  };
+
+  const result = await UserHandler.createUser(user);
+  expect(result).toStrictEqual(new HttpError("Could not hash user's password, please try again."));
+});
+
 test("Adding user -- failed to create user", async () => {
   const user = {
     firstName: "A",
     lastName: "B",
     email: "abc@mail.com",
     role: "admin",
-    password: " ",
+    password: " ",  // a single space is not a valid password
     password_confirm: " ",
     interestedIn: [],
     savedPosts: []
@@ -203,40 +238,23 @@ test("Adding user -- failed to create user", async () => {
 
 test("Fetching saved posts", async () => {
   const userId = "abc123";
-  const postId = "def456";
-
-  await userModel.updateOne({ _id: userId }, {
-      $push: { savedPosts: { postId: postId } },
-  });
-
-  const result = await UserHandler.getSavedPosts(userId);
-  expect(result).toBeDefined();
-  expect(result.length).toBe(1);
-  expect(result[0].postId).toBe(postId);
-});
-
-test("Fetching saved posts -- user has two saved posts", async () => {
-  const userId = "abc123";
   const postId1 = "def456";
   const postId2 = "ghi789";
-
-  await userModel.updateOne({ _id: userId }, {
-    $push: { savedPosts: { postId: postId1 } },
-  });
-  await userModel.updateOne({ _id: userId }, {
-    $push: { savedPosts: { postId: postId2 } },
-  });
 
   const result = await UserHandler.getSavedPosts(userId);
   expect(result).toBeDefined();
   expect(result.length).toBe(2);
-  expect(result[0].postId).toBe(postId2);
-  expect(result[1].postId).toBe(postId1);
+  expect(result[0].postId).toBe(postId1);
+  expect(result[1].postId).toBe(postId2);
 });
 
 test("Fetching saved posts -- user has no posts saved", async () => {
   const userId = "abc123";
-  const result = await UserHandler.getSavedPosts(userId);
+
+  let user = await userModel.find();
+  user = user.find(({ _id }) => _id !== userId);
+
+  const result = await UserHandler.getSavedPosts(user._id);
   expect(result).toBeDefined();
   expect(result.length).toBe(0);
 });
@@ -249,7 +267,7 @@ test("Fetching saved posts -- invalid user", async () => {
 
 test("Adding saved post", async () => {
   const userId = "abc123";
-  const postId = "def456";
+  const postId = "xyz000";
 
   const result = await UserHandler.addSavedPost(userId, postId);
   expect(result).toBeDefined();
@@ -257,22 +275,20 @@ test("Adding saved post", async () => {
 
   const user = await userModel.findOne({ _id: userId });
   expect(user).toBeDefined();
-  expect(user.savedPosts.length).toBe(1);
-  expect(user.savedPosts[0].postId).toBe(postId);
+  expect(user.savedPosts.length).toBe(3);
+  expect(user.savedPosts[2].postId).toBe(postId);
 });
 
 test("Adding saved post -- duplicate entry", async () => {
   const userId = "abc123";
   const postId = "def456";
-
-  await UserHandler.addSavedPost(userId, postId);
   
   const result = await UserHandler.addSavedPost(userId, postId);
   expect(result).toBe(null);
 
   const user = await userModel.findOne({ _id: userId });
   expect(user).toBeDefined();
-  expect(user.savedPosts.length).toBe(1);
+  expect(user.savedPosts.length).toBe(2);
   expect(user.savedPosts[0].postId).toBe(postId);
 });
 
@@ -291,15 +307,11 @@ test("Deleting saved post", async () => {
   const userId = "abc123";
   const postId = "def456";
 
-  await userModel.updateOne({ _id: userId }, {
-    $push: { savedPosts: { postId: postId } },
-  });
-
   const result = await UserHandler.deleteSavedPost(userId, postId);
   expect(result.modifiedCount).toBe(1);
 
   const user = await userModel.findOne({ _id: userId });
-  expect(user.savedPosts.length).toBe(0);
+  expect(user.savedPosts.length).toBe(1);
 });
 
 test("Print user JSON", async () => {

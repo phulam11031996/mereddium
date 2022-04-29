@@ -31,7 +31,7 @@ async function createUser(user) {
     interestedIn,
   } = user;
 
-  if (firstName == "" || lastName == "" || password == "" || email == "") {
+  if (firstName === "" || lastName === "" || password === "" || email === "") {
     const error = new HttpError("Please fill out all the information.", 422);
     return error;
   }
@@ -55,7 +55,7 @@ async function createUser(user) {
     return error;
   }
 
-  if (password != password_confirm) {
+  if (password !== password_confirm) {
     const error = new HttpError("Passwords do not match.", 406);
     return error;
   }
@@ -119,9 +119,7 @@ async function updateUserById(id, newUser) {
 
   const user = await userModel.updateOne(
     { _id: id },
-    {
-      $set: newUser,
-    }
+    { $set: newUser }
   );
 
   return user;
@@ -177,9 +175,10 @@ async function addSavedPost(userId, postId) {
 		return null;
 	}
 
-	const result = await userModel.updateOne({_id: userId}, {
-		$push: {savedPosts: { postId: postId} }
-	});
+	const result = await userModel.updateOne(
+    {_id: userId},
+    { $push: {savedPosts: { postId: postId} } }
+  );
 	
 	return result;
 }
@@ -189,9 +188,10 @@ async function deleteSavedPost(userId, postId) {
 	const db = await DatabaseHandler.getDbConnection();
 	const userModel = db.model('User', UserSchema);
 
-	const result = await userModel.updateOne({_id: userId}, {
-		$pull: {savedPosts: { postId: postId} }
-	});
+	const result = await userModel.updateOne(
+    {_id: userId},
+    { $pull: {savedPosts: { postId: postId} } }
+  );
 	
 	return result;
 }
@@ -201,7 +201,10 @@ async function updateUserImageById(id, photoPath) {
   const db = await DatabaseHandler.getDbConnection();
   const userModel = db.model("User", UserSchema);
 
-  const user = await userModel.updateOne({ _id: id }, { photo: photoPath });
+  const user = await userModel.updateOne(
+    { _id: id },
+    { photo: photoPath }
+  );
 
   return user;
 }
