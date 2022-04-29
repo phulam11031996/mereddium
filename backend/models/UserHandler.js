@@ -145,19 +145,19 @@ async function getUserByEmail(email) {
 
 // GET /user/saved/{id}
 async function getSavedPosts(userId) {
-	const db = await DatabaseHandler.getDbConnection();
-	const userModel = db.model('User', UserSchema);
+  const db = await DatabaseHandler.getDbConnection();
+  const userModel = db.model("User", UserSchema);
 
-	const user = await userModel.findOne({ _id: userId });
-	if (user === null) {
-		return 0;
-	}
+  const user = await userModel.findOne({ _id: userId });
+  if (user === null) {
+    return 0;
+  }
 
-	let savedPosts = user.savedPosts.sort((p1, p2) => {
-		return p2.dateSaved - p1.dateSaved;
-	});
+  let savedPosts = user.savedPosts.sort((p1, p2) => {
+    return p2.dateSaved - p1.dateSaved;
+  });
 
-	return savedPosts;
+  return savedPosts;
 }
 
 // POST /user/saved/{id}
@@ -218,6 +218,6 @@ module.exports = {
   getUserByEmail,
   updateUserImageById,
   getSavedPosts,
-	addSavedPost,
-	deleteSavedPost
+  addSavedPost,
+  deleteSavedPost,
 };

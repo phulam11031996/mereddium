@@ -133,8 +133,8 @@ export const Post = (props) => {
     if (userId === "null") {
       console.log("Must login first!");
     } else {
-     const response = await makeSaveCall(userId, postId);
-    if (response.status === 200 && response.data === { postId }) {
+      const response = await makeSaveCall(userId, postId);
+      if (response.status === 200 && response.data === { postId }) {
         console.log("Post Already Saved!");
       } else if (response.status === 200) {
         console.log("Successfully Unsaved Post!");
@@ -149,12 +149,18 @@ export const Post = (props) => {
 
   async function makeSaveCall(userId, postId) {
     try {
-      const userSaved = userSavedPosts.some((saved) => saved.postId === postId)
+      const userSaved = userSavedPosts.some((saved) => saved.postId === postId);
       if (userSaved) {
-        const response = await axios.delete(`http://localhost:3030/user/saved/${userId}`, { data: { postId: postId } });
+        const response = await axios.delete(
+          `http://localhost:3030/user/saved/${userId}`,
+          { data: { postId: postId } }
+        );
         return response;
       } else {
-        const response = await axios.post(`http://localhost:3030/user/saved/${userId}`, { postId: postId });
+        const response = await axios.post(
+          `http://localhost:3030/user/saved/${userId}`,
+          { postId: postId }
+        );
         return response;
       }
     } catch (error) {

@@ -1,3 +1,3 @@
-export * from './Login';
-export * from './Posts';
-export * from './SignUp';
+export * from "./Login";
+export * from "./Posts";
+export * from "./SignUp";

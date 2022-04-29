@@ -81,7 +81,7 @@ beforeEach(async () => {
     upVote: 0
   });
   await newPost.save();
-}); 
+});
 
 afterEach(async () => {
   await commentModel.deleteMany();
@@ -91,7 +91,7 @@ afterEach(async () => {
 test("Fetching all comments", async () => {
   const comments = await CommentHandler.getAllComments();
   expect(comments).toBeDefined();
-  expect(comments.length).toBe(2);  // 2 comments
+  expect(comments.length).toBe(2); // 2 comments
 });
 
 test("Adding comment", async () => {

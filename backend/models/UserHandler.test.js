@@ -8,8 +8,8 @@ const { v4: uuidv4 } = require('uuid');
 const HttpError = require("../utils/http-error");
 
 const uniqueID = () => {
-	return uuidv4();
-}
+  return uuidv4();
+};
 
 let mongoServer;
 let conn;
@@ -78,7 +78,7 @@ beforeEach(async () => {
     ]
 	});
   await newUser2.save();
-}); 
+});
 
 afterEach(async () => {
   await userModel.deleteMany();
@@ -135,7 +135,7 @@ test("Adding user", async () => {
     interestedIn: [],
     savedPosts: []
   };
-
+  
   const result = await UserHandler.createUser(user);
   expect(result).toBeDefined();
 });
@@ -282,7 +282,7 @@ test("Adding saved post", async () => {
 test("Adding saved post -- duplicate entry", async () => {
   const userId = "abc123";
   const postId = "def456";
-  
+
   const result = await UserHandler.addSavedPost(userId, postId);
   expect(result).toBe(null);
 
