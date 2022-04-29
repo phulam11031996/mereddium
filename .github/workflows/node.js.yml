@@ -16,8 +16,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
         node-version: [16.x]
+        # os: [ubuntu-latest, macos-latest, windows-latest]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -30,5 +30,6 @@ jobs:
         cache-dependency-path: /home/runner/work/blog-website/blog-website/backend/package-lock.json
     - run: cd backend/ && npm ci
     - run: cd backend/ && npm run build --if-present
-    - run: cd backend/ && npm test
     - run: cd backend/ && npm prettier
+    - run: cd backend/ && npm test
+    
