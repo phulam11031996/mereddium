@@ -117,10 +117,7 @@ async function updateUserById(id, newUser) {
   const db = await DatabaseHandler.getDbConnection();
   const userModel = db.model("User", UserSchema);
 
-  const user = await userModel.updateOne(
-    { _id: id },
-    { $set: newUser }
-  );
+  const user = await userModel.updateOne({ _id: id }, { $set: newUser });
 
   return user;
 }
@@ -162,38 +159,38 @@ async function getSavedPosts(userId) {
 
 // POST /user/saved/{id}
 async function addSavedPost(userId, postId) {
-	const db = await DatabaseHandler.getDbConnection();
-	const userModel = db.model('User', UserSchema);
+  const db = await DatabaseHandler.getDbConnection();
+  const userModel = db.model("User", UserSchema);
 
-	const user = await userModel.findOne({ _id: userId });
-	if (user === null) {
-		return 0;
-	}
+  const user = await userModel.findOne({ _id: userId });
+  if (user === null) {
+    return 0;
+  }
 
-	let duplicate = user.savedPosts.find( (post) => post.postId === postId );
-	if (duplicate !== undefined && duplicate !== null) {
-		return null;
-	}
+  let duplicate = user.savedPosts.find((post) => post.postId === postId);
+  if (duplicate !== undefined && duplicate !== null) {
+    return null;
+  }
 
-	const result = await userModel.updateOne(
-    {_id: userId},
-    { $push: {savedPosts: { postId: postId} } }
+  const result = await userModel.updateOne(
+    { _id: userId },
+    { $push: { savedPosts: { postId: postId } } }
   );
-	
-	return result;
+
+  return result;
 }
 
 // DELETE /user/saved/{id}
 async function deleteSavedPost(userId, postId) {
-	const db = await DatabaseHandler.getDbConnection();
-	const userModel = db.model('User', UserSchema);
+  const db = await DatabaseHandler.getDbConnection();
+  const userModel = db.model("User", UserSchema);
 
-	const result = await userModel.updateOne(
-    {_id: userId},
-    { $pull: {savedPosts: { postId: postId} } }
+  const result = await userModel.updateOne(
+    { _id: userId },
+    { $pull: { savedPosts: { postId: postId } } }
   );
-	
-	return result;
+
+  return result;
 }
 
 // UPDATE /user/image/{id}
@@ -201,10 +198,7 @@ async function updateUserImageById(id, photoPath) {
   const db = await DatabaseHandler.getDbConnection();
   const userModel = db.model("User", UserSchema);
 
-  const user = await userModel.updateOne(
-    { _id: id },
-    { photo: photoPath }
-  );
+  const user = await userModel.updateOne({ _id: id }, { photo: photoPath });
 
   return user;
 }

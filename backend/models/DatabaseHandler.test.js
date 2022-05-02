@@ -20,7 +20,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await conn.dropDatabase();
-  await Promise.all(mongoose.connections.map(c => c.close()));
+  await Promise.all(mongoose.connections.map((c) => c.close()));
   await mongoServer.stop();
 });
 

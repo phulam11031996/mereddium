@@ -5,12 +5,12 @@ const PostSchema = require("./PostSchema");
 const DatabaseHandler = require("./DatabaseHandler");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 const HttpError = require("../utils/http-error");
 
 const uniqueID = () => {
   return uuidv4();
-}
+};
 
 let mongoServer;
 let conn;
@@ -42,43 +42,43 @@ afterAll(async () => {
 
 beforeEach(async () => {
   const newComment = {
-    _id: uniqueID().slice(0,6), 
-    userId: "def456", 
+    _id: uniqueID().slice(0, 6),
+    userId: "def456",
     postId: "hij789",
     timeStamp: Date.now(),
     lastModifiedAt: Date.now(),
     message: "First!",
-    upVote: 3
+    upVote: 3,
   };
   let result = new commentModel(newComment);
   await result.save();
 
   const newComment2 = {
-    _id: "abc123", 
-    userId: "def456", 
+    _id: "abc123",
+    userId: "def456",
     postId: "hij789",
     timeStamp: Date.now(),
     lastModifiedAt: Date.now(),
     message: "Second!",
-    upVote: 1
+    upVote: 1,
   };
   result = new commentModel(newComment2);
   await result.save();
 
   const newPost = new postModel({
     _id: "hij789",
-    userId: "def456", 
-    title: "dummy title 1", 
+    userId: "def456",
+    title: "dummy title 1",
     message: "dummy message 1",
-    comments: [ newComment, newComment2 ], 
+    comments: [newComment, newComment2],
     turnOnComments: true,
-    published: true, 
+    published: true,
     stringify: "req.body.stringify",
     tags: [],
-    imageURL: "https://dummy1.url", 
+    imageURL: "https://dummy1.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0
+    upVote: 0,
   });
   await newPost.save();
 });
@@ -99,7 +99,7 @@ test("Adding comment", async () => {
     userId: "def456",
     postId: "hij789",
     message: "Third!",
-    upVote: 2
+    upVote: 2,
   };
 
   const result = await CommentHandler.createComment(comment);
@@ -107,7 +107,7 @@ test("Adding comment", async () => {
 
   const comments = await commentModel.find();
   expect(comments).toBeDefined();
-  expect(comments.length).toBe(3);  // from 2 comments to 3
+  expect(comments.length).toBe(3); // from 2 comments to 3
 
   const resultComment = await commentModel.findOne({ message: "Third!" });
   expect(resultComment).toBeDefined();
@@ -124,11 +124,11 @@ test("Fetching comment by id", async () => {
 
 test("Updating comment by id", async () => {
   const id = "abc123";
-  const comment = { upVote: -2 };  // change upvotes from 1 to -2
+  const comment = { upVote: -2 }; // change upvotes from 1 to -2
 
   const result = await CommentHandler.updateCommentById(id, comment);
   expect(result).toBeDefined();
-  expect(result.modifiedCount).toBe(1);  // one document was updated
+  expect(result.modifiedCount).toBe(1); // one document was updated
 
   const getComment = await commentModel.findOne({ _id: id });
   expect(getComment).toBeDefined();
@@ -140,11 +140,11 @@ test("Deleting comment by id", async () => {
   const postId = "hij789";
 
   const result = await CommentHandler.deleteCommentById(commentId, postId);
-  expect(result).toBe(1);  // function ran without errors
-  
+  expect(result).toBe(1); // function ran without errors
+
   const comments = await commentModel.find();
   expect(comments).toBeDefined();
-  expect(comments.length).toBe(1);  // from 2 comments to 1
+  expect(comments.length).toBe(1); // from 2 comments to 1
   expect(comments[0]._id).not.toBe(commentId);
 });
 

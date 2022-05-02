@@ -12,7 +12,8 @@ function setConnection(newConn) {
 
 function getDbConnection() {
   const database = process.env.MONGOLAB_URI;
-  const databaseJest = "mongodb+srv://msultano:4152838823OrifSs@cluster0.az8az.mongodb.net/CSC308?retryWrites=true&w=majority";
+  const databaseJest =
+    "mongodb+srv://msultano:4152838823OrifSs@cluster0.az8az.mongodb.net/CSC308?retryWrites=true&w=majority";
   if (!dbConnection) {
     dbConnection = mongoose.connect(databaseJest || database, {
       useUnifiedTopology: true,
@@ -24,5 +25,5 @@ function getDbConnection() {
 
 module.exports = {
   setConnection,
-  getDbConnection
+  getDbConnection,
 };

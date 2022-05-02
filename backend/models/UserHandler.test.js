@@ -4,7 +4,7 @@ const UserHandler = require("./UserHandler");
 const DatabaseHandler = require("./DatabaseHandler");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 const HttpError = require("../utils/http-error");
 
 const uniqueID = () => {
@@ -38,45 +38,42 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  const newUser = new userModel({ 
-    _id: uniqueID().slice(0,6), 
-    firstName: "Nick", 
+  const newUser = new userModel({
+    _id: uniqueID().slice(0, 6),
+    firstName: "Nick",
     lastName: "Bayati",
-    email: "nb@email.com", 
+    email: "nb@email.com",
     role: "admin",
-    photo: "v1650339103/default_ogjbtr.png", 
-    password: "password",
-    password_confirm: "password",
-    password_bcrypt: "password",
-    passwordChangedAt: Date.now(),
-    reset_token: uniqueID(), 
-    reset_token_ext: Date.now() + 60 * 60 * 1000,  // 60 minutes
-    blocked: false,
-    interestedIn: [],
-    savedPosts: []
-	});
-  await newUser.save();
-
-  const newUser2 = new userModel({ 
-    _id: "abc123", 
-    firstName: "Marco", 
-    lastName: "Polo",
-    email: "marco@polo.com", 
-    role: "admin",
-    photo: "v1650339103/default_ogjbtr.png", 
+    photo: "v1650339103/default_ogjbtr.png",
     password: "password",
     password_confirm: "password",
     password_bcrypt: "password",
     passwordChangedAt: Date.now(),
     reset_token: uniqueID(),
-    reset_token_ext: Date.now() + 60 * 60 * 1000,  // 60 minutes
+    reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
     blocked: false,
     interestedIn: [],
-    savedPosts: [
-      { postId: "def456" },
-      { postId: "ghi789" }
-    ]
-	});
+    savedPosts: [],
+  });
+  await newUser.save();
+
+  const newUser2 = new userModel({
+    _id: "abc123",
+    firstName: "Marco",
+    lastName: "Polo",
+    email: "marco@polo.com",
+    role: "admin",
+    photo: "v1650339103/default_ogjbtr.png",
+    password: "password",
+    password_confirm: "password",
+    password_bcrypt: "password",
+    passwordChangedAt: Date.now(),
+    reset_token: uniqueID(),
+    reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
+    blocked: false,
+    interestedIn: [],
+    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }],
+  });
   await newUser2.save();
 });
 
@@ -107,7 +104,7 @@ test("Fetching user by email", async () => {
 test("Deleting user by id", async () => {
   const id = "abc123";
   await UserHandler.deleteUserById(id);
-  
+
   const result = await UserHandler.getAllUsers();
   expect(result).toBeDefined();
   expect(result.length).toBe(1);
@@ -121,7 +118,7 @@ test("Updating user by id", async () => {
 
   const result = await UserHandler.updateUserById(id, user);
   expect(result).toBeDefined();
-  expect(result.modifiedCount).toBe(1);  // one document was updated
+  expect(result.modifiedCount).toBe(1); // one document was updated
 });
 
 test("Adding user", async () => {
@@ -133,9 +130,9 @@ test("Adding user", async () => {
     password: "password",
     password_confirm: "password",
     interestedIn: [],
-    savedPosts: []
+    savedPosts: [],
   };
-  
+
   const result = await UserHandler.createUser(user);
   expect(result).toBeDefined();
 });
@@ -147,45 +144,51 @@ test("Adding user -- already existing", async () => {
     email: "marco@polo.com",
     role: "admin",
     password: "password",
-    password_confirm: "password", 
+    password_confirm: "password",
     interestedIn: [],
-    savedPosts: []
+    savedPosts: [],
   };
 
   const result = await UserHandler.createUser(user);
-  expect(result).toStrictEqual(new HttpError("User exists already, please login instead."));
+  expect(result).toStrictEqual(
+    new HttpError("User exists already, please login instead.")
+  );
 });
 
 test("Adding user -- missing info", async () => {
   const user = {
-    firstName: "",  // some fields are empty strings
+    firstName: "", // some fields are empty strings
     lastName: "",
     email: "",
     role: "admin",
     password: "password",
     password_confirm: "password",
     interestedIn: [],
-    savedPosts: []
+    savedPosts: [],
   };
 
   const result = await UserHandler.createUser(user);
-  expect(result).toStrictEqual(new HttpError("Please fill out all the information."));
+  expect(result).toStrictEqual(
+    new HttpError("Please fill out all the information.")
+  );
 });
 
 test("Adding user -- sign up failed", async () => {
   const user = {
     firstName: "A",
     lastName: "B",
-    email: { n: "\n" },  // incorrectly formatted email entry
+    email: { n: "\n" }, // incorrectly formatted email entry
     role: "admin",
     password: "password",
     password_confirm: "password",
     interestedIn: [],
-    savedPosts: []
+    savedPosts: [],
   };
 
   const result = await UserHandler.createUser(user);
-  expect(result).toStrictEqual(new HttpError("Signing up failed, please try again later."));
+  expect(result).toStrictEqual(
+    new HttpError("Signing up failed, please try again later.")
+  );
 });
 
 test("Adding user -- passwords don't match", async () => {
@@ -197,7 +200,7 @@ test("Adding user -- passwords don't match", async () => {
     password: "password",
     password_confirm: "notmatching",
     interestedIn: [],
-    savedPosts: []
+    savedPosts: [],
   };
 
   const result = await UserHandler.createUser(user);
@@ -210,14 +213,16 @@ test("Adding user -- password couldn't be hashed", async () => {
     lastName: "B",
     email: "abc@mail.com",
     role: "admin",
-    password: null,  // null cannot be hashed
+    password: null, // null cannot be hashed
     password_confirm: null,
     interestedIn: [],
-    savedPosts: []
+    savedPosts: [],
   };
 
   const result = await UserHandler.createUser(user);
-  expect(result).toStrictEqual(new HttpError("Could not hash user's password, please try again."));
+  expect(result).toStrictEqual(
+    new HttpError("Could not hash user's password, please try again.")
+  );
 });
 
 test("Adding user -- failed to create user", async () => {
@@ -226,14 +231,16 @@ test("Adding user -- failed to create user", async () => {
     lastName: "B",
     email: "abc@mail.com",
     role: "admin",
-    password: " ",  // a single space is not a valid password
+    password: " ", // a single space is not a valid password
     password_confirm: " ",
     interestedIn: [],
-    savedPosts: []
+    savedPosts: [],
   };
 
   const result = await UserHandler.createUser(user);
-  expect(result).toStrictEqual(new HttpError("Could not create user, please try again."));
+  expect(result).toStrictEqual(
+    new HttpError("Could not create user, please try again.")
+  );
 });
 
 test("Fetching saved posts", async () => {
