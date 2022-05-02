@@ -13,7 +13,7 @@ function setConnection(newConn) {
 function getDbConnection() {
   const database = process.env.MONGOLAB_URI;
   if (!dbConnection) {
-    dbConnection = mongoose.connect(database, {
+    dbConnection = mongoose.connect(secrets.DATABASE || database, {
       useUnifiedTopology: true,
       useNewUrlParser: true,
     });

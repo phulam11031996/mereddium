@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --coverage && prettier --check .",
+    "test": "jest --coverage --detectOpendHandles && prettier --check .",
     "dev": "nodemon index.js",
     "start": "node index.js"
   },
