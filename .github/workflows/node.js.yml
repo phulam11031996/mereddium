@@ -12,7 +12,7 @@ on:
 jobs:
   build-backend:
 
-    runs-on: window-latest
+    runs-on: ubuntu-latest
     env:
       CI: false
     defaults:
