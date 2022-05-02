@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --coverage --detectOpenHandles --forceExit && prettier --check .",
+    "test": "jest --coverage --forceExit --detectOpenHandles && prettier --check .",
     "dev": "nodemon index.js",
     "start": "node index.js"
   },
