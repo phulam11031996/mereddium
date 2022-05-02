@@ -1,16 +1,31 @@
+const mongoose = require("mongoose");
 const DatabaseHandler = require("./DatabaseHandler");
-const UserSchema = require("./UserSchema");
-const UserHandler = require("./UserHandler");
+const { MongoMemoryServer } = require("mongodb-memory-server");
 
+let mongoServer;
 let conn;
-let userModel;
 
 beforeAll(async () => {
-  conn = await DatabaseHandler.getDbConnection();
-  userModel = conn.model("User", UserSchema);
+  mongoServer = await MongoMemoryServer.create();
+  const uri = mongoServer.getUri();
+
+  const mongooseOpts = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  };
+
+  conn = mongoose.createConnection(uri, mongooseOpts);
+  DatabaseHandler.setConnection(conn);
 });
 
-test("Access production database -- pull users", async () => {
-  const users = await UserHandler.getAllUsers();
-  expect(users).toBeDefined();
+afterAll(async () => {
+  await conn.dropDatabase();
+  await Promise.all(mongoose.connections.map(c => c.close()));
+  await mongoServer.stop();
+});
+
+test("establish database connection", async () => {
+  DatabaseHandler.setConnection(null);
+  const db = await DatabaseHandler.getDbConnection();
+  expect(db).toBeDefined();
 });

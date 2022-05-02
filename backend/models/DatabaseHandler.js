@@ -23,5 +23,5 @@ function getDbConnection() {
 
 module.exports = {
   setConnection,
-  getDbConnection,
+  getDbConnection
 };
