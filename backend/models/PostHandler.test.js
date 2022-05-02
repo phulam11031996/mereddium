@@ -23,7 +23,7 @@ beforeAll(async () => {
     useUnifiedTopology: true,
   };
 
-  conn = await mongoose.createConnection(uri, mongooseOpts);
+  conn = mongoose.createConnection(uri, mongooseOpts);
   postModel = conn.model("Post", PostSchema);
   DatabaseHandler.setConnection(conn);
 });

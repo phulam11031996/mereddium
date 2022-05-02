@@ -115,12 +115,12 @@ async function votePost(postId, userId, value) {
   if (userId === null) {
     return 0;
   } else {
-    const inUpVote = await postModel.update(
+    const inUpVote = await postModel.updateOne(
       { _id: postId },
       { $pull: { upVoteUsers: { userId: userId } } }
     );
 
-    const inDownVote = await postModel.update(
+    const inDownVote = await postModel.updateOne(
       { _id: postId },
       { $pull: { downVoteUsers: { userId: userId } } }
     );

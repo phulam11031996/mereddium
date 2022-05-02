@@ -23,7 +23,7 @@ beforeAll(async () => {
     useUnifiedTopology: true,
   };
 
-  conn = await mongoose.createConnection(uri, mongooseOpts);
+  conn = mongoose.createConnection(uri, mongooseOpts);
 
   tagModel = conn.model("Tag", TagSchema);
 

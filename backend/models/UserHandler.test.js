@@ -244,8 +244,11 @@ test("Fetching saved posts", async () => {
   const result = await UserHandler.getSavedPosts(userId);
   expect(result).toBeDefined();
   expect(result.length).toBe(2);
-  expect(result[0].postId).toBe(postId1);
-  expect(result[1].postId).toBe(postId2);
+
+  const postIdArr = result.map(({ postId }) => postId);
+  expect(postIdArr.includes(postId1)).toBeTruthy();
+  expect(postIdArr.includes(postId2)).toBeTruthy();
+  expect(postIdArr.includes("xyz000")).toBeFalsy();
 });
 
 test("Fetching saved posts -- user has no posts saved", async () => {
