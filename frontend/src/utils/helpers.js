@@ -100,8 +100,11 @@ export const handleSortByVote = async () => {
     const response = await axios.get(`http://localhost:3030/post/`);
     let result = response.data.data;
     let filtered = result.sort((p1, p2) => {
-      return (p2.upVoteUsers.length - p2.downVoteUsers.length)
-        - (p1.upVoteUsers.length - p1.downVoteUsers.length);
+      return (
+        p2.upVoteUsers.length -
+        p2.downVoteUsers.length -
+        (p1.upVoteUsers.length - p1.downVoteUsers.length)
+      );
     });
 
     return filtered;
@@ -114,15 +117,20 @@ export const handleSortByTrending = async () => {
   try {
     const response = await axios.get(`http://localhost:3030/post/`);
     let result = response.data.data;
-    let filtered = result.filter((post) => {
-      const time = new Date(post.createdAt);
-			var threshold = new Date();
-			threshold.setDate(threshold.getDate() - 30);
-			return time > threshold;
-    }).sort((p1, p2) => {
-      return (p2.upVoteUsers.length - p2.downVoteUsers.length)
-        - (p1.upVoteUsers.length - p1.downVoteUsers.length);
-    });
+    let filtered = result
+      .filter((post) => {
+        const time = new Date(post.createdAt);
+        var threshold = new Date();
+        threshold.setDate(threshold.getDate() - 30);
+        return time > threshold;
+      })
+      .sort((p1, p2) => {
+        return (
+          p2.upVoteUsers.length -
+          p2.downVoteUsers.length -
+          (p1.upVoteUsers.length - p1.downVoteUsers.length)
+        );
+      });
 
     return filtered;
   } catch (e) {
