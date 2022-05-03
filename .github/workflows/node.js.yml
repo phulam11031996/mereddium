@@ -5,9 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ci-and-cd]
+    branches: [ main ]
   pull_request:
-    branches: [ci-and-cd]
+    branches: [ main ]
 
 jobs:
   build-backend:
@@ -32,7 +32,7 @@ jobs:
           cache-dependency-path: backend/package-lock.json
       - run: npm ci
       - run: npm run build --if-present
-      # - run: npm test
+      - run: npm test
       - uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
