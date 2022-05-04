@@ -46,6 +46,6 @@ app.use((req, res, next) => {
 
 // PORT NUMBER 3030
 const PORT = 3030;
-app.listen(PORT, () => {
-  console.log(`SERVER IS RUNNING ON PORT ${PORT}`);
+app.listen(process.env.PORT || PORT, () => {
+  console.log("REST API is listening.");
 });

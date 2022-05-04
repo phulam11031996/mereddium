@@ -20,8 +20,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export const CreatePost = (props) => {
-  const [open, setOpen] = useState(false);
+  // eslint-disable-next-line
   const [userId, setUserId] = useState(props.userId);
+  const [open, setOpen] = useState(false);
   const [title, setTitle] = useState();
   const [message, setMessage] = useState();
   const [image, setImage] = useState("");
@@ -43,7 +44,7 @@ export const CreatePost = (props) => {
   const handleOnSubmit = (event) => {
     event.preventDefault();
     let post = {
-      userId: userId,
+      userId: props.userId,
       title: title,
       message: message,
       imageURL: image,

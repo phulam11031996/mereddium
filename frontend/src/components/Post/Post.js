@@ -20,7 +20,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 
-import { CommentReply, Comments } from "..";
+import { Comments } from "..";
 import { parseCookie, deletePostById } from "../../utils";
 import { getCookie } from "../../utils";
 import axios from "axios";
@@ -37,23 +37,31 @@ const ExpandMore = styled((props) => {
 }));
 
 export const Post = (props) => {
+  // eslint-disable-next-line
+  const [login, setLogin] = useState(false);
+  // eslint-disable-next-line
+  const [postId, setPostId] = useState(props.property._id);
+  // eslint-disable-next-line
+  const [title, setTitle] = useState(props.property.title);
+  // eslint-disable-next-line
+  const [message, setMessage] = useState(props.property.message);
+  // eslint-disable-next-line
+  const [comments, setComments] = useState(props.property.comments);
+  // eslint-disable-next-line
+  const [turnOnComments, setTurnOffComments] = useState(
+    props.property.turnOnComments
+  );
+  // eslint-disable-next-line
+  const [subTitle, setSubtitle] = useState(
+    props.property.message.slice(0, 350)
+  );
+
   const [expanded, setExpanded] = useState(false);
   const [userId, setUserId] = useState("null");
   const [firstName, setFirstName] = useState("");
   const [photo, setPhoto] = useState("");
-  const [login, setLogin] = useState(false);
   const [userMatch, setUserMatch] = useState(false);
   const [postUserId, setPostUsedId] = useState(props.property.userId);
-  const [postId, setPostId] = useState(props.property._id);
-  const [title, setTitle] = useState(props.property.title);
-  const [message, setMessage] = useState(props.property.message);
-  const [turnOnComments, setTurnOffComments] = useState(
-    props.property.turnOnComments
-  );
-  const [subTitle, setSubtitle] = useState(
-    props.property.message.slice(0, 350)
-  );
-  const [comments, setComments] = useState(props.property.comments);
   const [upVoteUsers, setUpvoteUsers] = useState(props.property.upVoteUsers);
   const [downVoteUsers, setDownVoteUsers] = useState(
     props.property.downVoteUsers
@@ -93,7 +101,7 @@ export const Post = (props) => {
           console.log(error);
         });
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleExpandClick = () => {
     setExpanded(!expanded);

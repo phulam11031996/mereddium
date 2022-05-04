@@ -20,6 +20,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export const CreatePostEditor = (props) => {
   const [open, setOpen] = React.useState(false);
 
+  // eslint-disable-next-line
   const [post, setPost] = React.useState({
     userId: props.userId,
     title: "",

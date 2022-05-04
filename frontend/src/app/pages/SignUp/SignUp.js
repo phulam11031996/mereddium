@@ -17,23 +17,18 @@ const theme = createTheme();
 
 export const SignUp = () => {
   const [error, setError] = useState("");
-  const [user, setUser] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    password_confirm: "",
-  });
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
-    user.firstName = data.get("firstName");
-    user.lastName = data.get("lastName");
-    user.email = data.get("email");
-    user.password = data.get("password");
-    user.password_confirm = data.get("password_confirm");
+    let user = {
+      firstName: data.get("firstName"),
+      lastName: data.get("lastName"),
+      email: data.get("email"),
+      password: data.get("password"),
+      password_confirm: data.get("password_confirm"),
+    };
 
     makeSignUpCall(user).then((jwt) => {
       if (jwt.status === 201) {

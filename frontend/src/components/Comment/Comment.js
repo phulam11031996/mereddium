@@ -12,6 +12,7 @@ import { Avatar } from "@material-ui/core";
 import { getCookie } from "../../utils";
 
 export const Comment = (props) => {
+  // eslint-disable-next-line
   const [comment, setComment] = useState(props.comment);
   const [userId, setUserId] = useState(null);
   const [firstName, setFirstName] = useState("");
@@ -28,10 +29,9 @@ export const Comment = (props) => {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleDeleteComment = async () => {
-    const postId = comment.postId;
     await axios
       .delete(`http://localhost:3030/comment/${comment._id}`, {
         data: { postId: comment.postId },
@@ -56,7 +56,7 @@ export const Comment = (props) => {
           )
         }
         action={
-          props.userId == userId && (
+          props.userId === userId && (
             <IconButton onClick={handleDeleteComment}>
               <DeleteOutlineIcon style={{ color: "#ee6c4d" }} />
             </IconButton>
