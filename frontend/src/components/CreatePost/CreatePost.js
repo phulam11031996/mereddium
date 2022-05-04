@@ -20,9 +20,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export const CreatePost = (props) => {
+  // eslint-disable-next-line
+  const [userId, setUserId] = useState(props.userId);
   const [open, setOpen] = useState(false);
-  // comments out to pass ci-and-cd
-  // const [userId, setUserId] = useState(props.userId);
   const [title, setTitle] = useState();
   const [message, setMessage] = useState();
   const [image, setImage] = useState("");

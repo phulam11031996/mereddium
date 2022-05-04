@@ -12,15 +12,15 @@ import { Avatar } from "@material-ui/core";
 import { getCookie } from "../../utils";
 
 export const Comment = (props) => {
-  // have to comment out to pass ci-and-cd test
-  // const [comment, setComment] = useState(props.comment);
+  // eslint-disable-next-line
+  const [comment, setComment] = useState(props.comment);
   const [userId, setUserId] = useState(null);
   const [firstName, setFirstName] = useState("");
   const [photo, setPhoto] = useState("");
 
   useEffect(() => {
     axios
-      .get("http://localhost:3030/user/" + props.comment.userId)
+      .get("http://localhost:3030/user/" + comment.userId)
       .then((user) => {
         setUserId(user.data.data.user._id);
         setFirstName(user.data.data.user.firstName);
@@ -29,13 +29,12 @@ export const Comment = (props) => {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleDeleteComment = async () => {
-    const postId = props.comment.postId;
     await axios
-      .delete(`http://localhost:3030/comment/${postId}`, {
-        data: { postId: postId },
+      .delete(`http://localhost:3030/comment/${comment._id}`, {
+        data: { postId: comment.postId },
         headers: { Authorization: `Basic ${getCookie("jwt")}` },
       })
       .then((res) => {
@@ -47,10 +46,7 @@ export const Comment = (props) => {
   };
 
   return (
-    <Card
-      key={props.comment._id}
-      style={{ padding: "5px 5px", marginTop: "5px" }}
-    >
+    <Card key={comment._id} style={{ padding: "5px 5px", marginTop: "5px" }}>
       <CardHeader
         avatar={
           photo !== "" && (
@@ -67,10 +63,10 @@ export const Comment = (props) => {
           )
         }
         title={firstName}
-        subheader={props.comment.lastModifiedAt.slice(0, 10)}
+        subheader={comment.lastModifiedAt.slice(0, 10)}
       />
       <CardContent>
-        <Typography paragraph>{props.comment.message}</Typography>
+        <Typography paragraph>{comment.message}</Typography>
       </CardContent>
     </Card>
   );

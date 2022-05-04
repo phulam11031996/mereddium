@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Comment, CommentReply } from "../index";
 
 export const Comments = (props) => {
+  // eslint-disable-next-line
+  const [postId, setPostId] = useState(props.postId);
   const [comments, setComments] = useState(props.comments);
-  // comments out to pass ci-and-cd
-  // const [postId, setPostId] = useState(props.postId);
 
   const addComment = (newComments) => {
     setComments(newComments);

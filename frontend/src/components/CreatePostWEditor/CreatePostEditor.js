@@ -20,13 +20,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export const CreatePostEditor = (props) => {
   const [open, setOpen] = React.useState(false);
 
-  // comments out to pass ci-and-cd
-  // const [post, setPost] = React.useState({
-  //   userId: props.userId,
-  //   title: "",
-  //   message: "",
-  //   imageURL: "",
-  // });
+  // eslint-disable-next-line
+  const [post, setPost] = React.useState({
+    userId: props.userId,
+    title: "",
+    message: "",
+    imageURL: "",
+  });
 
   const handleClickOpen = () => {
     setOpen(true);
