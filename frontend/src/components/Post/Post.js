@@ -20,7 +20,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 
-import { CommentReply, Comments } from "..";
+import { Comments } from "..";
 import { parseCookie, deletePostById } from "../../utils";
 import { getCookie } from "../../utils";
 import axios from "axios";
@@ -60,8 +60,8 @@ export const Post = (props) => {
   );
   const [userSavedPosts, setUserSavedPosts] = useState([]);
 
-  useEffect(() => {
-    axios
+  useEffect(async () => {
+    await axios
       .get("http://localhost:3030/user/" + props.property.userId)
       .then((user) => {
         setPostUsedId(user.userId);
@@ -84,7 +84,7 @@ export const Post = (props) => {
         setUserId(null);
       }
 
-      axios
+      await axios
         .get("http://localhost:3030/user/" + getUser)
         .then((user) => {
           setUserSavedPosts(user.data.data.user.savedPosts);

@@ -20,12 +20,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export const CreatePostEditor = (props) => {
   const [open, setOpen] = React.useState(false);
 
-  const [post, setPost] = React.useState({
-    userId: props.userId,
-    title: "",
-    message: "",
-    imageURL: "",
-  });
+  // comments out to pass ci-and-cd
+  // const [post, setPost] = React.useState({
+  //   userId: props.userId,
+  //   title: "",
+  //   message: "",
+  //   imageURL: "",
+  // });
 
   const handleClickOpen = () => {
     setOpen(true);

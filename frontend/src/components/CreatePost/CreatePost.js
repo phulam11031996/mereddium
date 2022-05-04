@@ -21,7 +21,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export const CreatePost = (props) => {
   const [open, setOpen] = useState(false);
-  const [userId, setUserId] = useState(props.userId);
+  // comments out to pass ci-and-cd
+  // const [userId, setUserId] = useState(props.userId);
   const [title, setTitle] = useState();
   const [message, setMessage] = useState();
   const [image, setImage] = useState("");
@@ -43,7 +44,7 @@ export const CreatePost = (props) => {
   const handleOnSubmit = (event) => {
     event.preventDefault();
     let post = {
-      userId: userId,
+      userId: props.userId,
       title: title,
       message: message,
       imageURL: image,
