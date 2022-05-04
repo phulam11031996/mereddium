@@ -5,9 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ ci-and-cd ]
   pull_request:
-    branches: [ main ]
+    branches: [ ci-and-cd ]
 
 jobs:
   build-backend:
@@ -39,6 +39,7 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "csc309blogsite"
           heroku_email: "phulam11031996@gmail.com"
+          appdir: "backend/"
 
   # build-frontend:
   #     runs-on: windows-latest
