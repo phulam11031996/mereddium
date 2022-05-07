@@ -23,7 +23,19 @@ function getDbConnection() {
   return dbConnection;
 }
 
+function createDbConnection() {
+  if(!dbConnection) {
+    const uri = process.env.MONGOLAB_URI;
+    const opts = {
+      useUnifiedTopology: true,
+      useNewUrlParser: true
+    };
+    dbConnection = mongoose.connect(uri, opts);
+  }
+}
+
 module.exports = {
   setConnection,
   getDbConnection,
+  createDbConnection
 };

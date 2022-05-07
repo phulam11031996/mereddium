@@ -1,4 +1,5 @@
-const DatabaseHandler = require("./DatabaseHandler");
+// const DatabaseHandler = require("./DatabaseHandler");
+const mongoose = require("mongoose");
 const TagSchema = require("./TagSchema");
 
 const { v4: uuidv4 } = require("uuid");
@@ -9,8 +10,9 @@ const uniqueID = () => {
 
 // GET /tag/
 async function getAllTags() {
-  const db = await DatabaseHandler.getDbConnection();
-  const tagModel = db.model("Tag", TagSchema);
+  // const conn = await DatabaseHandler.getDbConnection();
+  // const tagModel = conn.model("Tag", TagSchema);
+  const tagModel = mongoose.model("Tag", TagSchema);
 
   const allTags = await tagModel.find();
   return allTags;
@@ -18,8 +20,9 @@ async function getAllTags() {
 
 // POST /tag/
 async function createTag(tag) {
-  const db = await DatabaseHandler.getDbConnection();
-  const tagModel = db.model("Tag", TagSchema);
+  // const conn = await DatabaseHandler.getDbConnection();
+  // const tagModel = conn.model("Tag", TagSchema);
+  const tagModel = mongoose.model("Tag", TagSchema);
 
   const tagId = uniqueID().slice(0, 6);
 
@@ -34,8 +37,9 @@ async function createTag(tag) {
 
 // GET /tag/{id}
 async function getTagById(id) {
-  const db = await DatabaseHandler.getDbConnection();
-  const tagModel = db.model("Tag", TagSchema);
+  // const conn = await DatabaseHandler.getDbConnection();
+  // const tagModel = conn.model("Tag", TagSchema);
+  const tagModel = mongoose.model("Tag", TagSchema);
 
   const tag = await tagModel.findById({ _id: id });
   return tag;
@@ -43,26 +47,28 @@ async function getTagById(id) {
 
 // UPDATE /tag/{id}
 async function updateTagById(id, newInfo) {
-  const db = await DatabaseHandler.getDbConnection();
-  const tagModel = db.model("Tag", TagSchema);
+  // const conn = await DatabaseHandler.getDbConnection();
+  // const tagModel = conn.model("Tag", TagSchema);
+  const tagModel = mongoose.model("Tag", TagSchema);
 
-  const updatedTag = await tagModel.updateOne(
+  const result = await tagModel.updateOne(
     { _id: id },
     {
       $set: newInfo,
     }
   );
 
-  return updatedTag;
+  return result;
 }
 
 // DELETE /tag/{id}
 async function deleteTagById(id) {
-  const db = await DatabaseHandler.getDbConnection();
-  const tagModel = db.model("Tag", TagSchema);
+  // const conn = await DatabaseHandler.getDbConnection();
+  // const tagModel = conn.model("Tag", TagSchema);
+  const tagModel = mongoose.model("Tag", TagSchema);
 
-  await tagModel.deleteOne({ _id: id });
-  return 0;
+  const result = await tagModel.deleteOne({ _id: id });
+  return result;
 }
 
 module.exports = {

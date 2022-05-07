@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const TagSchema = require("./TagSchema");
 const TagHandler = require("./TagHandler");
-const DatabaseHandler = require("./DatabaseHandler");
+// const DatabaseHandler = require("./DatabaseHandler");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 
 const { v4: uuidv4 } = require("uuid");
@@ -11,7 +11,7 @@ const uniqueID = () => {
 };
 
 let mongoServer;
-let conn;
+// let conn;
 let tagModel;
 
 beforeAll(async () => {
@@ -22,30 +22,31 @@ beforeAll(async () => {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   };
-
-  conn = mongoose.createConnection(uri, mongooseOpts);
-
-  tagModel = conn.model("Tag", TagSchema);
-
-  DatabaseHandler.setConnection(conn);
+  
+  // conn = mongoose.createConnection(uri, mongooseOpts);
+  // DatabaseHandler.setConnection(conn);
+  mongoose.connect(uri, mongooseOpts);
+  tagModel = mongoose.model("Tag", TagSchema);
 });
 
 afterAll(async () => {
-  await conn.dropDatabase();
-  await conn.close();
+  // await conn.dropDatabase();
+  // await conn.close();
+  await mongoose.connection.dropDatabase();
+  await mongoose.connection.close();
   await mongoServer.stop();
 });
 
 beforeEach(async () => {
   const newTag = new tagModel({
     _id: uniqueID().slice(0, 6),
-    name: "Technology",
+    name: "Technology"
   });
   await newTag.save();
 
   const newTag2 = new tagModel({
     _id: "abc123",
-    name: "Education",
+    name: "Education"
   });
   await newTag2.save();
 });
@@ -60,19 +61,24 @@ test("Fetching all tags", async () => {
   expect(tags.length).toBe(2); // 2 tags
 });
 
+test("Adding tag", async () => {
+  const tag = {
+    name: "Computers",
+  };
+
+  const result = await TagHandler.createTag(tag);
+  expect(result).toBeDefined();
+
+  const getTag = await tagModel.findOne({ name: tag.name });
+  expect(getTag).toBeDefined();
+  expect(getTag.name).toBe(tag.name);
+});
+
 test("Fetching tag by id", async () => {
   const id = "abc123";
   const tag = await TagHandler.getTagById(id);
   expect(tag).toBeDefined();
-  expect(tag["id"]).toBe(id);
-});
-
-test("Deleting tag by id", async () => {
-  const id = "abc123";
-  await TagHandler.deleteTagById(id);
-  const tags = await TagHandler.getAllTags();
-  expect(tags).toBeDefined();
-  expect(tags.length).toBe(1); // from 2 tags to 1
+  expect(tag._id).toBe(id);
 });
 
 test("Updating tag by id", async () => {
@@ -83,22 +89,25 @@ test("Updating tag by id", async () => {
 
   const result = await TagHandler.updateTagById(id, tag);
   expect(result).toBeDefined();
-  expect(result["modifiedCount"]).toBe(1); // one document was updated
+  expect(result.modifiedCount).toBe(1); // one document was updated
 
-  const getTag = await TagHandler.getTagById(id);
+  const getTag = await tagModel.findById(id);
   expect(getTag).toBeDefined();
-  expect(getTag["name"]).toBe("Numbers");
+  expect(getTag.name).toBe("Numbers");
 });
 
-test("Adding tag", async () => {
-  const tag = {
-    name: "Computers",
-  };
-
-  const result = await TagHandler.createTag(tag);
+test("Deleting tag by id", async () => {
+  const id = "abc123";
+  
+  const result = await TagHandler.deleteTagById(id);
   expect(result).toBeDefined();
+  expect(result.deletedCount).toBe(1);
+});
 
-  const tags = await TagHandler.getAllTags();
-  expect(tags).toBeDefined();
-  expect(tags.length).toBe(3); // from 2 tags to 3
+test("Deleting tag by id -- tag not found", async () => {
+  const id = "xyz000";
+  
+  const result = await TagHandler.deleteTagById(id);
+  expect(result).toBeDefined();
+  expect(result.deletedCount).toBe(0);
 });
