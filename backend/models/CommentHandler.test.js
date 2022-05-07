@@ -122,19 +122,6 @@ test("Fetching comment by id", async () => {
   expect(comment.message).toBe("Second!");
 });
 
-test("Updating comment by id", async () => {
-  const id = "abc123";
-  const comment = { upVote: -2 }; // change upvotes from 1 to -2
-
-  const result = await CommentHandler.updateCommentById(id, comment);
-  expect(result).toBeDefined();
-  expect(result.modifiedCount).toBe(1); // one document was updated
-
-  const getComment = await commentModel.findOne({ _id: id });
-  expect(getComment).toBeDefined();
-  expect(getComment.upVote).toBe(-2);
-});
-
 test("Deleting comment by id", async () => {
   const commentId = "abc123";
   const postId = "hij789";
@@ -153,6 +140,55 @@ test("Deleting comment by id -- invalid comment id", async () => {
   const postId = "hij789";
 
   const result = await CommentHandler.deleteCommentById(commentId, postId);
+  expect(result).toBeDefined();
+  expect(result).toStrictEqual(new HttpError("commentId not found!"));
+});
+
+test("Updating comment by id - no error", async () => {
+  const commentId = "abc123";
+  const postId = "hij789";
+  const newComment = { message: "Hello" };
+
+  const result = await CommentHandler.updateCommentById(
+    commentId,
+    postId,
+    newComment
+  );
+  expect(result).toBeDefined();
+});
+
+test("Updating comment by id - empty string error", async () => {
+  const commentId = "abc123";
+  const postId = "hij789";
+  const newComment = "";
+
+  const result = await CommentHandler.updateCommentById(
+    commentId,
+    postId,
+    newComment
+  );
+  expect(result).toStrictEqual(new HttpError("New comment can't be empty."));
+});
+
+test("Updating comment by id - no error", async () => {
+  const commentId = "abc123";
+  const postId = "hij789";
+  const newComment = "Hello!";
+
+  const result = await CommentHandler.updateCommentById(
+    commentId,
+    postId,
+    newComment
+  );
+  expect(result).toBe(1);
+});
+
+test("Updating comment by id - error", async () => {
+  const commentId = "xyz000";
+  const postId = "hij789";
+  const comment = "Hello";
+
+  const result = await CommentHandler.updateCommentById(commentId, postId, comment);
   expect(result).toBeDefined();
   expect(result).toStrictEqual(new HttpError("commentId not found!"));
 });

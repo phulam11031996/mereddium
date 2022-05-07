@@ -98,6 +98,31 @@ async function deleteCommentByPostId(commentId, postId) {
   }
 }
 
+// UPDATE /post/comment/{id}
+async function updateCommentByPostId(commentId, postId, newMessage) {
+  const db = await DatabaseHandler.getDbConnection();
+  const postModel = db.model("Post", PostSchema);
+
+  if (newMessage == "")
+    throw (error = new HttpError("New comment can't be empty.", 400));
+
+  const post = await postModel.updateOne(
+    { _id: postId, comments: { $elemMatch: { _d: commentId } } },
+    { $set: { "comments.$.message": newMessage } }
+  );
+
+  if (post.modifiedCount === 1 && post.matchedCount === 1) {
+    return 1;
+  } else if (post.modifiedCount === 0 && post.matchedCount === 1) {
+    throw (error = new HttpError(
+      "New message can't be the same as the old message.",
+      400
+    ));
+  } else {
+    throw (error = new HttpError("commentId not found", 404));
+  }
+}
+
 // DELETE /post/{id}
 async function deletePostById(id) {
   const db = await DatabaseHandler.getDbConnection();
@@ -162,4 +187,5 @@ module.exports = {
   votePost,
   addCommentByPostId,
   deleteCommentByPostId,
+  updateCommentByPostId,
 };

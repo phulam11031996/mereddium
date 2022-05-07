@@ -17,6 +17,18 @@ export const Comments = (props) => {
     setComments(updatedComments);
   };
 
+  const updateComment = (commentId, newMessage) => {
+    let updatedComments = comments.map((comment) => {
+      if (comment._id === commentId) {
+        return comment;
+      } else {
+        comment.message = newMessage;
+        return comment;
+      }
+    });
+    setComments(updatedComments);
+  };
+
   return (
     <>
       <div style={{ padding: 14 }} className="App">
@@ -27,6 +39,7 @@ export const Comments = (props) => {
               comment={comment}
               userId={props.userId}
               deleteComment={deleteComment}
+              updateComment={updateComment}
             />
           );
         })}
