@@ -40,7 +40,28 @@ beforeEach(async () => {
     userId: "qwe123",
     title: "dummy title 1",
     message: "dummy message 1",
-    comments: [],
+    comments: [
+      {
+        _id: "zxy000",
+        userId: "cb781d",
+        postId: "5ad992",
+        message: "hello",
+        upVote: 1,
+        timeStamp: "2022-03-12T00:21:07.956Z",
+        lastModifiedAt: "1647044467956",
+        __v: 0,
+      },
+      {
+        _id: "000xyz",
+        userId: "cb781d",
+        postId: "5ad992",
+        message: "hi",
+        upVote: 1,
+        timeStamp: "2022-03-12T00:21:07.956Z",
+        lastModifiedAt: "1647044467956",
+        __v: 0,
+      },
+    ],
     turnOnComments: true,
     published: true,
     stringify: "req.body.stringify",
@@ -255,4 +276,70 @@ test("votePost -- downVote", async () => {
 test("votePost -- null user", async () => {
   const voteResult = await PostHandler.votePost("abc123", null, 1);
   expect(voteResult).toBe(0);
+});
+
+test("updateCommentByPostId - same message error", async () => {
+  let thrown = false;
+  try {
+    const result = await PostHandler.updateCommentByPostId(
+      "zxy000",
+      "abc123",
+      "hello"
+    );
+  } catch (error) {
+    expect(error.code).toBe(400);
+    expect(error.message).toBe(
+      "New message can't be the same as the old message."
+    );
+    thrown = true;
+  }
+  expect(thrown).toBe(true);
+});
+
+test("updateCommentByPostId - commentId not found error", async () => {
+  let thrown = false;
+  try {
+    const result = await PostHandler.updateCommentByPostId(
+      "unknown commentId",
+      "abc123",
+      "new message"
+    );
+    console.log(result);
+  } catch (error) {
+    expect(error.code).toBe(404);
+    expect(error.message).toBe("commentId not found.");
+    thrown = true;
+  }
+  expect(thrown).toBe(true);
+});
+
+test("updateCommentByPostId - empty message error", async () => {
+  let thrown = false;
+  try {
+    const result = await PostHandler.updateCommentByPostId(
+      "zxy000",
+      "abc123",
+      ""
+    );
+  } catch (error) {
+    expect(error.code).toBe(400);
+    expect(error.message).toBe("New comment can't be empty.");
+    thrown = true;
+  }
+  expect(thrown).toBe(true);
+});
+
+test("updateCommentByPostId - no error", async () => {
+  let thrown = false;
+  try {
+    const result = await PostHandler.updateCommentByPostId(
+      "zxy000",
+      "abc123",
+      "new message"
+    );
+    expect(result).toBe(1);
+  } catch (error) {
+    thrown = true;
+  }
+  expect(thrown).toBe(false);
 });

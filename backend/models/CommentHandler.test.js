@@ -182,13 +182,3 @@ test("Updating comment by id - no error", async () => {
   );
   expect(result).toBe(1);
 });
-
-test("Updating comment by id - error", async () => {
-  const commentId = "xyz000";
-  const postId = "hij789";
-  const comment = "Hello";
-
-  const result = await CommentHandler.updateCommentById(commentId, postId, comment);
-  expect(result).toBeDefined();
-  expect(result).toStrictEqual(new HttpError("commentId not found!"));
-});

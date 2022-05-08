@@ -54,10 +54,14 @@ async function updateCommentById(commentId, postId, newMessage) {
   const commentModel = db.model("Comment", CommentSchema);
 
   try {
-    const post = await PostHandler.updateCommentByPostId(commentId, postId, newMessage);
+    const post = await PostHandler.updateCommentByPostId(
+      commentId,
+      postId,
+      newMessage
+    );
     const comment = await commentModel.updateOne(
       { _id: commentId },
-      { $set: { message : newMessage }}
+      { $set: { message: newMessage } }
     );
     return 1;
   } catch (err) {
