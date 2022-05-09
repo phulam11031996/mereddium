@@ -9,7 +9,7 @@ exports.getAllTags = catchAsync(async (req, res) => {
   const allTags = await TagHandler.getAllTags();
   res.status(200).json({
     status: "success",
-    data: allTags,
+    data: allTags
   });
 });
 

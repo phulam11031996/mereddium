@@ -80,5 +80,5 @@ module.exports = {
   createComment,
   getCommentById,
   updateCommentById,
-  deleteCommentById,
+  deleteCommentById
 };

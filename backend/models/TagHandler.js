@@ -65,5 +65,5 @@ module.exports = {
   createTag,
   getTagById,
   updateTagById,
-  deleteTagById,
+  deleteTagById
 };

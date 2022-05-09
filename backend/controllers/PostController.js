@@ -12,9 +12,9 @@ exports.getAllPosts = catchAsync(async (req, res) => {
 
 // POST /post/
 exports.createPost = catchAsync(async (req, res) => {
-  const post = await PostHandler.createPost(req.body);
+  const newPost = await PostHandler.createPost(req.body);
   res.status(201).json({
-    post,
+    newPost
   });
 });
 
@@ -23,9 +23,7 @@ exports.getPostById = catchAsync(async (req, res) => {
   const post = await PostHandler.getPostById(req.params.id);
   res.status(200).json({
     status: "success",
-    data: {
-      post,
-    },
+    data: { post }
   });
 });
 
@@ -34,16 +32,24 @@ exports.updatePostById = catchAsync(async (req, res) => {
   const post = await PostHandler.updatePostById(req.params.id, req.body);
   res.status(200).json({
     status: "success",
-    data: {
-      post,
-    },
+    data: { post }
   });
 });
 
 // // DELETE /post/{id}
 exports.deletePostById = catchAsync(async (req, res) => {
   const result = await PostHandler.deletePostById(req.params.id);
-  res.status(200).send(req.params.id).end();
+  
+  if (result.deletedCount == 1) {
+    res.status(200).json({
+      status: ""
+    });
+  } else {
+    res.status(404).json({
+      status: "failure",
+      data: { result }
+    });
+  }
 });
 
 // POST /vote/{id}
@@ -55,7 +61,7 @@ exports.votePost = catchAsync(async (req, res) => {
   const result = await PostHandler.votePost(postId, userId, value);
   if (result === 0) {
     res.status(401).json({
-      status: "Must login first!",
+      status: "Must login first!"
     });
   } else {
     const upVoteUsers = result[0];
@@ -65,7 +71,7 @@ exports.votePost = catchAsync(async (req, res) => {
       data: {
         upVoteUsers,
         downVoteUsers,
-      },
+      }
     });
   }
 });

@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
+const { MongoMemoryServer } = require("mongodb-memory-server");
 const PostSchema = require("./PostSchema");
 const PostHandler = require("./PostHandler");
-const DatabaseHandler = require("./DatabaseHandler");
-const { MongoMemoryServer } = require("mongodb-memory-server");
 
 const { v4: uuidv4 } = require("uuid");
 
@@ -11,7 +10,6 @@ const uniqueID = () => {
 };
 
 let mongoServer;
-let conn;
 let postModel;
 
 beforeAll(async () => {
@@ -23,19 +21,18 @@ beforeAll(async () => {
     useUnifiedTopology: true,
   };
 
-  conn = mongoose.createConnection(uri, mongooseOpts);
-  postModel = conn.model("Post", PostSchema);
-  DatabaseHandler.setConnection(conn);
+  mongoose.connect(uri, mongooseOpts);
+  postModel = mongoose.model("Post", PostSchema);
 });
 
 afterAll(async () => {
-  await conn.dropDatabase();
-  await conn.close();
+  await mongoose.connection.dropDatabase();
+  await mongoose.connection.close();
   await mongoServer.stop();
 });
 
 beforeEach(async () => {
-  let newPost = {
+  const newPost = new postModel({
     _id: "abc123",
     userId: "qwe123",
     title: "dummy title 1",
@@ -48,12 +45,11 @@ beforeEach(async () => {
     imageURL: "https://dummy1.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0,
-  };
-  result = new postModel(newPost);
-  await result.save();
+    upVote: 0
+  });
+  await newPost.save();
 
-  newPost = {
+  const newPost2 = new postModel({
     _id: uniqueID().slice(0, 6),
     userId: "asd456",
     title: "dummy title 2",
@@ -66,12 +62,11 @@ beforeEach(async () => {
     imageURL: "https://dummy2.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0,
-  };
-  result = new postModel(newPost);
-  await result.save();
+    upVote: 0
+  });
+  await newPost2.save();
 
-  newPost = {
+  const newPost3 = new postModel({
     _id: uniqueID().slice(0, 6),
     userId: "zxc789",
     title: "dummy title 3",
@@ -84,20 +79,19 @@ beforeEach(async () => {
     imageURL: "https://dummy3.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0,
-  };
-  result = new postModel(newPost);
-  await result.save();
+    upVote: 0
+  });
+  await newPost3.save();
 });
 
 afterEach(async () => {
   await postModel.deleteMany();
 });
 
-test("Fetching all users", async () => {
+test("Fetching all posts", async () => {
   const posts = await PostHandler.getAllPosts();
   expect(posts).toBeDefined();
-  expect(posts.length).toBeGreaterThan(0);
+  expect(posts.length).toBe(3);  // 3 posts
 });
 
 test("createPost -- successful path", async () => {

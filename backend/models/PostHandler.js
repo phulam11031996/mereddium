@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const DatabaseHandler = require("./DatabaseHandler");
 const PostSchema = require("./PostSchema");
 
 const HttpError = require("../utils/http-error");
@@ -11,16 +10,15 @@ const uniqueID = () => {
 
 // GET /post/
 async function getAllPosts() {
-  const db = await DatabaseHandler.getDbConnection();
-  const postModel = db.model("Post", PostSchema);
-  let result = await postModel.find();
-  return result;
+  const postModel = mongoose.model("Post", PostSchema);
+
+  let posts = await postModel.find();
+  return posts;
 }
 
 // POST /post/
 async function createPost(post) {
-  const db = await DatabaseHandler.getDbConnection();
-  const postModel = db.model("Post", PostSchema);
+  const postModel = mongoose.model("Post", PostSchema);
 
   const postId = uniqueID().slice(0, 6);
 
@@ -46,8 +44,7 @@ async function createPost(post) {
 
 // GET /post/{id}
 async function getPostById(id) {
-  const db = await DatabaseHandler.getDbConnection();
-  const postModel = db.model("Post", PostSchema);
+  const postModel = mongoose.model("Post", PostSchema);
 
   const post = await postModel.findById({ _id: id });
   return post;
@@ -55,17 +52,14 @@ async function getPostById(id) {
 
 // UPDATE /post/{id}
 async function updatePostById(id, newInfo) {
-  const db = await DatabaseHandler.getDbConnection();
-  const postModel = db.model("Post", PostSchema);
+  const postModel = mongoose.model("Post", PostSchema);
 
-  const post = await postModel.updateOne(
+  const result = await postModel.updateOne(
     { _id: id },
-    {
-      $set: newInfo,
-    }
+    { $set: newInfo }
   );
 
-  return post;
+  return result;
 }
 
 // UPDATE /post/comment/{id}
@@ -99,17 +93,15 @@ async function deleteCommentByPostId(commentId, postId) {
 
 // DELETE /post/{id}
 async function deletePostById(id) {
-  const db = await DatabaseHandler.getDbConnection();
-  const postModel = db.model("Post", PostSchema);
+  const postModel = mongoose.model("Post", PostSchema);
 
-  await postModel.deleteOne({ _id: id });
-  return 0;
+  const result = await postModel.deleteOne({ _id: id });
+  return result;
 }
 
 // UPDATE /vote/{id}
 async function votePost(postId, userId, value) {
-  const db = await DatabaseHandler.getDbConnection();
-  const postModel = db.model("Post", PostSchema);
+  const postModel = mongoose.model("Post", PostSchema);
 
   if (userId === null) {
     return 0;
@@ -160,5 +152,5 @@ module.exports = {
   deletePostById,
   votePost,
   addCommentByPostId,
-  deleteCommentByPostId,
+  deleteCommentByPostId
 };
