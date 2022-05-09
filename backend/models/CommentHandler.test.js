@@ -1,19 +1,17 @@
 const mongoose = require("mongoose");
+const { MongoMemoryServer } = require("mongodb-memory-server");
 const CommentSchema = require("./CommentSchema");
 const CommentHandler = require("./CommentHandler");
 const PostSchema = require("./PostSchema");
-const DatabaseHandler = require("./DatabaseHandler");
-const { MongoMemoryServer } = require("mongodb-memory-server");
 
-const { v4: uuidv4 } = require("uuid");
 const HttpError = require("../utils/http-error");
+const { v4: uuidv4 } = require("uuid");
 
 const uniqueID = () => {
   return uuidv4();
 };
 
 let mongoServer;
-let conn;
 let commentModel;
 let postModel;
 
@@ -26,44 +24,39 @@ beforeAll(async () => {
     useUnifiedTopology: true,
   };
 
-  conn = mongoose.createConnection(uri, mongooseOpts);
-
-  commentModel = conn.model("Comment", CommentSchema);
-  postModel = conn.model("Post", PostSchema);
-
-  DatabaseHandler.setConnection(conn);
+  mongoose.connect(uri, mongooseOpts);
+  commentModel = mongoose.model("Comment", CommentSchema);
+  postModel = mongoose.model("Post", PostSchema);
 });
 
 afterAll(async () => {
-  await conn.dropDatabase();
-  await conn.close();
+  await mongoose.connection.dropDatabase();
+  await mongoose.connection.close();
   await mongoServer.stop();
 });
 
 beforeEach(async () => {
-  const newComment = {
+  const newComment = new commentModel({
     _id: uniqueID().slice(0, 6),
     userId: "def456",
     postId: "hij789",
     timeStamp: Date.now(),
     lastModifiedAt: Date.now(),
     message: "First!",
-    upVote: 3,
-  };
-  let result = new commentModel(newComment);
-  await result.save();
+    upVote: 3
+  });
+  await newComment.save();
 
-  const newComment2 = {
+  const newComment2 = new commentModel({
     _id: "abc123",
     userId: "def456",
     postId: "hij789",
     timeStamp: Date.now(),
     lastModifiedAt: Date.now(),
     message: "Second!",
-    upVote: 1,
-  };
-  result = new commentModel(newComment2);
-  await result.save();
+    upVote: 1
+  });
+  await newComment2.save();
 
   const newPost = new postModel({
     _id: "hij789",
@@ -78,7 +71,7 @@ beforeEach(async () => {
     imageURL: "https://dummy1.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0,
+    upVote: 0
   });
   await newPost.save();
 });
@@ -104,14 +97,15 @@ test("Adding comment", async () => {
 
   const result = await CommentHandler.createComment(comment);
   expect(result).toBeDefined();
+  expect(result._id).toBeDefined();
+  expect(result.userId).toBe(comment.userId);
+  expect(result.postId).toBe(comment.postId);
+  expect(result.message).toBe(comment.message);
+  expect(result.upVote).toBe(comment.upVote);
 
   const comments = await commentModel.find();
   expect(comments).toBeDefined();
   expect(comments.length).toBe(3); // from 2 comments to 3
-
-  const resultComment = await commentModel.findOne({ message: "Third!" });
-  expect(resultComment).toBeDefined();
-  expect(resultComment.upVote).toBe(2);
 });
 
 test("Fetching comment by id", async () => {
@@ -140,7 +134,8 @@ test("Deleting comment by id", async () => {
   const postId = "hij789";
 
   const result = await CommentHandler.deleteCommentById(commentId, postId);
-  expect(result).toBe(1); // function ran without errors
+  expect(result).toBeDefined();
+  expect(result.deletedCount).toBe(1);
 
   const comments = await commentModel.find();
   expect(comments).toBeDefined();

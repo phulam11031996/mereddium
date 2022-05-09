@@ -35,7 +35,7 @@ test("Fetching all tags -- no tags stored", async () => {
   
   const tags = await TagHandler.getAllTags();
   expect(tags).toBeDefined();
-  expect(tags.length).toBe(0); // 0 tags
+  expect(tags.length).toBe(0);  // 0 tags
 
   expect(tagModel.find.mock.calls.length).toBe(1);
   expect(tagModel.find).toHaveBeenCalledWith();
@@ -56,7 +56,7 @@ test("Fetching all tags -- 2 tags stored", async () => {
   
   const tags = await TagHandler.getAllTags();
   expect(tags).toBeDefined();
-  expect(tags.length).toBe(2); // 2 tags
+  expect(tags.length).toBe(2);  // 2 tags
 
   expect(tagModel.find.mock.calls.length).toBe(1);
   expect(tagModel.find).toHaveBeenCalledWith();
@@ -82,13 +82,13 @@ test("Fetching tag by id", async () => {
   };
   tagModel.findById = jest.fn().mockResolvedValue(tag);
 
-  const foundTag = await TagHandler.getTagById(tag._id);
+  const foundTag = await TagHandler.getTagById("abc123");
   expect(foundTag).toBeDefined();
   expect(foundTag._id).toBe(tag._id);
   expect(foundTag.name).toBe(tag.name);
 
   expect(tagModel.findById.mock.calls.length).toBe(1);
-  expect(tagModel.findById).toHaveBeenCalledWith({ _id: tag._id });
+  expect(tagModel.findById).toHaveBeenCalledWith({ _id: "abc123" });
 });
 
 test("Updating tag by id", async () => {
@@ -97,7 +97,7 @@ test("Updating tag by id", async () => {
     name: "Education"
   };
   const tagUpdate = {
-    name: "Numbers", // change name from "Education" to "Numbers"
+    name: "Numbers",  // change name from "Education" to "Numbers"
   };
   tagModel.updateOne = jest.fn().mockResolvedValue(
     {
@@ -111,7 +111,7 @@ test("Updating tag by id", async () => {
 
   const result = await TagHandler.updateTagById(tag._id, tagUpdate);
   expect(result).toBeDefined();
-  expect(result.modifiedCount).toBe(1); // one document was updated
+  expect(result.modifiedCount).toBe(1);  // one document was updated
 
   expect(tagModel.updateOne.mock.calls.length).toBe(1);
   expect(tagModel.updateOne).toHaveBeenCalledWith(

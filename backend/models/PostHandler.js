@@ -1,7 +1,8 @@
+const mongoose = require("mongoose");
 const DatabaseHandler = require("./DatabaseHandler");
 const PostSchema = require("./PostSchema");
-const HttpError = require("../utils/http-error");
 
+const HttpError = require("../utils/http-error");
 const { v4: uuidv4 } = require("uuid");
 
 const uniqueID = () => {
@@ -69,21 +70,19 @@ async function updatePostById(id, newInfo) {
 
 // UPDATE /post/comment/{id}
 async function addCommentByPostId(id, newComment) {
-  const db = await DatabaseHandler.getDbConnection();
-  const postModel = db.model("Post", PostSchema);
+  const postModel = mongoose.model("Post", PostSchema);
 
-  const post = await postModel.findOneAndUpdate(
+  const result = await postModel.updateOne(
     { _id: id },
-    { $push: { comments: newComment } },
-    { new: true }
+    { $push: { comments: newComment } }
   );
-  return post;
+
+  return result;
 }
 
 // DELETE /post/comment/{id}
 async function deleteCommentByPostId(commentId, postId) {
-  const db = await DatabaseHandler.getDbConnection();
-  const postModel = db.model("Post", PostSchema);
+  const postModel = mongoose.model("Post", PostSchema);
 
   const post = await postModel.updateOne(
     { _id: postId },

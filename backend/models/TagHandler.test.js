@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
+const { MongoMemoryServer } = require("mongodb-memory-server");
 const TagSchema = require("./TagSchema");
 const TagHandler = require("./TagHandler");
-// const DatabaseHandler = require("./DatabaseHandler");
-const { MongoMemoryServer } = require("mongodb-memory-server");
 
 const { v4: uuidv4 } = require("uuid");
 
@@ -11,7 +10,6 @@ const uniqueID = () => {
 };
 
 let mongoServer;
-// let conn;
 let tagModel;
 
 beforeAll(async () => {
@@ -23,15 +21,11 @@ beforeAll(async () => {
     useUnifiedTopology: true,
   };
   
-  // conn = mongoose.createConnection(uri, mongooseOpts);
-  // DatabaseHandler.setConnection(conn);
   mongoose.connect(uri, mongooseOpts);
   tagModel = mongoose.model("Tag", TagSchema);
 });
 
 afterAll(async () => {
-  // await conn.dropDatabase();
-  // await conn.close();
   await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
   await mongoServer.stop();
