@@ -1,6 +1,9 @@
 const PostHandler = require("../models/PostHandler");
 const catchAsync = require("../utils/catchAsync");
 
+const DatabaseHandler = require("../models/DatabaseHandler");
+DatabaseHandler.createDbConnection();
+
 // GET /post/
 exports.getAllPosts = catchAsync(async (req, res) => {
   const allPosts = await PostHandler.getAllPosts();
@@ -42,7 +45,8 @@ exports.deletePostById = catchAsync(async (req, res) => {
   
   if (result.deletedCount == 1) {
     res.status(200).json({
-      status: ""
+      status: "success",
+      data: { result }
     });
   } else {
     res.status(404).json({

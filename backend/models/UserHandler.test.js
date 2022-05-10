@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
+const { MongoMemoryServer } = require("mongodb-memory-server");
 const UserSchema = require("./UserSchema");
 const UserHandler = require("./UserHandler");
-const DatabaseHandler = require("./DatabaseHandler");
-const { MongoMemoryServer } = require("mongodb-memory-server");
 
 const { v4: uuidv4 } = require("uuid");
 const HttpError = require("../utils/http-error");
@@ -12,7 +11,6 @@ const uniqueID = () => {
 };
 
 let mongoServer;
-let conn;
 let userModel;
 
 beforeAll(async () => {
@@ -24,16 +22,13 @@ beforeAll(async () => {
     useUnifiedTopology: true,
   };
 
-  conn = mongoose.createConnection(uri, mongooseOpts);
-
-  userModel = conn.model("User", UserSchema);
-
-  DatabaseHandler.setConnection(conn);
+  mongoose.connect(uri, mongooseOpts);
+  userModel = mongoose.model("User", UserSchema);
 });
 
 afterAll(async () => {
-  await conn.dropDatabase();
-  await conn.close();
+  await mongoose.connection.dropDatabase();
+  await mongoose.connection.close();
   await mongoServer.stop();
 });
 
@@ -53,7 +48,7 @@ beforeEach(async () => {
     reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
     blocked: false,
     interestedIn: [],
-    savedPosts: [],
+    savedPosts: []
   });
   await newUser.save();
 
@@ -72,7 +67,7 @@ beforeEach(async () => {
     reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
     blocked: false,
     interestedIn: [],
-    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }],
+    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }]
   });
   await newUser2.save();
 });
@@ -103,11 +98,13 @@ test("Fetching user by email", async () => {
 
 test("Deleting user by id", async () => {
   const id = "abc123";
-  await UserHandler.deleteUserById(id);
-
-  const result = await UserHandler.getAllUsers();
+  const result = await UserHandler.deleteUserById(id);
   expect(result).toBeDefined();
-  expect(result.length).toBe(1);
+  expect(result.deletedCount).toBe(1);
+
+  const users = await UserHandler.getAllUsers();
+  expect(users).toBeDefined();
+  expect(users.length).toBe(1);  // from 2 users to 1
 });
 
 test("Updating user by id", async () => {

@@ -74,6 +74,10 @@ test("Fetching all comments -- 2 comments stored", async () => {
   expect(commentModel.find).toHaveBeenCalledWith();
 });
 
+// ------------------------------------
+//       Adding Comment Tests
+// ------------------------------------
+
 test("Adding comment", async () => {
   const comment = {
     userId: "def456",
@@ -103,9 +107,11 @@ test("Adding comment", async () => {
 
   const result = await CommentHandler.createComment(comment);
   expect(result).toBeDefined();
-  expect(result._id).toBeDefined();
+  expect(result).toHaveProperty('_id');
   expect(result.userId).toBe(comment.userId);
   expect(result.postId).toBe(comment.postId);
+  expect(result).toHaveProperty('timeStamp');
+  expect(result).toHaveProperty('lastModifiedAt');
   expect(result.message).toBe(comment.message);
   expect(result.upVote).toBe(comment.upVote);
 
@@ -154,6 +160,10 @@ test("Adding comment -- incorrect postId", async () => {
   expect(commentModel.deleteOne.mock.calls.length).toBe(1);
   expect(commentModel.deleteOne).toHaveBeenCalledWith({ _id: addedComment._id });
 });
+
+// ------------------------------------
+//    End of Adding Comment Tests
+// ------------------------------------
 
 test("Fetching comment by id", async () => {
   const comment = {

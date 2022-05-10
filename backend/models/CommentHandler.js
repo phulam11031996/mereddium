@@ -23,18 +23,11 @@ async function createComment(comment) {
   comment._id = uniqueID().slice(0, 6);
 
   const newComment = new commentModel(comment);
-  let addedComment = await newComment.save();
-
-  if (!addedComment) {
-    return addedComment;
-  }
+  const addedComment = await newComment.save();
 
   result = await PostHandler.addCommentByPostId(addedComment.postId, addedComment);
   if (result.modifiedCount === 0) {
     result = await commentModel.deleteOne({ _id: addedComment._id });
-    if (result.deletedCount === 0) {
-      return -1;
-    }
     return 0;
   }
 

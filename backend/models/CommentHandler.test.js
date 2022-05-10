@@ -108,6 +108,19 @@ test("Adding comment", async () => {
   expect(comments.length).toBe(3); // from 2 comments to 3
 });
 
+test("Adding comment -- incorrect postId", async () => {
+  const comment = {
+    userId: "def456",
+    postId: "xyz000",
+    message: "Third!",
+    upVote: 2,
+  };
+
+  const result = await CommentHandler.createComment(comment);
+  expect(result).toBeDefined();
+  expect(result).toBe(0);
+});
+
 test("Fetching comment by id", async () => {
   const id = "abc123";
   const comment = await CommentHandler.getCommentById(id);

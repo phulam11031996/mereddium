@@ -219,17 +219,23 @@ test("Updating post -- fail path", async () => {
 });
 
 test("deletePostById -- successful path", async () => {
-  await PostHandler.deletePostById("abc123");
-  const result = await PostHandler.getAllPosts();
+  const result = await PostHandler.deletePostById("abc123");
   expect(result).toBeDefined();
-  expect(result.length).toBe(2);
+  expect(result.deletedCount).toBe(1);
+
+  const posts = await PostHandler.getAllPosts();
+  expect(posts).toBeDefined();
+  expect(posts.length).toBe(2);  // from 3 posts to 2
 });
 
 test("deletePostById -- fail path", async () => {
-  await PostHandler.deletePostById("invalidId");
-  const result = await PostHandler.getAllPosts();
+  const result = await PostHandler.deletePostById("xyz000");
   expect(result).toBeDefined();
-  expect(result.length).toBe(3);
+  expect(result.deletedCount).toBe(0);
+
+  const posts = await PostHandler.getAllPosts();
+  expect(posts).toBeDefined();
+  expect(posts.length).toBe(3);  // 3 posts
 });
 
 test("votePost -- upVote", async () => {

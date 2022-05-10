@@ -72,7 +72,8 @@ test("Adding tag", async () => {
 
   const result = await TagHandler.createTag(tag);
   expect(result).toBeDefined();
-  expect(result.name).toBe(addedTag.name);
+  expect(result).toHaveProperty('_id');
+  expect(result.name).toBe(tag.name);
 });
 
 test("Fetching tag by id", async () => {
