@@ -189,10 +189,7 @@ async function deleteSavedPost(userId, postId) {
 async function updateUserImageById(id, photoPath) {
   const userModel = mongoose.model("User", UserSchema);
 
-  const result = await userModel.updateOne(
-    { _id: id },
-    { photo: photoPath }
-  );
+  const result = await userModel.updateOne({ _id: id }, { photo: photoPath });
 
   return result;
 }
@@ -207,5 +204,5 @@ module.exports = {
   updateUserImageById,
   getSavedPosts,
   addSavedPost,
-  deleteSavedPost
+  deleteSavedPost,
 };

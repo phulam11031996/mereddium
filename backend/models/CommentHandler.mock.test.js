@@ -19,22 +19,18 @@ beforeAll(async () => {
   commentModel = mongoose.model("Comment", CommentSchema);
 });
 
-afterAll(async () => {
-
-});
+afterAll(async () => {});
 
 beforeEach(async () => {
   jest.clearAllMocks();
   mockingoose.resetAll();
 });
-  
-afterEach(async () => {
 
-});
+afterEach(async () => {});
 
 test("Fetching all comments -- no comments stored", async () => {
   commentModel.find = jest.fn().mockResolvedValue([]);
-  
+
   const result = await CommentHandler.getAllComments();
   expect(result).toBeDefined();
   expect(result.length).toBe(0); // 0 comments
@@ -52,7 +48,7 @@ test("Fetching all comments -- 2 comments stored", async () => {
       timeStamp: Date.now(),
       lastModifiedAt: Date.now(),
       message: "First!",
-      upVote: 3
+      upVote: 3,
     },
     {
       _id: "abc123",
@@ -61,11 +57,11 @@ test("Fetching all comments -- 2 comments stored", async () => {
       timeStamp: Date.now(),
       lastModifiedAt: Date.now(),
       message: "Second!",
-      upVote: 1
-    }
-  ]
+      upVote: 1,
+    },
+  ];
   commentModel.find = jest.fn().mockResolvedValue(comments);
-  
+
   const result = await CommentHandler.getAllComments();
   expect(result).toBeDefined();
   expect(result.length).toBe(2); // 2 comments
@@ -92,26 +88,24 @@ test("Adding comment", async () => {
     timeStamp: Date.now(),
     lastModifiedAt: Date.now(),
     message: "Third!",
-    upVote: 2
+    upVote: 2,
   };
-  mockingoose(commentModel).toReturn(addedComment, 'save');
-  PostHandler.addCommentByPostId = jest.fn().mockResolvedValue(
-    {
-      acknowledged: true,
-      modifiedCount: 1,
-      upsertedId: null,
-      upsertedCount: 0,
-      matchedCount: 1
-    }
-  );
+  mockingoose(commentModel).toReturn(addedComment, "save");
+  PostHandler.addCommentByPostId = jest.fn().mockResolvedValue({
+    acknowledged: true,
+    modifiedCount: 1,
+    upsertedId: null,
+    upsertedCount: 0,
+    matchedCount: 1,
+  });
 
   const result = await CommentHandler.createComment(comment);
   expect(result).toBeDefined();
-  expect(result).toHaveProperty('_id');
+  expect(result).toHaveProperty("_id");
   expect(result.userId).toBe(comment.userId);
   expect(result.postId).toBe(comment.postId);
-  expect(result).toHaveProperty('timeStamp');
-  expect(result).toHaveProperty('lastModifiedAt');
+  expect(result).toHaveProperty("timeStamp");
+  expect(result).toHaveProperty("lastModifiedAt");
   expect(result.message).toBe(comment.message);
   expect(result.upVote).toBe(comment.upVote);
 
@@ -132,24 +126,20 @@ test("Adding comment -- incorrect postId", async () => {
     timeStamp: Date.now(),
     lastModifiedAt: Date.now(),
     message: "Third!",
-    upVote: 2
+    upVote: 2,
   };
-  mockingoose(commentModel).toReturn(addedComment, 'save');
-  PostHandler.addCommentByPostId = jest.fn().mockResolvedValue(
-    {
-      acknowledged: true,
-      modifiedCount: 0,
-      upsertedId: null,
-      upsertedCount: 0,
-      matchedCount: 0
-    }
-  );
-  commentModel.deleteOne = jest.fn().mockResolvedValue(
-    {
-      acknowledged: true,
-      deletedCount: 1
-    }
-  );
+  mockingoose(commentModel).toReturn(addedComment, "save");
+  PostHandler.addCommentByPostId = jest.fn().mockResolvedValue({
+    acknowledged: true,
+    modifiedCount: 0,
+    upsertedId: null,
+    upsertedCount: 0,
+    matchedCount: 0,
+  });
+  commentModel.deleteOne = jest.fn().mockResolvedValue({
+    acknowledged: true,
+    deletedCount: 1,
+  });
 
   const result = await CommentHandler.createComment(comment);
   expect(result).toBeDefined();
@@ -158,7 +148,9 @@ test("Adding comment -- incorrect postId", async () => {
   expect(PostHandler.addCommentByPostId.mock.calls.length).toBe(1);
 
   expect(commentModel.deleteOne.mock.calls.length).toBe(1);
-  expect(commentModel.deleteOne).toHaveBeenCalledWith({ _id: addedComment._id });
+  expect(commentModel.deleteOne).toHaveBeenCalledWith({
+    _id: addedComment._id,
+  });
 });
 
 // ------------------------------------
@@ -173,7 +165,7 @@ test("Fetching comment by id", async () => {
     timeStamp: Date.now(),
     lastModifiedAt: Date.now(),
     message: "Second!",
-    upVote: 1
+    upVote: 1,
   };
   commentModel.findById = jest.fn().mockResolvedValue(comment);
 
@@ -197,22 +189,23 @@ test("Updating comment by id", async () => {
     timeStamp: Date.now(),
     lastModifiedAt: Date.now(),
     message: "Second!",
-    upVote: 1
+    upVote: 1,
   };
   const commentUpdate = {
-    upVote: -2  // change upvotes from 1 to -2
+    upVote: -2, // change upvotes from 1 to -2
   };
-  commentModel.updateOne = jest.fn().mockResolvedValue(
-    {
-      acknowledged: true,
-      modifiedCount: 1,
-      upsertedId: null,
-      upsertedCount: 0,
-      matchedCount: 1
-    }
-  );
+  commentModel.updateOne = jest.fn().mockResolvedValue({
+    acknowledged: true,
+    modifiedCount: 1,
+    upsertedId: null,
+    upsertedCount: 0,
+    matchedCount: 1,
+  });
 
-  const result = await CommentHandler.updateCommentById(comment._id, commentUpdate);
+  const result = await CommentHandler.updateCommentById(
+    comment._id,
+    commentUpdate
+  );
   expect(result).toBeDefined();
   expect(result.modifiedCount).toBe(1); // one document was updated
 
@@ -231,17 +224,18 @@ test("Deleting comment by id", async () => {
     timeStamp: Date.now(),
     lastModifiedAt: Date.now(),
     message: "Second!",
-    upVote: 1
+    upVote: 1,
   };
-  commentModel.deleteOne = jest.fn().mockResolvedValue(
-    {
-      acknowledged: true,
-      deletedCount: 1
-    }
-  );
+  commentModel.deleteOne = jest.fn().mockResolvedValue({
+    acknowledged: true,
+    deletedCount: 1,
+  });
   PostHandler.deleteCommentByPostId = jest.fn().mockResolvedValue(1);
 
-  const result = await CommentHandler.deleteCommentById(comment._id, comment.postId);
+  const result = await CommentHandler.deleteCommentById(
+    comment._id,
+    comment.postId
+  );
   expect(result).toBeDefined();
   expect(result.deletedCount).toBe(1);
 
@@ -249,7 +243,10 @@ test("Deleting comment by id", async () => {
   expect(commentModel.deleteOne).toHaveBeenCalledWith({ _id: comment._id });
 
   expect(PostHandler.deleteCommentByPostId.mock.calls.length).toBe(1);
-  expect(PostHandler.deleteCommentByPostId).toHaveBeenCalledWith(comment._id, comment.postId);
+  expect(PostHandler.deleteCommentByPostId).toHaveBeenCalledWith(
+    comment._id,
+    comment.postId
+  );
 });
 
 test("Deleting comment by id -- incorrect commentId", async () => {
@@ -264,5 +261,8 @@ test("Deleting comment by id -- incorrect commentId", async () => {
   expect(result).toStrictEqual(new HttpError("commentId not found!", 404));
 
   expect(PostHandler.deleteCommentByPostId.mock.calls.length).toBe(1);
-  expect(PostHandler.deleteCommentByPostId).toHaveBeenCalledWith(commentId, postId);
+  expect(PostHandler.deleteCommentByPostId).toHaveBeenCalledWith(
+    commentId,
+    postId
+  );
 });

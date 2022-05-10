@@ -25,7 +25,10 @@ async function createComment(comment) {
   const newComment = new commentModel(comment);
   const addedComment = await newComment.save();
 
-  result = await PostHandler.addCommentByPostId(addedComment.postId, addedComment);
+  result = await PostHandler.addCommentByPostId(
+    addedComment.postId,
+    addedComment
+  );
   if (result.modifiedCount === 0) {
     result = await commentModel.deleteOne({ _id: addedComment._id });
     return 0;
@@ -73,5 +76,5 @@ module.exports = {
   createComment,
   getCommentById,
   updateCommentById,
-  deleteCommentById
+  deleteCommentById,
 };

@@ -9,7 +9,7 @@ exports.getAllTags = catchAsync(async (req, res) => {
   const allTags = await TagHandler.getAllTags();
   res.status(200).json({
     status: "success",
-    data: allTags
+    data: allTags,
   });
 });
 
@@ -17,7 +17,7 @@ exports.getAllTags = catchAsync(async (req, res) => {
 exports.createTag = catchAsync(async (req, res) => {
   const newTag = await TagHandler.createTag(req.body);
   res.status(201).json({
-    newTag
+    newTag,
   });
 });
 
@@ -26,7 +26,7 @@ exports.getTagById = catchAsync(async (req, res) => {
   const tag = await TagHandler.getTagById(req.params.id);
   res.status(200).json({
     status: "success",
-    data: { tag }
+    data: { tag },
   });
 });
 
@@ -35,7 +35,7 @@ exports.updateTagById = catchAsync(async (req, res) => {
   const result = await TagHandler.updateTagById(req.params.id, req.body);
   res.status(200).json({
     status: "success",
-    data: { result }
+    data: { result },
   });
 });
 
@@ -44,6 +44,6 @@ exports.deleteTagById = catchAsync(async (req, res) => {
   const result = await TagHandler.deleteTagById(req.params.id);
   res.status(200).json({
     status: "success",
-    data: { result }
+    data: { result },
   });
 });

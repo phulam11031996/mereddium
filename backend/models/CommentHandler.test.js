@@ -43,7 +43,7 @@ beforeEach(async () => {
     timeStamp: Date.now(),
     lastModifiedAt: Date.now(),
     message: "First!",
-    upVote: 3
+    upVote: 3,
   });
   await newComment.save();
 
@@ -54,7 +54,7 @@ beforeEach(async () => {
     timeStamp: Date.now(),
     lastModifiedAt: Date.now(),
     message: "Second!",
-    upVote: 1
+    upVote: 1,
   });
   await newComment2.save();
 
@@ -71,7 +71,7 @@ beforeEach(async () => {
     imageURL: "https://dummy1.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0
+    upVote: 0,
   });
   await newPost.save();
 });

@@ -6,16 +6,16 @@ dotenv.config();
 let dbConnection;
 
 function createDbConnection() {
-  if(!dbConnection) {
+  if (!dbConnection) {
     const uri = process.env.MONGOLAB_URI;
     const opts = {
       useUnifiedTopology: true,
-      useNewUrlParser: true
+      useNewUrlParser: true,
     };
     dbConnection = mongoose.connect(uri, opts);
   }
 }
 
 module.exports = {
-  createDbConnection
+  createDbConnection,
 };

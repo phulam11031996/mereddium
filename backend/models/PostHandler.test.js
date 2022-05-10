@@ -45,7 +45,7 @@ beforeEach(async () => {
     imageURL: "https://dummy1.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0
+    upVote: 0,
   });
   await newPost.save();
 
@@ -62,7 +62,7 @@ beforeEach(async () => {
     imageURL: "https://dummy2.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0
+    upVote: 0,
   });
   await newPost2.save();
 
@@ -79,7 +79,7 @@ beforeEach(async () => {
     imageURL: "https://dummy3.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0
+    upVote: 0,
   });
   await newPost3.save();
 });
@@ -91,7 +91,7 @@ afterEach(async () => {
 test("Fetching all posts", async () => {
   const posts = await PostHandler.getAllPosts();
   expect(posts).toBeDefined();
-  expect(posts.length).toBe(3);  // 3 posts
+  expect(posts.length).toBe(3); // 3 posts
 });
 
 test("createPost -- successful path", async () => {
@@ -225,7 +225,7 @@ test("deletePostById -- successful path", async () => {
 
   const posts = await PostHandler.getAllPosts();
   expect(posts).toBeDefined();
-  expect(posts.length).toBe(2);  // from 3 posts to 2
+  expect(posts.length).toBe(2); // from 3 posts to 2
 });
 
 test("deletePostById -- fail path", async () => {
@@ -235,7 +235,7 @@ test("deletePostById -- fail path", async () => {
 
   const posts = await PostHandler.getAllPosts();
   expect(posts).toBeDefined();
-  expect(posts.length).toBe(3);  // 3 posts
+  expect(posts.length).toBe(3); // 3 posts
 });
 
 test("votePost -- upVote", async () => {

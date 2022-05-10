@@ -18,25 +18,21 @@ beforeAll(async () => {
   userModel = mongoose.model("User", UserSchema);
 });
 
-afterAll(async () => {
-
-});
+afterAll(async () => {});
 
 beforeEach(async () => {
   jest.clearAllMocks();
   mockingoose.resetAll();
 });
-  
-afterEach(async () => {
 
-});
+afterEach(async () => {});
 
 test("Fetching all users -- no users stored", async () => {
   userModel.find = jest.fn().mockResolvedValue([]);
-  
+
   const users = await UserHandler.getAllUsers();
   expect(users).toBeDefined();
-  expect(users.length).toBe(0);  // 0 users
+  expect(users.length).toBe(0); // 0 users
 
   expect(userModel.find.mock.calls.length).toBe(1);
   expect(userModel.find).toHaveBeenCalledWith();
@@ -59,7 +55,7 @@ test("Fetching all users -- 2 users stored", async () => {
       reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
       blocked: false,
       interestedIn: [],
-      savedPosts: []
+      savedPosts: [],
     },
     {
       _id: "abc123",
@@ -76,14 +72,14 @@ test("Fetching all users -- 2 users stored", async () => {
       reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
       blocked: false,
       interestedIn: [],
-      savedPosts: [{ postId: "def456" }, { postId: "ghi789" }]
-    }
+      savedPosts: [{ postId: "def456" }, { postId: "ghi789" }],
+    },
   ];
   userModel.find = jest.fn().mockResolvedValue(result);
-  
+
   const users = await UserHandler.getAllUsers();
   expect(users).toBeDefined();
-  expect(users.length).toBe(2);  // 2 users
+  expect(users.length).toBe(2); // 2 users
 
   expect(userModel.find.mock.calls.length).toBe(1);
   expect(userModel.find).toHaveBeenCalledWith();
@@ -103,7 +99,7 @@ test("Adding user", async () => {
     password: "password",
     password_confirm: "password",
     interestedIn: [],
-    savedPosts: []
+    savedPosts: [],
   };
   const addedUser = {
     _id: uniqueID().slice(0, 6),
@@ -120,15 +116,15 @@ test("Adding user", async () => {
     reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
     blocked: false,
     interestedIn: [],
-    savedPosts: []
+    savedPosts: [],
   };
-  mockingoose(userModel).toReturn(addedUser, 'save');
+  mockingoose(userModel).toReturn(addedUser, "save");
 
   userModel.findOne = jest.fn().mockResolvedValue(null);
 
   const result = await UserHandler.createUser(user);
   expect(result).toBeDefined();
-  expect(result).toHaveProperty('_id');
+  expect(result).toHaveProperty("_id");
   expect(result.firstName).toBe(user.firstName);
   expect(result.lastName).toBe(user.lastName);
   expect(result.email).toBe(user.email);
@@ -136,11 +132,11 @@ test("Adding user", async () => {
   expect(result.photo).toBe(user.photo);
   expect(result.password).toBe(user.password);
   expect(result.password_confirm).toBe(user.password_confirm);
-  expect(result).toHaveProperty('password_bcrypt');
-  expect(result).toHaveProperty('passwordChangedAt');
-  expect(result).toHaveProperty('reset_token');
-  expect(result).toHaveProperty('reset_token_ext');
-  expect(result).toHaveProperty('blocked');
+  expect(result).toHaveProperty("password_bcrypt");
+  expect(result).toHaveProperty("passwordChangedAt");
+  expect(result).toHaveProperty("reset_token");
+  expect(result).toHaveProperty("reset_token_ext");
+  expect(result).toHaveProperty("blocked");
   expect(result.interestedIn).toStrictEqual(user.interestedIn);
   expect(result.savedPosts).toStrictEqual(user.savedPosts);
 
@@ -201,7 +197,7 @@ test("Adding user -- already existing", async () => {
     password: "password",
     password_confirm: "password",
     interestedIn: [],
-    savedPosts: []
+    savedPosts: [],
   };
   const alreadyAddedUser = {
     _id: "abc123",
@@ -218,7 +214,7 @@ test("Adding user -- already existing", async () => {
     reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
     blocked: false,
     interestedIn: [],
-    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }]
+    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }],
   };
   userModel.findOne = jest.fn().mockResolvedValue(alreadyAddedUser);
 
@@ -246,9 +242,7 @@ test("Adding user -- passwords don't match", async () => {
   userModel.findOne = jest.fn().mockResolvedValue(null);
 
   const result = await UserHandler.createUser(user);
-  expect(result).toStrictEqual(
-    new HttpError("Passwords do not match.")
-  );
+  expect(result).toStrictEqual(new HttpError("Passwords do not match."));
 
   expect(userModel.findOne.mock.calls.length).toBe(1);
   expect(userModel.findOne).toHaveBeenCalledWith({ email: user.email });
@@ -289,7 +283,7 @@ test("Adding user -- failed to create user", async () => {
     savedPosts: [],
   };
 
-  mockingoose(userModel).toReturn(new Error(), 'save');
+  mockingoose(userModel).toReturn(new Error(), "save");
 
   userModel.findOne = jest.fn().mockResolvedValue(null);
 
@@ -322,10 +316,10 @@ test("Fetching user by id", async () => {
     reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
     blocked: false,
     interestedIn: [],
-    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }]
+    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }],
   };
   userModel.findById = jest.fn().mockResolvedValue(user);
-  
+
   const foundUser = await UserHandler.getUserById("abc123");
   expect(foundUser).toBeDefined();
   expect(foundUser._id).toBe(user._id);
@@ -364,10 +358,10 @@ test("Fetching user by email", async () => {
     reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
     blocked: false,
     interestedIn: [],
-    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }]
+    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }],
   };
   userModel.findOne = jest.fn().mockResolvedValue(user);
-  
+
   const foundUser = await UserHandler.getUserByEmail("marco@polo.com");
   expect(foundUser).toBeDefined();
   expect(foundUser._id).toBe(user._id);
@@ -406,22 +400,20 @@ test("Updating user by id", async () => {
     reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
     blocked: false,
     interestedIn: [],
-    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }]
+    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }],
   };
   const userUpdate = {
     firstName: "Marcus",
-    lastName: "Pollock"
+    lastName: "Pollock",
   };
 
-  userModel.updateOne = jest.fn().mockResolvedValue(
-    {
-      acknowledged: true,
-      modifiedCount: 1,
-      upsertedId: null,
-      upsertedCount: 0,
-      matchedCount: 1
-    }
-  );
+  userModel.updateOne = jest.fn().mockResolvedValue({
+    acknowledged: true,
+    modifiedCount: 1,
+    upsertedId: null,
+    upsertedCount: 0,
+    matchedCount: 1,
+  });
 
   const result = await UserHandler.updateUserById(user._id, userUpdate);
   expect(result).toBeDefined();
@@ -450,15 +442,13 @@ test("Deleting user by id", async () => {
     reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
     blocked: false,
     interestedIn: [],
-    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }]
+    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }],
   };
 
-  userModel.deleteOne = jest.fn().mockResolvedValue(
-    {
-      acknowledged: true,
-      deletedCount: 1
-    }
-  );
+  userModel.deleteOne = jest.fn().mockResolvedValue({
+    acknowledged: true,
+    deletedCount: 1,
+  });
 
   const result = await UserHandler.deleteUserById(user._id);
   expect(result).toBeDefined();
@@ -470,12 +460,10 @@ test("Deleting user by id", async () => {
 
 test("Deleting user by id -- user not found", async () => {
   const id = "xyz000";
-  userModel.deleteOne = jest.fn().mockResolvedValue(
-    {
-      acknowledged: true,
-      deletedCount: 0
-    }
-  );
+  userModel.deleteOne = jest.fn().mockResolvedValue({
+    acknowledged: true,
+    deletedCount: 0,
+  });
 
   const result = await UserHandler.deleteUserById(id);
   expect(result).toBeDefined();
@@ -505,13 +493,13 @@ test("Fetching saved posts", async () => {
     reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
     blocked: false,
     interestedIn: [],
-    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }]
+    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }],
   };
   userModel.findOne = jest.fn().mockResolvedValue(user);
 
   const savedPosts = await UserHandler.getSavedPosts(user._id);
   expect(savedPosts).toBeDefined();
-  expect(savedPosts.length).toBe(2);  // 2 saved posts
+  expect(savedPosts.length).toBe(2); // 2 saved posts
 
   const postIdArr = savedPosts.map(({ postId }) => postId);
   expect(postIdArr.includes("def456")).toBeTruthy();
@@ -538,14 +526,14 @@ test("Fetching saved posts -- user has no posts saved", async () => {
     reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
     blocked: false,
     interestedIn: [],
-    savedPosts: []
+    savedPosts: [],
   };
 
   userModel.findOne = jest.fn().mockResolvedValue(user);
 
   const savedPosts = await UserHandler.getSavedPosts(user._id);
   expect(savedPosts).toBeDefined();
-  expect(savedPosts.length).toBe(0);  // 0 saved posts
+  expect(savedPosts.length).toBe(0); // 0 saved posts
 
   expect(userModel.findOne.mock.calls.length).toBe(1);
   expect(userModel.findOne).toHaveBeenCalledWith({ _id: "abc123" });
@@ -579,19 +567,17 @@ test("Adding saved post", async () => {
     reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
     blocked: false,
     interestedIn: [],
-    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }]
+    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }],
   };
   userModel.findOne = jest.fn().mockResolvedValue(user);
-  
-  userModel.updateOne = jest.fn().mockResolvedValue(
-    {
-      acknowledged: true,
-      modifiedCount: 1,
-      upsertedId: null,
-      upsertedCount: 0,
-      matchedCount: 1
-    }
-  );
+
+  userModel.updateOne = jest.fn().mockResolvedValue({
+    acknowledged: true,
+    modifiedCount: 1,
+    upsertedId: null,
+    upsertedCount: 0,
+    matchedCount: 1,
+  });
 
   const result = await UserHandler.addSavedPost(user._id, "xyz000");
   expect(result).toBeDefined();
@@ -623,7 +609,7 @@ test("Adding saved post -- duplicate entry", async () => {
     reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
     blocked: false,
     interestedIn: [],
-    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }]
+    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }],
   };
   userModel.findOne = jest.fn().mockResolvedValue(user);
 
@@ -663,18 +649,16 @@ test("Deleting saved post", async () => {
     reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
     blocked: false,
     interestedIn: [],
-    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }]
+    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }],
   };
 
-  userModel.updateOne = jest.fn().mockResolvedValue(
-    {
-      acknowledged: true,
-      modifiedCount: 1,
-      upsertedId: null,
-      upsertedCount: 0,
-      matchedCount: 1
-    }
-  );
+  userModel.updateOne = jest.fn().mockResolvedValue({
+    acknowledged: true,
+    modifiedCount: 1,
+    upsertedId: null,
+    upsertedCount: 0,
+    matchedCount: 1,
+  });
 
   const result = await UserHandler.deleteSavedPost(user._id, "def456");
   expect(result.modifiedCount).toBe(1);
@@ -704,7 +688,7 @@ test("Parse saved posts", async () => {
     reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
     blocked: false,
     interestedIn: [],
-    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }]
+    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }],
   });
   const parsedUser = {
     _id: "abc123",
@@ -723,10 +707,10 @@ test("Parse saved posts", async () => {
     interestedIn: [],
     savedPosts: [
       { postId: "def456", dateSaved: Date.now() },
-      { postId: "ghi789", dateSaved: Date.now() }
-    ]
+      { postId: "ghi789", dateSaved: Date.now() },
+    ],
   };
-  mockingoose(userModel).toReturn(parsedUser, 'save');
+  mockingoose(userModel).toReturn(parsedUser, "save");
 
   const savedUser = user.save();
   expect(savedUser).toBeDefined();
@@ -753,19 +737,17 @@ test("Updating user image", async () => {
     reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
     blocked: false,
     interestedIn: [],
-    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }]
+    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }],
   };
   const photoPath = "v1234567890/fake_image.png";
 
-  userModel.updateOne = jest.fn().mockResolvedValue(
-    {
-      acknowledged: true,
-      modifiedCount: 1,
-      upsertedId: null,
-      upsertedCount: 0,
-      matchedCount: 1
-    }
-  );
+  userModel.updateOne = jest.fn().mockResolvedValue({
+    acknowledged: true,
+    modifiedCount: 1,
+    upsertedId: null,
+    upsertedCount: 0,
+    matchedCount: 1,
+  });
 
   const result = await UserHandler.updateUserImageById(user._id, photoPath);
   expect(result).toBeDefined();

@@ -54,10 +54,7 @@ async function getPostById(id) {
 async function updatePostById(id, newInfo) {
   const postModel = mongoose.model("Post", PostSchema);
 
-  const result = await postModel.updateOne(
-    { _id: id },
-    { $set: newInfo }
-  );
+  const result = await postModel.updateOne({ _id: id }, { $set: newInfo });
 
   return result;
 }
@@ -152,5 +149,5 @@ module.exports = {
   deletePostById,
   votePost,
   addCommentByPostId,
-  deleteCommentByPostId
+  deleteCommentByPostId,
 };

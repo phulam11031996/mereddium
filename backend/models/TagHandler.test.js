@@ -20,7 +20,7 @@ beforeAll(async () => {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   };
-  
+
   mongoose.connect(uri, mongooseOpts);
   tagModel = mongoose.model("Tag", TagSchema);
 });
@@ -34,13 +34,13 @@ afterAll(async () => {
 beforeEach(async () => {
   const newTag = new tagModel({
     _id: uniqueID().slice(0, 6),
-    name: "Technology"
+    name: "Technology",
   });
   await newTag.save();
 
   const newTag2 = new tagModel({
     _id: "abc123",
-    name: "Education"
+    name: "Education",
   });
   await newTag2.save();
 });
@@ -92,7 +92,7 @@ test("Updating tag by id", async () => {
 
 test("Deleting tag by id", async () => {
   const id = "abc123";
-  
+
   const result = await TagHandler.deleteTagById(id);
   expect(result).toBeDefined();
   expect(result.deletedCount).toBe(1);
@@ -100,7 +100,7 @@ test("Deleting tag by id", async () => {
 
 test("Deleting tag by id -- tag not found", async () => {
   const id = "xyz000";
-  
+
   const result = await TagHandler.deleteTagById(id);
   expect(result).toBeDefined();
   expect(result.deletedCount).toBe(0);

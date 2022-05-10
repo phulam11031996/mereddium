@@ -11,7 +11,7 @@ exports.getAllUsers = catchAsync(async (req, res) => {
   const allUsers = await UserHandler.getAllUsers();
   res.status(200).json({
     status: "success",
-    data: allUsers
+    data: allUsers,
   });
 });
 
@@ -25,7 +25,7 @@ exports.createUser = catchAsync(async (req, res) => {
     });
   } else {
     res.status(201).json({
-      result
+      result,
     });
   }
 });
@@ -35,7 +35,7 @@ exports.getUserById = catchAsync(async (req, res) => {
   const user = await UserHandler.getUserById(req.params.id);
   res.status(200).json({
     status: "success",
-    data: { user }
+    data: { user },
   });
 });
 
@@ -45,23 +45,23 @@ exports.updateUserById = catchAsync(async (req, res) => {
 
   res.status(200).json({
     status: "success",
-    data: { result }
+    data: { result },
   });
 });
 
 // DELETE /user/{id}
 exports.deleteUserById = catchAsync(async (req, res) => {
   const result = await UserHandler.deleteUserById(req.params.id);
-  
+
   if (result.deletedCount == 1) {
     res.status(200).json({
       status: "success",
-      data: { result }
+      data: { result },
     });
   } else {
     res.status(404).json({
       status: "failure",
-      data: { result }
+      data: { result },
     });
   }
 });
@@ -95,7 +95,7 @@ exports.getSavedPosts = catchAsync(async (req, res) => {
 
     res.status(200).json({
       status: "success",
-      data: savedPostList.filter((post) => !("removeSavedPost" in post))
+      data: savedPostList.filter((post) => !("removeSavedPost" in post)),
     });
   }
 });
@@ -108,17 +108,17 @@ exports.addSavedPost = catchAsync(async (req, res) => {
 
   if (result === 0) {
     res.status(401).json({
-      status: "Must login first!"
+      status: "Must login first!",
     });
   } else if (result === null) {
     res.status(200).json({
       status: "post already saved",
-      data: { postId }
+      data: { postId },
     });
   } else {
     res.status(201).json({
       status: "success",
-      data: result
+      data: result,
     });
   }
 });
@@ -134,7 +134,7 @@ exports.deleteSavedPost = catchAsync(async (req, res) => {
   } else {
     res.status(200).json({
       status: "success",
-      data: result
+      data: result,
     });
   }
 });

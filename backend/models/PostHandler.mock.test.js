@@ -15,28 +15,24 @@ const uniqueID = () => {
 let postModel;
 
 beforeAll(async () => {
-    postModel = mongoose.model("Post", PostSchema);
+  postModel = mongoose.model("Post", PostSchema);
 });
 
-afterAll(async () => {
-
-});
+afterAll(async () => {});
 
 beforeEach(async () => {
   jest.clearAllMocks();
   mockingoose.resetAll();
 });
-  
-afterEach(async () => {
 
-});
+afterEach(async () => {});
 
 test("Fetching all posts -- no posts stored", async () => {
   postModel.find = jest.fn().mockResolvedValue([]);
-  
+
   const posts = await PostHandler.getAllPosts();
   expect(posts).toBeDefined();
-  expect(posts.length).toBe(0);  // 0 posts
+  expect(posts.length).toBe(0); // 0 posts
 
   expect(postModel.find.mock.calls.length).toBe(1);
   expect(postModel.find).toHaveBeenCalledWith();
@@ -57,7 +53,7 @@ test("Fetching all posts -- 2 posts stored", async () => {
       imageURL: "https://dummy1.url",
       upVoteUsers: [],
       downVoteUsers: [],
-      upVote: 0
+      upVote: 0,
     },
     {
       _id: uniqueID().slice(0, 6),
@@ -72,14 +68,14 @@ test("Fetching all posts -- 2 posts stored", async () => {
       imageURL: "https://dummy2.url",
       upVoteUsers: [],
       downVoteUsers: [],
-      upVote: 0
-    }
+      upVote: 0,
+    },
   ];
   postModel.find = jest.fn().mockResolvedValue(result);
-  
+
   const posts = await PostHandler.getAllPosts();
   expect(posts).toBeDefined();
-  expect(posts.length).toBe(2);  // 2 posts
+  expect(posts.length).toBe(2); // 2 posts
 
   expect(postModel.find.mock.calls.length).toBe(1);
   expect(postModel.find).toHaveBeenCalledWith();
@@ -90,7 +86,7 @@ test("Adding post", async () => {
     userId: "zxc789",
     title: "dummy title 3",
     message: "dummy message 3",
-    imageURL: "https://dummy3.url"
+    imageURL: "https://dummy3.url",
   };
   const addedPost = {
     _id: uniqueID().slice(0, 6),
@@ -105,24 +101,24 @@ test("Adding post", async () => {
     imageURL: "https://dummy3.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0
+    upVote: 0,
   };
-  mockingoose(postModel).toReturn(addedPost, 'save');
+  mockingoose(postModel).toReturn(addedPost, "save");
 
   const result = await PostHandler.createPost(post);
   expect(result).toBeDefined();
-  expect(result).toHaveProperty('_id');
+  expect(result).toHaveProperty("_id");
   expect(result.userId).toBe(post.userId);
   expect(result.title).toBe(post.title);
   expect(result.message).toBe(post.message);
-  expect(result).toHaveProperty('comments');
-  expect(result).toHaveProperty('turnOnComments');
-  expect(result).toHaveProperty('published');
-  expect(result).toHaveProperty('stringify');
-  expect(result).toHaveProperty('tags');
+  expect(result).toHaveProperty("comments");
+  expect(result).toHaveProperty("turnOnComments");
+  expect(result).toHaveProperty("published");
+  expect(result).toHaveProperty("stringify");
+  expect(result).toHaveProperty("tags");
   expect(result.imageURL).toBe(post.imageURL);
-  expect(result).toHaveProperty('upVoteUsers');
-  expect(result).toHaveProperty('downVoteUsers');
+  expect(result).toHaveProperty("upVoteUsers");
+  expect(result).toHaveProperty("downVoteUsers");
   expect(result.upVote).toBe(addedPost.upVote);
 });
 
@@ -140,7 +136,7 @@ test("Fetching post by id", async () => {
     imageURL: "https://dummy1.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0
+    upVote: 0,
   };
   postModel.findById = jest.fn().mockResolvedValue(post);
 
@@ -171,24 +167,22 @@ test("Updating post by id", async () => {
     imageURL: "https://dummy1.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0
+    upVote: 0,
   };
   const postUpdate = {
-    upVote: 5,  // change upvotes from 0 to 4
+    upVote: 5, // change upvotes from 0 to 4
   };
-  postModel.updateOne = jest.fn().mockResolvedValue(
-    {
-      acknowledged: true,
-      modifiedCount: 1,
-      upsertedId: null,
-      upsertedCount: 0,
-      matchedCount: 1
-    }
-  );
+  postModel.updateOne = jest.fn().mockResolvedValue({
+    acknowledged: true,
+    modifiedCount: 1,
+    upsertedId: null,
+    upsertedCount: 0,
+    matchedCount: 1,
+  });
 
   const result = await PostHandler.updatePostById(post._id, postUpdate);
   expect(result).toBeDefined();
-  expect(result.modifiedCount).toBe(1);  // one document was updated
+  expect(result.modifiedCount).toBe(1); // one document was updated
 
   expect(postModel.updateOne.mock.calls.length).toBe(1);
   expect(postModel.updateOne).toHaveBeenCalledWith(
@@ -211,15 +205,13 @@ test("Deleting post by id", async () => {
     imageURL: "https://dummy1.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0
+    upVote: 0,
   };
-  postModel.deleteOne = jest.fn().mockResolvedValue(
-    {
-      acknowledged: true,
-      deletedCount: 1
-    }
-  );
-  
+  postModel.deleteOne = jest.fn().mockResolvedValue({
+    acknowledged: true,
+    deletedCount: 1,
+  });
+
   const result = await PostHandler.deletePostById(post._id);
   expect(result).toBeDefined();
   expect(result.deletedCount).toBe(1);
@@ -230,12 +222,10 @@ test("Deleting post by id", async () => {
 
 test("Deleting post by id -- post not found", async () => {
   const id = "xyz000";
-  postModel.deleteOne = jest.fn().mockResolvedValue(
-    {
-      acknowledged: true,
-      deletedCount: 0
-    }
-  );
+  postModel.deleteOne = jest.fn().mockResolvedValue({
+    acknowledged: true,
+    deletedCount: 0,
+  });
 
   const result = await PostHandler.deletePostById(id);
   expect(result).toBeDefined();
@@ -263,7 +253,7 @@ test("Adding comment to post", async () => {
     imageURL: "https://dummy1.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0
+    upVote: 0,
   };
   const comment = {
     _id: uniqueID().slice(0, 6),
@@ -272,18 +262,16 @@ test("Adding comment to post", async () => {
     timeStamp: Date.now(),
     lastModifiedAt: Date.now(),
     message: "First!",
-    upVote: 3
+    upVote: 3,
   };
 
-  postModel.updateOne = jest.fn().mockResolvedValue(
-    {
-      acknowledged: true,
-      modifiedCount: 1,
-      upsertedId: null,
-      upsertedCount: 0,
-      matchedCount: 1
-    }
-  );
+  postModel.updateOne = jest.fn().mockResolvedValue({
+    acknowledged: true,
+    modifiedCount: 1,
+    upsertedId: null,
+    upsertedCount: 0,
+    matchedCount: 1,
+  });
 
   const result = await PostHandler.addCommentByPostId(post._id, comment);
   expect(result).toBeDefined();
@@ -310,8 +298,8 @@ test("Deleting comment from post", async () => {
         timeStamp: Date.now(),
         lastModifiedAt: Date.now(),
         message: "First!",
-        upVote: 3
-      }
+        upVote: 3,
+      },
     ],
     turnOnComments: true,
     published: true,
@@ -320,18 +308,16 @@ test("Deleting comment from post", async () => {
     imageURL: "https://dummy1.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0
+    upVote: 0,
   };
 
-  postModel.updateOne = jest.fn().mockResolvedValue(
-    {
-      acknowledged: true,
-      modifiedCount: 1,
-      upsertedId: null,
-      upsertedCount: 0,
-      matchedCount: 1
-    }
-  );
+  postModel.updateOne = jest.fn().mockResolvedValue({
+    acknowledged: true,
+    modifiedCount: 1,
+    upsertedId: null,
+    upsertedCount: 0,
+    matchedCount: 1,
+  });
 
   const result = await PostHandler.deleteCommentByPostId("xyz000", post._id);
   expect(result).toBeDefined();
@@ -358,21 +344,20 @@ test("Deleting comment from post -- commentId not found", async () => {
     imageURL: "https://dummy1.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0
+    upVote: 0,
   };
 
-  postModel.updateOne = jest.fn().mockResolvedValue(
-    {
-      acknowledged: true,
-      modifiedCount: 0,
-      upsertedId: null,
-      upsertedCount: 0,
-      matchedCount: 0
-    }
-  );
+  postModel.updateOne = jest.fn().mockResolvedValue({
+    acknowledged: true,
+    modifiedCount: 0,
+    upsertedId: null,
+    upsertedCount: 0,
+    matchedCount: 0,
+  });
 
-  await expect(PostHandler.deleteCommentByPostId("xyz000", post._id))
-    .rejects.toThrowError(new HttpError("commentId not found!", 404));
+  await expect(
+    PostHandler.deleteCommentByPostId("xyz000", post._id)
+  ).rejects.toThrowError(new HttpError("commentId not found!", 404));
 
   expect(postModel.updateOne.mock.calls.length).toBe(1);
   expect(postModel.updateOne).toHaveBeenCalledWith(
@@ -399,7 +384,7 @@ test("votePost -- upVote", async () => {
     imageURL: "https://dummy1.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0
+    upVote: 0,
   };
 
   const noUpdateResult = {
@@ -407,24 +392,26 @@ test("votePost -- upVote", async () => {
     modifiedCount: 0,
     upsertedId: null,
     upsertedCount: 0,
-    matchedCount: 0
+    matchedCount: 0,
   };
   const updateResult = {
     acknowledged: true,
     modifiedCount: 1,
     upsertedId: null,
     upsertedCount: 0,
-    matchedCount: 1
-  }
-  postModel.updateOne = jest.fn()
+    matchedCount: 1,
+  };
+  postModel.updateOne = jest
+    .fn()
     .mockResolvedValueOnce(noUpdateResult)
     .mockResolvedValueOnce(noUpdateResult)
     .mockResolvedValueOnce(updateResult);
-  
-  postModel.find = jest.fn()
+
+  postModel.find = jest
+    .fn()
     .mockResolvedValueOnce([{ userId: "qwe123" }])
     .mockResolvedValueOnce([]);
-  
+
   const voteResult = await PostHandler.votePost(post._id, "qwe123", 1);
   expect(voteResult).toBeDefined();
   // upVoteUsers should have one object
@@ -434,18 +421,28 @@ test("votePost -- upVote", async () => {
   expect(voteResult[1].length).toBe(0);
 
   expect(postModel.updateOne.mock.calls.length).toBe(3);
-  expect(postModel.updateOne.mock.calls[0]).toEqual([{ _id: post._id },
-    { $pull: { upVoteUsers: { userId: "qwe123" } } }]);
-  expect(postModel.updateOne.mock.calls[1]).toEqual([{ _id: post._id },
-    { $pull: { downVoteUsers: { userId: "qwe123" } } }]);
-  expect(postModel.updateOne.mock.calls[2]).toEqual([{ _id: post._id },
-    { $push: { upVoteUsers: { userId: "qwe123" } } }]);
+  expect(postModel.updateOne.mock.calls[0]).toEqual([
+    { _id: post._id },
+    { $pull: { upVoteUsers: { userId: "qwe123" } } },
+  ]);
+  expect(postModel.updateOne.mock.calls[1]).toEqual([
+    { _id: post._id },
+    { $pull: { downVoteUsers: { userId: "qwe123" } } },
+  ]);
+  expect(postModel.updateOne.mock.calls[2]).toEqual([
+    { _id: post._id },
+    { $push: { upVoteUsers: { userId: "qwe123" } } },
+  ]);
 
   expect(postModel.find.mock.calls.length).toBe(2);
-  expect(postModel.find.mock.calls[0]).toEqual([{ _id: post._id },
-    { upVoteUsers: 1, _id: 0 }]);
-  expect(postModel.find.mock.calls[1]).toEqual([{ _id: post._id },
-    { downVoteUsers: 1, _id: 0 }]);
+  expect(postModel.find.mock.calls[0]).toEqual([
+    { _id: post._id },
+    { upVoteUsers: 1, _id: 0 },
+  ]);
+  expect(postModel.find.mock.calls[1]).toEqual([
+    { _id: post._id },
+    { downVoteUsers: 1, _id: 0 },
+  ]);
 });
 
 test("votePost -- downVote", async () => {
@@ -462,7 +459,7 @@ test("votePost -- downVote", async () => {
     imageURL: "https://dummy1.url",
     upVoteUsers: [],
     downVoteUsers: [],
-    upVote: 0
+    upVote: 0,
   };
 
   const noUpdateResult = {
@@ -470,24 +467,26 @@ test("votePost -- downVote", async () => {
     modifiedCount: 0,
     upsertedId: null,
     upsertedCount: 0,
-    matchedCount: 0
+    matchedCount: 0,
   };
   const updateResult = {
     acknowledged: true,
     modifiedCount: 1,
     upsertedId: null,
     upsertedCount: 0,
-    matchedCount: 1
-  }
-  postModel.updateOne = jest.fn()
+    matchedCount: 1,
+  };
+  postModel.updateOne = jest
+    .fn()
     .mockResolvedValueOnce(noUpdateResult)
     .mockResolvedValueOnce(noUpdateResult)
     .mockResolvedValueOnce(updateResult);
-  
-  postModel.find = jest.fn()
+
+  postModel.find = jest
+    .fn()
     .mockResolvedValueOnce([])
     .mockResolvedValueOnce([{ userId: "qwe123" }]);
-  
+
   const voteResult = await PostHandler.votePost(post._id, "qwe123", -1);
   expect(voteResult).toBeDefined();
   // upVoteUsers should be empty
@@ -497,18 +496,28 @@ test("votePost -- downVote", async () => {
   expect(voteResult[1][0]).toStrictEqual({ userId: "qwe123" });
 
   expect(postModel.updateOne.mock.calls.length).toBe(3);
-  expect(postModel.updateOne.mock.calls[0]).toEqual([{ _id: post._id },
-    { $pull: { upVoteUsers: { userId: "qwe123" } } }]);
-  expect(postModel.updateOne.mock.calls[1]).toEqual([{ _id: post._id },
-    { $pull: { downVoteUsers: { userId: "qwe123" } } }]);
-  expect(postModel.updateOne.mock.calls[2]).toEqual([{ _id: post._id },
-    { $push: { downVoteUsers: { userId: "qwe123" } } }]);
+  expect(postModel.updateOne.mock.calls[0]).toEqual([
+    { _id: post._id },
+    { $pull: { upVoteUsers: { userId: "qwe123" } } },
+  ]);
+  expect(postModel.updateOne.mock.calls[1]).toEqual([
+    { _id: post._id },
+    { $pull: { downVoteUsers: { userId: "qwe123" } } },
+  ]);
+  expect(postModel.updateOne.mock.calls[2]).toEqual([
+    { _id: post._id },
+    { $push: { downVoteUsers: { userId: "qwe123" } } },
+  ]);
 
   expect(postModel.find.mock.calls.length).toBe(2);
-  expect(postModel.find.mock.calls[0]).toEqual([{ _id: post._id },
-    { upVoteUsers: 1, _id: 0 }]);
-  expect(postModel.find.mock.calls[1]).toEqual([{ _id: post._id },
-    { downVoteUsers: 1, _id: 0 }]);
+  expect(postModel.find.mock.calls[0]).toEqual([
+    { _id: post._id },
+    { upVoteUsers: 1, _id: 0 },
+  ]);
+  expect(postModel.find.mock.calls[1]).toEqual([
+    { _id: post._id },
+    { downVoteUsers: 1, _id: 0 },
+  ]);
 });
 
 test("votePost -- null user", async () => {

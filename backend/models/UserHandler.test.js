@@ -48,7 +48,7 @@ beforeEach(async () => {
     reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
     blocked: false,
     interestedIn: [],
-    savedPosts: []
+    savedPosts: [],
   });
   await newUser.save();
 
@@ -67,7 +67,7 @@ beforeEach(async () => {
     reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
     blocked: false,
     interestedIn: [],
-    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }]
+    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }],
   });
   await newUser2.save();
 });
@@ -104,7 +104,7 @@ test("Deleting user by id", async () => {
 
   const users = await UserHandler.getAllUsers();
   expect(users).toBeDefined();
-  expect(users.length).toBe(1);  // from 2 users to 1
+  expect(users.length).toBe(1); // from 2 users to 1
 });
 
 test("Updating user by id", async () => {
