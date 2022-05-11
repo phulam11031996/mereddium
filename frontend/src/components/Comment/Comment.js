@@ -68,7 +68,7 @@ export const Comment = (props) => {
         { headers: { Authorization: `Basic ${getCookie("jwt")}` } }
       )
       .then(() => {
-        props.updateComment(comment.id, commentValue);
+        props.updateComment(comment._id, commentValue);
       })
       .catch((err) => {
         console.error(err.response.data.message);

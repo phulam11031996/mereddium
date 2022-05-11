@@ -198,13 +198,13 @@ export const Post = (props) => {
         subheader={props.property.createdAt.slice(0, 10)}
       />
 
-      {props.property.imageURL !== "" ? (
+      {props.property.imageURL && (
         <CardMedia
-          height="500"
+          style={{ height: "300px" }}
+          component="img"
           image={props.property.imageURL}
-          alt="Paella dish"
         />
-      ) : null}
+      )}
 
       <CardContent>
         <Typography

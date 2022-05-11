@@ -63,7 +63,6 @@ export const Dashboard = (props) => {
           "local",
           "url",
           "image_search",
-          "google_drive",
           "facebook",
           "dropbox",
           "instagram",

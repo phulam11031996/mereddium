@@ -19,7 +19,7 @@ export const Comments = (props) => {
 
   const updateComment = (commentId, newMessage) => {
     let updatedComments = comments.map((comment) => {
-      if (comment._id === commentId) {
+      if (comment._id !== commentId) {
         return comment;
       } else {
         comment.message = newMessage;
