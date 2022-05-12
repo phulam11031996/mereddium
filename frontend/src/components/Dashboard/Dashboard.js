@@ -28,7 +28,9 @@ export const Dashboard = (props) => {
 
   const handleOnSubmit = async () => {
     await axios
-      .patch(`http://localhost:3030/user/${props.userId}`, { photo: path })
+      .patch(`${process.env.REACT_APP_BACKEND_URL}/user/${props.userId}`, {
+        photo: path,
+      })
       .then((res) => {
         setIsOpen(false);
         window.location = "/";
