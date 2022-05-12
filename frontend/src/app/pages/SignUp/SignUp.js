@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useFormik } from "formik";
+import * as yup from "yup";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -15,31 +17,64 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { makeSignUpCall } from "../../../utils";
 const theme = createTheme();
 
+const validationSchema = yup.object({
+  firstName: yup
+    .string("Enter your first name")
+    .required("First name is required")
+    .min(3, "Minimum 3 characters"),
+  lastName: yup
+    .string("Enter your last name")
+    .required("Last name is required")
+    .min(3, "Minimum 3 characters"),
+  email: yup
+    .string("Enter your email")
+    .email("Enter a valid email")
+    .required("Email is required"),
+  password: yup
+    .string("Enter your password")
+    .min(8, "Password should be of minimum 8 characters length")
+    .required("Password is required")
+    .matches(
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+      "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character. I am sorry guys LMAO."
+    ),
+  password_confirm: yup
+    .string()
+    .oneOf([yup.ref("password"), null], "Passwords must match"),
+});
+
 export const SignUp = () => {
   const [error, setError] = useState("");
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    let user = {
-      firstName: data.get("firstName"),
-      lastName: data.get("lastName"),
-      email: data.get("email"),
-      password: data.get("password"),
-      password_confirm: data.get("password_confirm"),
-    };
+  const formik = useFormik({
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      password_confirm: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      let user = {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        password: values.password,
+        password_confirm: values.password_confirm,
+      };
 
-    makeSignUpCall(user).then((jwt) => {
-      if (jwt.status === 201) {
-        document.cookie = `jwt=${jwt.data.token}`;
-        document.cookie = `userId=${jwt.data.data.user._id}`;
-        window.location = "/";
-      } else {
-        setError(jwt.response.data.message);
-      }
-    });
-  };
+      makeSignUpCall(user).then((jwt) => {
+        if (jwt.status === 201) {
+          document.cookie = `jwt=${jwt.data.data.token}`;
+          document.cookie = `userId=${jwt.data.data.user._id}`;
+          window.location = "/";
+        } else {
+          setError(jwt.response.data.message);
+        }
+      });
+    },
+  });
 
   return (
     <ThemeProvider theme={theme}>
@@ -66,12 +101,8 @@ export const SignUp = () => {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 3 }}
-          >
+
+          <Box noValidate sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -82,6 +113,13 @@ export const SignUp = () => {
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  onChange={formik.handleChange}
+                  error={
+                    formik.touched.firstName && Boolean(formik.errors.firstName)
+                  }
+                  helperText={
+                    formik.touched.firstName && formik.errors.firstName
+                  }
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -92,6 +130,11 @@ export const SignUp = () => {
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
+                  onChange={formik.handleChange}
+                  error={
+                    formik.touched.lastName && Boolean(formik.errors.lastName)
+                  }
+                  helperText={formik.touched.lastName && formik.errors.lastName}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -102,6 +145,9 @@ export const SignUp = () => {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  onChange={formik.handleChange}
+                  error={formik.touched.email && Boolean(formik.errors.email)}
+                  helperText={formik.touched.email && formik.errors.email}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -113,6 +159,11 @@ export const SignUp = () => {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  onChange={formik.handleChange}
+                  error={
+                    formik.touched.password && Boolean(formik.errors.password)
+                  }
+                  helperText={formik.touched.password && formik.errors.password}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -124,6 +175,15 @@ export const SignUp = () => {
                   type="password"
                   id="password_confirm"
                   autoComplete="new-password"
+                  onChange={formik.handleChange}
+                  error={
+                    formik.touched.password_confirm &&
+                    Boolean(formik.errors.password_confirm)
+                  }
+                  helperText={
+                    formik.touched.password_confirm &&
+                    formik.errors.password_confirm
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -140,9 +200,11 @@ export const SignUp = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={formik.handleSubmit}
             >
               Sign Up
             </Button>
+
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link

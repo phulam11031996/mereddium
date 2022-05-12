@@ -49,16 +49,24 @@ async function getCommentById(id) {
 }
 
 // UPDATE /comment/{id}
-async function updateCommentById(id, new_comment) {
+async function updateCommentById(commentId, postId, newMessage) {
   const db = await DatabaseHandler.getDbConnection();
   const commentModel = db.model("Comment", CommentSchema);
 
-  const comment = await commentModel.updateOne(
-    { _id: id },
-    { $set: new_comment }
-  );
-
-  return comment;
+  try {
+    const post = await PostHandler.updateCommentByPostId(
+      commentId,
+      postId,
+      newMessage
+    );
+    const comment = await commentModel.updateOne(
+      { _id: commentId },
+      { $set: { message: newMessage } }
+    );
+    return 1;
+  } catch (err) {
+    return err;
+  }
 }
 
 // DELETE /comment/{:id}

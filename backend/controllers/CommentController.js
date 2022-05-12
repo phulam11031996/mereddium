@@ -40,15 +40,17 @@ exports.getCommentById = catchAsync(async (req, res) => {
 
 // UPDATE /comment/{id}
 exports.updateCommentById = catchAsync(async (req, res) => {
-  const comment = await CommentHandler.updateCommentById(
+  const response = await CommentHandler.updateCommentById(
     req.params.id,
-    req.body
+    req.body.postId,
+    req.body.message
   );
 
-  res.status(200).json({
-    status: "success",
-    data: { comment },
-  });
+  if (response === 1) {
+    res.status(204).send();
+  } else {
+    res.status(response.code).json({ message: response.message });
+  }
 });
 
 // DELETE /comment/{id}
@@ -61,6 +63,6 @@ exports.deleteCommentById = catchAsync(async (req, res) => {
   if (response === 1) {
     res.status(200).json({ commentId: req.params.id });
   } else {
-    res.status(404).json({ message: response.message });
+    res.status(response.code).json({ message: response.message });
   }
 });

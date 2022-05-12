@@ -6,21 +6,32 @@ import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import IconButton from "@mui/material/IconButton";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditIcon from "@mui/icons-material/Edit";
 import Typography from "@mui/material/Typography";
 import { Avatar } from "@material-ui/core";
 
+import Input from "@mui/material/Input";
+
+import CheckIcon from "@mui/icons-material/Check";
+import ClearIcon from "@mui/icons-material/Clear";
+
 import { getCookie } from "../../utils";
+import { Box } from "@mui/system";
 
 export const Comment = (props) => {
+  const initStateComment = props.comment.message.replace(/\r?\n|\r/g, "");
+
   // eslint-disable-next-line
   const [comment, setComment] = useState(props.comment);
   const [userId, setUserId] = useState(null);
   const [firstName, setFirstName] = useState("");
   const [photo, setPhoto] = useState("");
+  const [editCommentMode, setEditCommentMode] = useState(false);
+  const [commentValue, setCommentValue] = useState(initStateComment);
 
   useEffect(() => {
     axios
-      .get("http://localhost:3030/user/" + comment.userId)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/user/${comment.userId}`)
       .then((user) => {
         setUserId(user.data.data.user._id);
         setFirstName(user.data.data.user.firstName);
@@ -33,7 +44,7 @@ export const Comment = (props) => {
 
   const handleDeleteComment = async () => {
     await axios
-      .delete(`http://localhost:3030/comment/${comment._id}`, {
+      .delete(`${process.env.REACT_APP_BACKEND_URL}/comment/${comment._id}`, {
         data: { postId: comment.postId },
         headers: { Authorization: `Basic ${getCookie("jwt")}` },
       })
@@ -43,6 +54,38 @@ export const Comment = (props) => {
       .catch((err) => {
         console.error(err);
       });
+  };
+
+  const handleEditSubmit = async () => {
+    setEditCommentMode(false);
+    await axios
+      .patch(
+        `${process.env.REACT_APP_BACKEND_URL}/comment/${comment._id}`,
+        {
+          postId: comment.postId,
+          message: commentValue,
+        },
+        { headers: { Authorization: `Basic ${getCookie("jwt")}` } }
+      )
+      .then(() => {
+        props.updateComment(comment._id, commentValue);
+      })
+      .catch((err) => {
+        console.error(err.response.data.message);
+      });
+  };
+
+  const handleEditComment = async () => {
+    setEditCommentMode(true);
+  };
+
+  const handleCloseEdit = async () => {
+    setEditCommentMode(false);
+    setCommentValue(initStateComment);
+  };
+
+  const onChange = (e) => {
+    setCommentValue(e.target.value);
   };
 
   return (
@@ -56,17 +99,60 @@ export const Comment = (props) => {
           )
         }
         action={
-          props.userId === userId && (
-            <IconButton onClick={handleDeleteComment}>
-              <DeleteOutlineIcon style={{ color: "#ee6c4d" }} />
-            </IconButton>
-          )
+          <>
+            {!editCommentMode && props.userId === userId && (
+              <Box>
+                <IconButton onClick={handleEditComment}>
+                  <EditIcon style={{ color: "#0077b6" }} fontSize="small" />
+                </IconButton>
+                <IconButton onClick={handleDeleteComment}>
+                  <DeleteOutlineIcon
+                    style={{ color: "#ee6c4d" }}
+                    fontSize="small"
+                  />
+                </IconButton>
+              </Box>
+            )}
+            {editCommentMode && (
+              <Box>
+                <IconButton
+                  onClick={handleEditSubmit}
+                  disabled={
+                    initStateComment === commentValue || commentValue === ""
+                      ? true
+                      : false
+                  }
+                >
+                  <CheckIcon style={{ color: "#0077b6" }} fontSize="small" />
+                </IconButton>
+                <IconButton onClick={handleCloseEdit}>
+                  <ClearIcon style={{ color: "#ee6c4d" }} fontSize="small" />
+                </IconButton>
+              </Box>
+            )}
+          </>
         }
         title={firstName}
         subheader={comment.lastModifiedAt.slice(0, 10)}
       />
       <CardContent>
-        <Typography paragraph>{comment.message}</Typography>
+        {editCommentMode ? (
+          <Card style={{ padding: "10px 10px", marginTop: "7px" }}>
+            <Input
+              maxRows={4}
+              minRows={3}
+              fullWidth
+              multiline
+              disableUnderline
+              value={commentValue}
+              onChange={onChange}
+              // autoFocus
+              // autoFocus commented out because can't find a way to have to cursor move to the front
+            />
+          </Card>
+        ) : (
+          <Typography paragraph>{comment.message}</Typography>
+        )}
       </CardContent>
     </Card>
   );
