@@ -7,7 +7,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 
 export const LogOut = () => {
   const handLogOut = async (event) => {
-    await axios.get(`${process.env.REACT_APP_BACKEND_URL}/auth/logout"`);
+    await axios.get(`${process.env.REACT_APP_BACKEND_URL}/auth/logout`);
     document.cookie = "jwt=null";
     document.cookie = "userId=null";
     window.location = "/";
