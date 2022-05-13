@@ -99,25 +99,28 @@ async function deleteCommentByPostId(commentId, postId) {
 }
 
 // UPDATE /post/comment/{id}
-async function updateCommentByPostId(commentId, postId, newMessage) {
+async function updateCommentByPostId(commentId, postId, commentUpdate) {
   const db = await DatabaseHandler.getDbConnection();
   const postModel = db.model("Post", PostSchema);
 
-  if (newMessage == "")
+  if (newMessage === null)
     throw (error = new HttpError("New comment can't be empty.", 400));
 
   const post = await postModel.updateOne(
     { _id: postId, comments: { $elemMatch: { _id: commentId } } },
-    { $set: { "comments.$.message": newMessage } }
+    { $set: commentUpdate }
   );
 
-  if (post.modifiedCount === 1 && post.matchedCount === 1) return 1;
-  else if (post.modifiedCount === 0 && post.matchedCount === 1)
+  if (post.modifiedCount === 1 && post.matchedCount === 1) {
+    return 1;
+  } else if (post.modifiedCount === 0 && post.matchedCount === 1) {
     throw new HttpError(
       "New message can't be the same as the old message.",
       400
     );
-  else throw new HttpError("commentId not found.", 404);
+  } else {
+    throw new HttpError("commentId not found.", 404);
+  }
 }
 
 // DELETE /post/{id}
