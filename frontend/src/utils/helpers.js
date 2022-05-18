@@ -36,7 +36,7 @@ export const parseCookie = (str) =>
 export const makeCommentCall = async (newComment) => {
   try {
     const response = await axios.post(
-      "http://localhost:3030/comment/",
+      `${process.env.REACT_APP_BACKEND_URL}/comment/`,
       newComment,
       { headers: { Authorization: `Basic ${getCookie("jwt")}` } }
     );
@@ -57,9 +57,12 @@ export const deletePostById = (id) => {
 
 export const makePostDeleteCall = async (id) => {
   try {
-    const response = await axios.delete(`http://localhost:3030/post/${id}`, {
-      headers: { Authorization: `Basic ${getCookie("jwt")}` },
-    });
+    const response = await axios.delete(
+      `${process.env.REACT_APP_BACKEND_URL}/post/${id}`,
+      {
+        headers: { Authorization: `Basic ${getCookie("jwt")}` },
+      }
+    );
     return response;
   } catch (error) {
     console.log(error);
@@ -69,9 +72,13 @@ export const makePostDeleteCall = async (id) => {
 
 export const makePostCall = async (post) => {
   try {
-    const response = await axios.post("http://localhost:3030/post", post, {
-      headers: { Authorization: `Basic ${getCookie("jwt")}` },
-    });
+    const response = await axios.post(
+      `${process.env.REACT_APP_BACKEND_URL}/post`,
+      post,
+      {
+        headers: { Authorization: `Basic ${getCookie("jwt")}` },
+      }
+    );
     return response;
   } catch (error) {
     console.log(error);
@@ -81,7 +88,9 @@ export const makePostCall = async (post) => {
 
 export const handleSortByTime = async () => {
   try {
-    const response = await axios.get(`http://localhost:3030/post/`);
+    const response = await axios.get(
+      `${process.env.REACT_APP_BACKEND_URL}/post/`
+    );
     let result = response.data.data;
     let filtered = result.sort((p1, p2) => {
       const time1 = new Date(p1.createdAt);
@@ -97,7 +106,9 @@ export const handleSortByTime = async () => {
 
 export const handleSortByVote = async () => {
   try {
-    const response = await axios.get(`http://localhost:3030/post/`);
+    const response = await axios.get(
+      `${process.env.REACT_APP_BACKEND_URL}/post/`
+    );
     let result = response.data.data;
     let filtered = result.sort((p1, p2) => {
       return (
@@ -115,7 +126,9 @@ export const handleSortByVote = async () => {
 
 export const handleSortByTrending = async () => {
   try {
-    const response = await axios.get(`http://localhost:3030/post/`);
+    const response = await axios.get(
+      `${process.env.REACT_APP_BACKEND_URL}/post/`
+    );
     let result = response.data.data;
     let filtered = result
       .filter((post) => {
@@ -140,7 +153,9 @@ export const handleSortByTrending = async () => {
 
 export const handleSearch = async (searchKey) => {
   try {
-    const response = await axios.get(`http://localhost:3030/post/`);
+    const response = await axios.get(
+      `${process.env.REACT_APP_BACKEND_URL}/post/`
+    );
     let result = response.data.data;
     let filtered = result.filter((post) => {
       return post.title.toLowerCase().match(searchKey.toLowerCase());
@@ -155,7 +170,7 @@ export const handleSearch = async (searchKey) => {
 export const handleSavedPosts = async (userId) => {
   try {
     const response = await axios.get(
-      `http://localhost:3030/user/saved/${userId}`
+      `${process.env.REACT_APP_BACKEND_URL}/user/saved/${userId}`
     );
     return response.data.data;
   } catch (error) {
@@ -166,7 +181,7 @@ export const handleSavedPosts = async (userId) => {
 export const makeSignUpCall = async (user) => {
   try {
     const response = await axios.post(
-      "http://localhost:3030/auth/signup",
+      `${process.env.REACT_APP_BACKEND_URL}/auth/signup`,
       user
     );
     return response;

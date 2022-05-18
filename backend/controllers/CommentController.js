@@ -42,7 +42,8 @@ exports.getCommentById = catchAsync(async (req, res) => {
 exports.updateCommentById = catchAsync(async (req, res) => {
   const response = await CommentHandler.updateCommentById(
     req.params.id,
-    req.body
+    req.body.postId,
+    req.body.message
   );
 
   if (response === 1) {

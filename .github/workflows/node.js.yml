@@ -5,9 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ main, ci-and-cd ]
+    branches: [ main, prod ]
   pull_request:
-    branches: [ main, ci-and-cd ]
+    branches: [ main, prod ]
 
 jobs:
   build-backend:
@@ -33,7 +33,7 @@ jobs:
           cache-dependency-path: backend/package-lock.json
       - run: npm ci
       - run: npm run build --if-present
-      # - run: npm test
+      - run: npm test
       - uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
@@ -58,8 +58,13 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-          cache-dependency-path: backend/package-lock.json
+          cache-dependency-path: frontend/package-lock.json
       - run: npm ci
       - run: npm run prettier
       - run: npm run build --if-present
-      # Add Heroku deploy step here if needed
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "csc309blogplatform"
+          heroku_email: "phulam11031996@gmail.com"
+          appdir: "frontend/"

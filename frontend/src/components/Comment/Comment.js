@@ -31,7 +31,7 @@ export const Comment = (props) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3030/user/" + comment.userId)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/user/${comment.userId}`)
       .then((user) => {
         setUserId(user.data.data.user._id);
         setFirstName(user.data.data.user.firstName);
@@ -44,7 +44,7 @@ export const Comment = (props) => {
 
   const handleDeleteComment = async () => {
     await axios
-      .delete(`http://localhost:3030/comment/${comment._id}`, {
+      .delete(`${process.env.REACT_APP_BACKEND_URL}/comment/${comment._id}`, {
         data: { postId: comment.postId },
         headers: { Authorization: `Basic ${getCookie("jwt")}` },
       })
@@ -60,7 +60,7 @@ export const Comment = (props) => {
     setEditCommentMode(false);
     await axios
       .patch(
-        `http://localhost:3030/comment/${comment._id}`,
+        `${process.env.REACT_APP_BACKEND_URL}/comment/${comment._id}`,
         {
           postId: comment.postId,
           message: commentValue,

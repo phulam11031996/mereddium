@@ -46,9 +46,7 @@ app.use((req, res, next) => {
 
 // PORT NUMBER 3030
 const PORT = 3030;
-// app.listen(process.env.PORT || PORT, () => {
-//   console.log("REST API is listening.");
-// });
-app.listen(PORT, () => {
-  console.log("REST API is listening.");
+app.listen(process.env.PORT || PORT, () => {
+  if (process.env.PORT) console.log("REST API is running on HEROKU.");
+  else if (PORT) console.log(`APP is listening on ${3030} port.`);
 });
