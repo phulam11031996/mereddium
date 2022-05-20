@@ -46,15 +46,29 @@ async function getCommentById(id) {
 }
 
 // UPDATE /comment/{id}
-async function updateCommentById(id, new_comment) {
+async function updateCommentById(id, commentUpdate) {
   const commentModel = mongoose.model("Comment", CommentSchema);
 
-  const result = await commentModel.updateOne(
+  if (commentUpdate === null) {
+    return 0;
+  }
+
+  const comment = await commentModel.findOneAndUpdate(
     { _id: id },
-    { $set: new_comment }
+    { $set: commentUpdate },
+    { returnNewDocument: true }
   );
 
-  return result;
+  if (comment === null) {
+    return -1;
+  }
+
+  try {
+    await PostHandler.updateCommentByPostId(id, comment.postId, commentUpdate);
+    return 1;
+  } catch (err) {
+    return err;
+  }
 }
 
 // DELETE /comment/{:id}

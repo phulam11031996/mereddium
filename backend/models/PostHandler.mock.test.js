@@ -284,6 +284,102 @@ test("Adding comment to post", async () => {
   );
 });
 
+test("Updating a comment on post -- success", async () => {
+  const comment = {
+    _id: "xyz000",
+    userId: "def456",
+    postId: "abc123",
+    timeStamp: Date.now(),
+    lastModifiedAt: Date.now(),
+    message: "First!",
+    upVote: 3,
+  };
+  const post = {
+    _id: "abc123",
+    userId: "qwe123",
+    title: "dummy title 1",
+    message: "dummy message 1",
+    comments: [comment],
+    turnOnComments: true,
+    published: true,
+    stringify: "req.body.stringify",
+    tags: [],
+    imageURL: "https://dummy1.url",
+    upVoteUsers: [],
+    downVoteUsers: [],
+    upVote: 0,
+  };
+  commentUpdate = { upVote: -2 };
+
+  postModel.updateOne = jest.fn().mockResolvedValue({
+    acknowledged: true,
+    modifiedCount: 1,
+    upsertedId: null,
+    upsertedCount: 0,
+    matchedCount: 1,
+  });
+
+  const result = await PostHandler.updateCommentByPostId(
+    comment._id,
+    post._id,
+    commentUpdate
+  );
+  expect(result).toBeDefined();
+  expect(result).toBe(1);
+
+  expect(postModel.updateOne.mock.calls.length).toBe(1);
+  expect(postModel.updateOne).toHaveBeenCalledWith(
+    { _id: post._id, comments: { $elemMatch: { _id: comment._id } } },
+    { $set: commentUpdate }
+  );
+});
+
+test("Updating a comment on post -- comment not found", async () => {
+  const comment = {
+    _id: "xyz000",
+    userId: "def456",
+    postId: "abc123",
+    timeStamp: Date.now(),
+    lastModifiedAt: Date.now(),
+    message: "First!",
+    upVote: 3,
+  };
+  const post = {
+    _id: "abc123",
+    userId: "qwe123",
+    title: "dummy title 1",
+    message: "dummy message 1",
+    comments: [], // no comments on post
+    turnOnComments: true,
+    published: true,
+    stringify: "req.body.stringify",
+    tags: [],
+    imageURL: "https://dummy1.url",
+    upVoteUsers: [],
+    downVoteUsers: [],
+    upVote: 0,
+  };
+  commentUpdate = { upVote: -2 };
+
+  postModel.updateOne = jest.fn().mockResolvedValue({
+    acknowledged: true,
+    modifiedCount: 0,
+    upsertedId: null,
+    upsertedCount: 0,
+    matchedCount: 0,
+  });
+
+  await expect(
+    PostHandler.updateCommentByPostId(comment._id, post._id, commentUpdate)
+  ).rejects.toThrowError(new HttpError("comment not found on post.", 404));
+
+  expect(postModel.updateOne.mock.calls.length).toBe(1);
+  expect(postModel.updateOne).toHaveBeenCalledWith(
+    { _id: post._id, comments: { $elemMatch: { _id: comment._id } } },
+    { $set: commentUpdate }
+  );
+});
+
 test("Deleting comment from post", async () => {
   const post = {
     _id: "abc123",

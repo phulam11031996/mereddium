@@ -71,6 +71,22 @@ async function addCommentByPostId(id, newComment) {
   return result;
 }
 
+// UPDATE /post/comment/{id}
+async function updateCommentByPostId(commentId, postId, commentUpdate) {
+  const postModel = mongoose.model("Post", PostSchema);
+
+  const result = await postModel.updateOne(
+    { _id: postId, comments: { $elemMatch: { _id: commentId } } },
+    { $set: commentUpdate }
+  );
+
+  if (result.modifiedCount === 1 && result.matchedCount === 1) {
+    return 1;
+  } else {
+    throw new HttpError("comment not found on post.", 404);
+  }
+}
+
 // DELETE /post/comment/{id}
 async function deleteCommentByPostId(commentId, postId) {
   const postModel = mongoose.model("Post", PostSchema);
@@ -149,5 +165,6 @@ module.exports = {
   deletePostById,
   votePost,
   addCommentByPostId,
+  updateCommentByPostId,
   deleteCommentByPostId,
 };

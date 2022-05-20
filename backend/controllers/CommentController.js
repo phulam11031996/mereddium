@@ -53,15 +53,29 @@ exports.getCommentById = catchAsync(async (req, res) => {
 
 // UPDATE /comment/{id}
 exports.updateCommentById = catchAsync(async (req, res) => {
-  const result = await CommentHandler.updateCommentById(
+  const response = await CommentHandler.updateCommentById(
     req.params.id,
     req.body
   );
 
-  res.status(200).json({
-    status: "success",
-    data: { result },
-  });
+  if (response === 1) {
+    res.status(200).json({
+      status: "success",
+      data: req.body,
+    });
+  } else if (response === 0) {
+    res.status(400).json({
+      status: "failure, nothing given to update",
+      data: req.body,
+    });
+  } else if (response === -1) {
+    res.status(404).json({
+      status: "failure, comment not found",
+      data: req.body,
+    });
+  } else {
+    res.status(response.code).json({ message: response.message });
+  }
 });
 
 // DELETE /comment/{id}

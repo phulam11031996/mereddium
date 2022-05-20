@@ -181,7 +181,11 @@ test("Fetching comment by id", async () => {
   expect(commentModel.findById).toHaveBeenCalledWith({ _id: "abc123" });
 });
 
-test("Updating comment by id", async () => {
+// ------------------------------------
+//       Updating Comment Tests
+// ------------------------------------
+
+test("Updating comment by id -- success", async () => {
   const comment = {
     _id: "abc123",
     userId: "def456",
@@ -194,12 +198,152 @@ test("Updating comment by id", async () => {
   const commentUpdate = {
     upVote: -2, // change upvotes from 1 to -2
   };
-  commentModel.updateOne = jest.fn().mockResolvedValue({
-    acknowledged: true,
-    modifiedCount: 1,
-    upsertedId: null,
-    upsertedCount: 0,
-    matchedCount: 1,
+
+  commentModel.findOneAndUpdate = jest.fn().mockResolvedValue({
+    _id: "abc123",
+    userId: "def456",
+    postId: "hij789",
+    timeStamp: Date.now(),
+    lastModifiedAt: Date.now(),
+    message: "Second!",
+    upVote: -2,
+  });
+
+  PostHandler.updateCommentByPostId = jest.fn().mockResolvedValue(1);
+
+  const result = await CommentHandler.updateCommentById(
+    comment._id,
+    commentUpdate
+  );
+  expect(result).toBeDefined();
+  expect(result).toBe(1);
+
+  expect(commentModel.findOneAndUpdate.mock.calls.length).toBe(1);
+  expect(commentModel.findOneAndUpdate).toHaveBeenCalledWith(
+    { _id: comment._id },
+    { $set: commentUpdate },
+    { returnNewDocument: true }
+  );
+
+  expect(PostHandler.updateCommentByPostId.mock.calls.length).toBe(1);
+  expect(PostHandler.updateCommentByPostId).toHaveBeenCalledWith(
+    comment._id,
+    comment.postId,
+    commentUpdate
+  );
+});
+
+test("Updating comment by id -- success", async () => {
+  const comment = {
+    _id: "abc123",
+    userId: "def456",
+    postId: "hij789",
+    timeStamp: Date.now(),
+    lastModifiedAt: Date.now(),
+    message: "Second!",
+    upVote: 1,
+  };
+  const commentUpdate = { message: "Hello" };
+
+  commentModel.findOneAndUpdate = jest.fn().mockResolvedValue({
+    _id: "abc123",
+    userId: "def456",
+    postId: "hij789",
+    timeStamp: Date.now(),
+    lastModifiedAt: Date.now(),
+    message: "Hello",
+    upVote: 1,
+  });
+
+  PostHandler.updateCommentByPostId = jest.fn().mockResolvedValue(1);
+
+  const result = await CommentHandler.updateCommentById(
+    comment._id,
+    commentUpdate
+  );
+  expect(result).toBeDefined();
+  expect(result).toBe(1);
+
+  expect(commentModel.findOneAndUpdate.mock.calls.length).toBe(1);
+  expect(commentModel.findOneAndUpdate).toHaveBeenCalledWith(
+    { _id: comment._id },
+    { $set: commentUpdate },
+    { returnNewDocument: true }
+  );
+
+  expect(PostHandler.updateCommentByPostId.mock.calls.length).toBe(1);
+  expect(PostHandler.updateCommentByPostId).toHaveBeenCalledWith(
+    comment._id,
+    comment.postId,
+    commentUpdate
+  );
+});
+
+test("Updating comment by id -- no update given", async () => {
+  const comment = {
+    _id: "abc123",
+    userId: "def456",
+    postId: "hij789",
+    timeStamp: Date.now(),
+    lastModifiedAt: Date.now(),
+    message: "Second!",
+    upVote: 1,
+  };
+  const commentUpdate = null;
+
+  const result = await CommentHandler.updateCommentById(
+    comment._id,
+    commentUpdate
+  );
+  expect(result).toBeDefined();
+  expect(result).toBe(0);
+});
+
+test("Updating comment by id -- comment id not found", async () => {
+  const commentId = "xyz000";
+  const commentUpdate = { message: "Hello" };
+
+  commentModel.findOneAndUpdate = jest.fn().mockResolvedValue(null);
+
+  const result = await CommentHandler.updateCommentById(
+    commentId,
+    commentUpdate
+  );
+  expect(result).toBeDefined();
+  expect(result).toBe(-1);
+
+  expect(commentModel.findOneAndUpdate.mock.calls.length).toBe(1);
+  expect(commentModel.findOneAndUpdate).toHaveBeenCalledWith(
+    { _id: commentId },
+    { $set: commentUpdate },
+    { returnNewDocument: true }
+  );
+});
+
+test("Updating comment by id -- comment not found in post", async () => {
+  const comment = {
+    _id: "abc123",
+    userId: "def456",
+    postId: "hij789",
+    timeStamp: Date.now(),
+    lastModifiedAt: Date.now(),
+    message: "Second!",
+    upVote: 1,
+  };
+  const commentUpdate = { postId: "xyz000" };
+
+  commentModel.findOneAndUpdate = jest.fn().mockResolvedValue({
+    _id: "abc123",
+    userId: "def456",
+    postId: "xyz000",
+    timeStamp: Date.now(),
+    lastModifiedAt: Date.now(),
+    message: "Hello",
+    upVote: 1,
+  });
+
+  PostHandler.updateCommentByPostId = jest.fn().mockImplementation(() => {
+    throw new HttpError("comment not found on post.", 404);
   });
 
   const result = await CommentHandler.updateCommentById(
@@ -207,14 +351,28 @@ test("Updating comment by id", async () => {
     commentUpdate
   );
   expect(result).toBeDefined();
-  expect(result.modifiedCount).toBe(1); // one document was updated
+  expect(result).toStrictEqual(
+    new HttpError("comment not found on post.", 404)
+  );
 
-  expect(commentModel.updateOne.mock.calls.length).toBe(1);
-  expect(commentModel.updateOne).toHaveBeenCalledWith(
+  expect(commentModel.findOneAndUpdate.mock.calls.length).toBe(1);
+  expect(commentModel.findOneAndUpdate).toHaveBeenCalledWith(
     { _id: comment._id },
-    { $set: commentUpdate }
+    { $set: commentUpdate },
+    { returnNewDocument: true }
+  );
+
+  expect(PostHandler.updateCommentByPostId.mock.calls.length).toBe(1);
+  expect(PostHandler.updateCommentByPostId).toHaveBeenCalledWith(
+    comment._id,
+    commentUpdate.postId,
+    commentUpdate
   );
 });
+
+// ------------------------------------
+//       Deleting Comment Tests
+// ------------------------------------
 
 test("Deleting comment by id", async () => {
   const comment = {
