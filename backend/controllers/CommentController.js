@@ -1,6 +1,9 @@
 const CommentHandler = require("../models/CommentHandler");
 const catchAsync = require("../utils/catchAsync");
 
+const DatabaseHandler = require("../models/DatabaseHandler");
+DatabaseHandler.createDbConnection();
+
 // GET /comment/
 exports.getAllComments = catchAsync(async (req, res) => {
   const allComments = await CommentHandler.getAllComments();
@@ -15,14 +18,24 @@ exports.getAllComments = catchAsync(async (req, res) => {
 exports.createComment = catchAsync(async (req, res) => {
   const result = await CommentHandler.createComment(req.body);
 
-  if (!result) {
+  if (result === 0) {
     res.status(404).json({
-      status: "failed to add comment",
+      status: "failed to add comment to the post",
+      data: req.body,
+    });
+  } else if (result == -1) {
+    res.status(400).json({
+      status: "failure: comment was created but wasn't added to the post",
+      data: req.body,
+    });
+  } else if (!result) {
+    res.status(400).json({
+      status: "failed to create comment",
       data: req.body,
     });
   } else {
-    res.status(200).json({
-      status: "success, added comment",
+    res.status(201).json({
+      status: "successfully added comment",
       data: result,
     });
   }
@@ -47,7 +60,20 @@ exports.updateCommentById = catchAsync(async (req, res) => {
   );
 
   if (response === 1) {
-    res.status(204).send();
+    res.status(200).json({
+      status: "success",
+      data: req.body,
+    });
+  } else if (response === 0) {
+    res.status(400).json({
+      status: "failure, nothing given to update",
+      data: req.body,
+    });
+  } else if (response === -1) {
+    res.status(404).json({
+      status: "failure, comment not found",
+      data: req.body,
+    });
   } else {
     res.status(response.code).json({ message: response.message });
   }
@@ -60,8 +86,16 @@ exports.deleteCommentById = catchAsync(async (req, res) => {
     req.body.postId
   );
 
-  if (response === 1) {
-    res.status(200).json({ commentId: req.params.id });
+  if (response.deletedCount && response.deletedCount === 1) {
+    res.status(200).json({
+      status: "success",
+      data: { result },
+    });
+  } else if (response.deletedCount && response.deletedCount === 0) {
+    res.status(404).json({
+      status: "failed to delete comment",
+      data: { result },
+    });
   } else {
     res.status(response.code).json({ message: response.message });
   }

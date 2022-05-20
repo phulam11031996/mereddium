@@ -1,9 +1,10 @@
-const { validationResult } = require("express-validator");
-
 const UserHandler = require("../models/UserHandler");
 const PostHandler = require("../models/PostHandler");
 const catchAsync = require("../utils/catchAsync");
 const HttpError = require("../utils/http-error");
+
+const DatabaseHandler = require("../models/DatabaseHandler");
+DatabaseHandler.createDbConnection();
 
 // GET /user/
 exports.getAllUsers = catchAsync(async (req, res) => {
@@ -40,18 +41,29 @@ exports.getUserById = catchAsync(async (req, res) => {
 
 // UPDATE /user/{id}
 exports.updateUserById = catchAsync(async (req, res) => {
-  const user = await UserHandler.updateUserById(req.params.id, req.body);
+  const result = await UserHandler.updateUserById(req.params.id, req.body);
 
   res.status(200).json({
     status: "success",
-    data: { user },
+    data: { result },
   });
 });
 
 // DELETE /user/{id}
 exports.deleteUserById = catchAsync(async (req, res) => {
-  await UserHandler.deleteUserById(req.params.id);
-  res.status(200).send(req.params.id).end();
+  const result = await UserHandler.deleteUserById(req.params.id);
+
+  if (result.deletedCount == 1) {
+    res.status(200).json({
+      status: "success",
+      data: { result },
+    });
+  } else {
+    res.status(404).json({
+      status: "failure",
+      data: { result },
+    });
+  }
 });
 
 // GET /user/saved/{id}

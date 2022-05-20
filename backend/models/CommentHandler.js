@@ -1,11 +1,8 @@
 const mongoose = require("mongoose");
-const { v4: uuidv4 } = require("uuid");
-
-const DatabaseHandler = require("./DatabaseHandler");
-const PostHandler = require("./PostHandler");
 const CommentSchema = require("./CommentSchema");
-const PostSchema = require("./PostSchema");
-const HttpError = require("../utils/http-error");
+const PostHandler = require("./PostHandler");
+
+const { v4: uuidv4 } = require("uuid");
 
 const uniqueID = () => {
   return uuidv4();
@@ -13,57 +10,61 @@ const uniqueID = () => {
 
 // GET /comment/
 async function getAllComments() {
-  const db = await DatabaseHandler.getDbConnection();
-  const commentModel = db.model("Comment", CommentSchema);
+  const commentModel = mongoose.model("Comment", CommentSchema);
 
-  let result = await commentModel.find();
-  return result;
+  let comments = await commentModel.find();
+  return comments;
 }
 
 // POST /comment/
 async function createComment(comment) {
-  const db = await DatabaseHandler.getDbConnection();
-  const commentModel = db.model("Comment", CommentSchema);
+  const commentModel = mongoose.model("Comment", CommentSchema);
 
   comment._id = uniqueID().slice(0, 6);
 
   const newComment = new commentModel(comment);
+  const addedComment = await newComment.save();
 
-  await newComment.save();
-
-  const result = await PostHandler.addCommentByPostId(
-    comment.postId,
-    newComment
+  result = await PostHandler.addCommentByPostId(
+    addedComment.postId,
+    addedComment
   );
+  if (result.modifiedCount === 0) {
+    result = await commentModel.deleteOne({ _id: addedComment._id });
+    return 0;
+  }
 
-  return result;
+  return addedComment;
 }
 
 // GET /comment/{id}
 async function getCommentById(id) {
-  const db = await DatabaseHandler.getDbConnection();
-  const commentModel = db.model("Comment", CommentSchema);
+  const commentModel = mongoose.model("Comment", CommentSchema);
 
-  const result = await commentModel.findById({ _id: id });
-  return result;
+  const comment = await commentModel.findById({ _id: id });
+  return comment;
 }
 
 // UPDATE /comment/{id}
-async function updateCommentById(commentId, commentUpdate) {
-  const db = await DatabaseHandler.getDbConnection();
-  const commentModel = db.model("Comment", CommentSchema);
+async function updateCommentById(id, commentUpdate) {
+  const commentModel = mongoose.model("Comment", CommentSchema);
+
+  if (commentUpdate === null) {
+    return 0;
+  }
+
+  const comment = await commentModel.findOneAndUpdate(
+    { _id: id },
+    { $set: commentUpdate },
+    { returnNewDocument: true }
+  );
+
+  if (comment === null) {
+    return -1;
+  }
 
   try {
-    const comment = await commentModel.findOneAndUpdate(
-      { _id: commentId },
-      { $set: commentUpdate },
-      { returnNewDocument: true }
-    );
-    const post = await PostHandler.updateCommentByPostId(
-      commentId,
-      comment.postId,
-      commentUpdate
-    );
+    await PostHandler.updateCommentByPostId(id, comment.postId, commentUpdate);
     return 1;
   } catch (err) {
     return err;
@@ -72,16 +73,16 @@ async function updateCommentById(commentId, commentUpdate) {
 
 // DELETE /comment/{:id}
 async function deleteCommentById(commentId, postId) {
-  const db = await DatabaseHandler.getDbConnection();
-  const commentModel = db.model("Comment", CommentSchema);
+  const commentModel = mongoose.model("Comment", CommentSchema);
 
   try {
-    const post = await PostHandler.deleteCommentByPostId(commentId, postId);
-    const comment = await commentModel.deleteOne({ _id: commentId });
-    return 1;
+    await PostHandler.deleteCommentByPostId(commentId, postId);
   } catch (err) {
     return err;
   }
+
+  const result = await commentModel.deleteOne({ _id: commentId });
+  return result;
 }
 
 module.exports = {

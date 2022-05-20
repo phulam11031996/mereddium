@@ -1,9 +1,9 @@
-const { v4: uuidv4 } = require("uuid");
-const bcrypt = require("bcryptjs");
-
-const DatabaseHandler = require("./DatabaseHandler");
+const mongoose = require("mongoose");
 const UserSchema = require("./UserSchema");
+
 const HttpError = require("../utils/http-error");
+const bcrypt = require("bcryptjs");
+const { v4: uuidv4 } = require("uuid");
 
 const uniqueID = () => {
   return uuidv4();
@@ -11,16 +11,16 @@ const uniqueID = () => {
 
 // GET /user/
 async function getAllUsers() {
-  const db = await DatabaseHandler.getDbConnection();
-  const userModel = db.model("User", UserSchema);
+  const userModel = mongoose.model("User", UserSchema);
+
   let result = await userModel.find();
   return result;
 }
 
 // POST /user/
 async function createUser(user) {
-  const db = await DatabaseHandler.getDbConnection();
-  const userModel = db.model("User", UserSchema);
+  const userModel = mongoose.model("User", UserSchema);
+
   const {
     firstName,
     lastName,
@@ -105,8 +105,7 @@ async function createUser(user) {
 
 // GET /user/{id}
 async function getUserById(id) {
-  const db = await DatabaseHandler.getDbConnection();
-  const userModel = db.model("User", UserSchema);
+  const userModel = mongoose.model("User", UserSchema);
 
   const user = await userModel.findById({ _id: id });
   return user;
@@ -114,27 +113,23 @@ async function getUserById(id) {
 
 // UPDATE /user/{id}
 async function updateUserById(id, newUser) {
-  const db = await DatabaseHandler.getDbConnection();
-  const userModel = db.model("User", UserSchema);
+  const userModel = mongoose.model("User", UserSchema);
 
-  const user = await userModel.updateOne({ _id: id }, { $set: newUser });
-
-  return user;
+  const result = await userModel.updateOne({ _id: id }, { $set: newUser });
+  return result;
 }
 
 // DELETE /user/{id}
 async function deleteUserById(id) {
-  const db = await DatabaseHandler.getDbConnection();
-  const userModel = db.model("User", UserSchema);
+  const userModel = mongoose.model("User", UserSchema);
 
-  await userModel.deleteOne({ _id: id });
-  return 0;
+  const result = await userModel.deleteOne({ _id: id });
+  return result;
 }
 
 // GET /user/{email}
 async function getUserByEmail(email) {
-  const db = await DatabaseHandler.getDbConnection();
-  const userModel = db.model("User", UserSchema);
+  const userModel = mongoose.model("User", UserSchema);
 
   const user = await userModel.findOne({ email: email });
   return user;
@@ -142,8 +137,7 @@ async function getUserByEmail(email) {
 
 // GET /user/saved/{id}
 async function getSavedPosts(userId) {
-  const db = await DatabaseHandler.getDbConnection();
-  const userModel = db.model("User", UserSchema);
+  const userModel = mongoose.model("User", UserSchema);
 
   const user = await userModel.findOne({ _id: userId });
   if (user === null) {
@@ -159,8 +153,7 @@ async function getSavedPosts(userId) {
 
 // POST /user/saved/{id}
 async function addSavedPost(userId, postId) {
-  const db = await DatabaseHandler.getDbConnection();
-  const userModel = db.model("User", UserSchema);
+  const userModel = mongoose.model("User", UserSchema);
 
   const user = await userModel.findOne({ _id: userId });
   if (user === null) {
@@ -182,8 +175,7 @@ async function addSavedPost(userId, postId) {
 
 // DELETE /user/saved/{id}
 async function deleteSavedPost(userId, postId) {
-  const db = await DatabaseHandler.getDbConnection();
-  const userModel = db.model("User", UserSchema);
+  const userModel = mongoose.model("User", UserSchema);
 
   const result = await userModel.updateOne(
     { _id: userId },
@@ -195,12 +187,11 @@ async function deleteSavedPost(userId, postId) {
 
 // UPDATE /user/image/{id}
 async function updateUserImageById(id, photoPath) {
-  const db = await DatabaseHandler.getDbConnection();
-  const userModel = db.model("User", UserSchema);
+  const userModel = mongoose.model("User", UserSchema);
 
-  const user = await userModel.updateOne({ _id: id }, { photo: photoPath });
+  const result = await userModel.updateOne({ _id: id }, { photo: photoPath });
 
-  return user;
+  return result;
 }
 
 module.exports = {

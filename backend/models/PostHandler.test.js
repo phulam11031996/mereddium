@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
+const { MongoMemoryServer } = require("mongodb-memory-server");
 const PostSchema = require("./PostSchema");
 const PostHandler = require("./PostHandler");
-const DatabaseHandler = require("./DatabaseHandler");
-const { MongoMemoryServer } = require("mongodb-memory-server");
 
 const { v4: uuidv4 } = require("uuid");
 
@@ -11,7 +10,6 @@ const uniqueID = () => {
 };
 
 let mongoServer;
-let conn;
 let postModel;
 
 beforeAll(async () => {
@@ -23,19 +21,18 @@ beforeAll(async () => {
     useUnifiedTopology: true,
   };
 
-  conn = mongoose.createConnection(uri, mongooseOpts);
-  postModel = conn.model("Post", PostSchema);
-  DatabaseHandler.setConnection(conn);
+  mongoose.connect(uri, mongooseOpts);
+  postModel = mongoose.model("Post", PostSchema);
 });
 
 afterAll(async () => {
-  await conn.dropDatabase();
-  await conn.close();
+  await mongoose.connection.dropDatabase();
+  await mongoose.connection.close();
   await mongoServer.stop();
 });
 
 beforeEach(async () => {
-  let newPost = {
+  const newPost = new postModel({
     _id: "abc123",
     userId: "qwe123",
     title: "dummy title 1",
@@ -70,11 +67,10 @@ beforeEach(async () => {
     upVoteUsers: [],
     downVoteUsers: [],
     upVote: 0,
-  };
-  result = new postModel(newPost);
-  await result.save();
+  });
+  await newPost.save();
 
-  newPost = {
+  const newPost2 = new postModel({
     _id: uniqueID().slice(0, 6),
     userId: "asd456",
     title: "dummy title 2",
@@ -88,11 +84,10 @@ beforeEach(async () => {
     upVoteUsers: [],
     downVoteUsers: [],
     upVote: 0,
-  };
-  result = new postModel(newPost);
-  await result.save();
+  });
+  await newPost2.save();
 
-  newPost = {
+  const newPost3 = new postModel({
     _id: uniqueID().slice(0, 6),
     userId: "zxc789",
     title: "dummy title 3",
@@ -106,19 +101,18 @@ beforeEach(async () => {
     upVoteUsers: [],
     downVoteUsers: [],
     upVote: 0,
-  };
-  result = new postModel(newPost);
-  await result.save();
+  });
+  await newPost3.save();
 });
 
 afterEach(async () => {
   await postModel.deleteMany();
 });
 
-test("Fetching all users", async () => {
+test("Fetching all posts", async () => {
   const posts = await PostHandler.getAllPosts();
   expect(posts).toBeDefined();
-  expect(posts.length).toBeGreaterThan(0);
+  expect(posts.length).toBe(3); // 3 posts
 });
 
 test("createPost -- successful path", async () => {
@@ -246,17 +240,23 @@ test("Updating post -- fail path", async () => {
 });
 
 test("deletePostById -- successful path", async () => {
-  await PostHandler.deletePostById("abc123");
-  const result = await PostHandler.getAllPosts();
+  const result = await PostHandler.deletePostById("abc123");
   expect(result).toBeDefined();
-  expect(result.length).toBe(2);
+  expect(result.deletedCount).toBe(1);
+
+  const posts = await PostHandler.getAllPosts();
+  expect(posts).toBeDefined();
+  expect(posts.length).toBe(2); // from 3 posts to 2
 });
 
 test("deletePostById -- fail path", async () => {
-  await PostHandler.deletePostById("invalidId");
-  const result = await PostHandler.getAllPosts();
+  const result = await PostHandler.deletePostById("xyz000");
   expect(result).toBeDefined();
-  expect(result.length).toBe(3);
+  expect(result.deletedCount).toBe(0);
+
+  const posts = await PostHandler.getAllPosts();
+  expect(posts).toBeDefined();
+  expect(posts.length).toBe(3); // 3 posts
 });
 
 test("votePost -- upVote", async () => {

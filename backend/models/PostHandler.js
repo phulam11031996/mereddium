@@ -1,7 +1,7 @@
-const DatabaseHandler = require("./DatabaseHandler");
+const mongoose = require("mongoose");
 const PostSchema = require("./PostSchema");
-const HttpError = require("../utils/http-error");
 
+const HttpError = require("../utils/http-error");
 const { v4: uuidv4 } = require("uuid");
 
 const uniqueID = () => {
@@ -10,16 +10,15 @@ const uniqueID = () => {
 
 // GET /post/
 async function getAllPosts() {
-  const db = await DatabaseHandler.getDbConnection();
-  const postModel = db.model("Post", PostSchema);
-  let result = await postModel.find();
-  return result;
+  const postModel = mongoose.model("Post", PostSchema);
+
+  let posts = await postModel.find();
+  return posts;
 }
 
 // POST /post/
 async function createPost(post) {
-  const db = await DatabaseHandler.getDbConnection();
-  const postModel = db.model("Post", PostSchema);
+  const postModel = mongoose.model("Post", PostSchema);
 
   const postId = uniqueID().slice(0, 6);
 
@@ -45,8 +44,7 @@ async function createPost(post) {
 
 // GET /post/{id}
 async function getPostById(id) {
-  const db = await DatabaseHandler.getDbConnection();
-  const postModel = db.model("Post", PostSchema);
+  const postModel = mongoose.model("Post", PostSchema);
 
   const post = await postModel.findById({ _id: id });
   return post;
@@ -54,36 +52,44 @@ async function getPostById(id) {
 
 // UPDATE /post/{id}
 async function updatePostById(id, newInfo) {
-  const db = await DatabaseHandler.getDbConnection();
-  const postModel = db.model("Post", PostSchema);
+  const postModel = mongoose.model("Post", PostSchema);
 
-  const post = await postModel.updateOne(
-    { _id: id },
-    {
-      $set: newInfo,
-    }
-  );
+  const result = await postModel.updateOne({ _id: id }, { $set: newInfo });
 
-  return post;
+  return result;
 }
 
 // UPDATE /post/comment/{id}
 async function addCommentByPostId(id, newComment) {
-  const db = await DatabaseHandler.getDbConnection();
-  const postModel = db.model("Post", PostSchema);
+  const postModel = mongoose.model("Post", PostSchema);
 
-  const post = await postModel.findOneAndUpdate(
+  const result = await postModel.updateOne(
     { _id: id },
-    { $push: { comments: newComment } },
-    { new: true }
+    { $push: { comments: newComment } }
   );
-  return post;
+
+  return result;
+}
+
+// UPDATE /post/comment/{id}
+async function updateCommentByPostId(commentId, postId, commentUpdate) {
+  const postModel = mongoose.model("Post", PostSchema);
+
+  const result = await postModel.updateOne(
+    { _id: postId, comments: { $elemMatch: { _id: commentId } } },
+    { $set: commentUpdate }
+  );
+
+  if (result.modifiedCount === 1 && result.matchedCount === 1) {
+    return 1;
+  } else {
+    throw new HttpError("comment not found on post.", 404);
+  }
 }
 
 // DELETE /post/comment/{id}
 async function deleteCommentByPostId(commentId, postId) {
-  const db = await DatabaseHandler.getDbConnection();
-  const postModel = db.model("Post", PostSchema);
+  const postModel = mongoose.model("Post", PostSchema);
 
   const post = await postModel.updateOne(
     { _id: postId },
@@ -125,17 +131,15 @@ async function updateCommentByPostId(commentId, postId, commentUpdate) {
 
 // DELETE /post/{id}
 async function deletePostById(id) {
-  const db = await DatabaseHandler.getDbConnection();
-  const postModel = db.model("Post", PostSchema);
+  const postModel = mongoose.model("Post", PostSchema);
 
-  await postModel.deleteOne({ _id: id });
-  return 0;
+  const result = await postModel.deleteOne({ _id: id });
+  return result;
 }
 
 // UPDATE /vote/{id}
 async function votePost(postId, userId, value) {
-  const db = await DatabaseHandler.getDbConnection();
-  const postModel = db.model("Post", PostSchema);
+  const postModel = mongoose.model("Post", PostSchema);
 
   if (userId === null) {
     return 0;
@@ -186,6 +190,7 @@ module.exports = {
   deletePostById,
   votePost,
   addCommentByPostId,
+  updateCommentByPostId,
   deleteCommentByPostId,
   updateCommentByPostId,
 };

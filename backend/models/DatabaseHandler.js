@@ -5,26 +5,17 @@ dotenv.config();
 // Initializing DB Connection
 let dbConnection;
 
-function setConnection(newConn) {
-  dbConnection = newConn;
-  return dbConnection;
-}
-
-function getDbConnection() {
-  const database = process.env.MONGOLAB_URI;
-  const databaseJest =
-    "mongodb+srv://msultano:4152838823OrifSs@cluster0.az8az.mongodb.net/CSC308?retryWrites=true&w=majority";
+function createDbConnection() {
   if (!dbConnection) {
-    // dbConnection = mongoose.connect(database || databaseJest, {
-    dbConnection = mongoose.connect(databaseJest, {
+    const uri = process.env.MONGOLAB_URI;
+    const opts = {
       useUnifiedTopology: true,
       useNewUrlParser: true,
-    });
+    };
+    dbConnection = mongoose.connect(uri, opts);
   }
-  return dbConnection;
 }
 
 module.exports = {
-  setConnection,
-  getDbConnection,
+  createDbConnection,
 };
