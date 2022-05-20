@@ -70,7 +70,7 @@ export const Post = (props) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3030/user/" + props.property.userId)
+      .get(`${process.env.REACT_APP_BACKEND_URL}/user/${props.property.userId}`)
       .then((user) => {
         setPostUsedId(user.userId);
         setFirstName(user.data.data.user.firstName);
@@ -93,7 +93,7 @@ export const Post = (props) => {
       }
 
       axios
-        .get("http://localhost:3030/user/" + getUser)
+        .get(`${process.env.REACT_APP_BACKEND_URL}/user/${getUser}`)
         .then((user) => {
           setUserSavedPosts(user.data.data.user.savedPosts);
         })
@@ -125,7 +125,7 @@ export const Post = (props) => {
   async function makeVoteCall(userId, postId, value) {
     try {
       const response = await axios.post(
-        `http://localhost:3030/post/vote/${postId}`,
+        `${process.env.REACT_APP_BACKEND_URL}/post/vote/${postId}`,
         { userId: userId, value: value },
         { headers: { Authorization: `Basic ${getCookie("jwt")}` } }
       );
@@ -150,7 +150,9 @@ export const Post = (props) => {
         console.log("Successfully Saved Post!");
       }
 
-      const user = await axios.get("http://localhost:3030/user/" + userId);
+      const user = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/user/${userId}`
+      );
       setUserSavedPosts(user.data.data.user.savedPosts);
     }
   }
@@ -160,13 +162,13 @@ export const Post = (props) => {
       const userSaved = userSavedPosts.some((saved) => saved.postId === postId);
       if (userSaved) {
         const response = await axios.delete(
-          `http://localhost:3030/user/saved/${userId}`,
+          `${process.env.REACT_APP_BACKEND_URL}/user/saved/${userId}`,
           { data: { postId: postId } }
         );
         return response;
       } else {
         const response = await axios.post(
-          `http://localhost:3030/user/saved/${userId}`,
+          `${process.env.REACT_APP_BACKEND_URL}/user/saved/${userId}`,
           { postId: postId }
         );
         return response;
@@ -198,13 +200,13 @@ export const Post = (props) => {
         subheader={props.property.createdAt.slice(0, 10)}
       />
 
-      {props.property.imageURL !== "" ? (
+      {props.property.imageURL && (
         <CardMedia
-          height="500"
+          style={{ height: "300px" }}
+          component="img"
           image={props.property.imageURL}
-          alt="Paella dish"
         />
-      ) : null}
+      )}
 
       <CardContent>
         <Typography

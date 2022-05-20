@@ -24,10 +24,12 @@ export const CommentReply = (props) => {
       let getUser = parseCookie(document.cookie).userId;
       if (getUser !== "null") {
         setUserId(getUser);
-        axios.get("http://localhost:3030/user/" + getUser).then((user) => {
-          setFirstName(user.data.data.user.firstName);
-          setPhoto(user.data.data.user.photo);
-        });
+        axios
+          .get(`${process.env.REACT_APP_BACKEND_URL}/user/${getUser}`)
+          .then((user) => {
+            setFirstName(user.data.data.user.firstName);
+            setPhoto(user.data.data.user.photo);
+          });
       }
     } else {
       setUserId(null);
