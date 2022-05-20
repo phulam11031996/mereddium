@@ -22,7 +22,7 @@ export const LogIn = () => {
   const logInCall = async (user) => {
     try {
       const response = await axios.post(
-        "http://localhost:3030/auth/login",
+        `${process.env.REACT_APP_BACKEND_URL}/auth/login`,
         user
       );
 

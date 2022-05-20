@@ -55,7 +55,8 @@ exports.getCommentById = catchAsync(async (req, res) => {
 exports.updateCommentById = catchAsync(async (req, res) => {
   const response = await CommentHandler.updateCommentById(
     req.params.id,
-    req.body
+    req.body.postId,
+    req.body.message
   );
 
   if (response === 1) {
@@ -96,6 +97,6 @@ exports.deleteCommentById = catchAsync(async (req, res) => {
       data: { result },
     });
   } else {
-    res.status(404).json({ message: response.message });
+    res.status(response.code).json({ message: response.message });
   }
 });

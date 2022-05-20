@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest --coverage --forceExit --detectOpenHandles && prettier --check .",
     "dev": "nodemon index.js",
-    "start": "node index.js"
+    "start": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
