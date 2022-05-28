@@ -51,8 +51,9 @@ export const CreatePost = (props) => {
     };
 
     makePostCall(post).then((result) => {
+      // console.log(result.data.newPost);
       if (result.status === 201) {
-        props.addPost(result.data.post);
+        props.addPost(result.data.newPost);
         handleClose();
       }
     });

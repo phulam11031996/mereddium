@@ -56,7 +56,7 @@ async function updateCommentById(id, commentUpdate) {
   const comment = await commentModel.findOneAndUpdate(
     { _id: id },
     { $set: commentUpdate },
-    { returnNewDocument: true }
+    { new: true }
   );
 
   if (comment === null) {

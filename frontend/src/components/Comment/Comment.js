@@ -49,7 +49,10 @@ export const Comment = (props) => {
         headers: { Authorization: `Basic ${getCookie("jwt")}` },
       })
       .then((res) => {
-        props.deleteComment(res.data.commentId);
+        console.log(res.data.data.result.modifiedCount);
+        if (res.data.data.result.modifiedCount === 1) {
+          props.deleteComment(comment._id);
+        }
       })
       .catch((err) => {
         console.error(err);
@@ -62,12 +65,11 @@ export const Comment = (props) => {
       .patch(
         `${process.env.REACT_APP_BACKEND_URL}/comment/${comment._id}`,
         {
-          postId: comment.postId,
-          message: commentValue,
+          newInfo: { message: commentValue },
         },
         { headers: { Authorization: `Basic ${getCookie("jwt")}` } }
       )
-      .then(() => {
+      .then((result) => {
         props.updateComment(comment._id, commentValue);
       })
       .catch((err) => {

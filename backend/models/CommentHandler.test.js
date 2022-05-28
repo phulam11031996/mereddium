@@ -140,6 +140,9 @@ test("Updating comment by id -- success", async () => {
   const getComment = await commentModel.findOne({ _id: id });
   expect(getComment).toBeDefined();
   expect(getComment.upVote).toBe(-2);
+
+  const getPost = await postModel.findOne({ _id: getComment.postId });
+  expect(getPost.comments.includes(getComment)); // check if post has update comment
 });
 
 test("Updating comment by id -- success", async () => {

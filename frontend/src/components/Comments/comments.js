@@ -6,8 +6,8 @@ export const Comments = (props) => {
   const [postId, setPostId] = useState(props.postId);
   const [comments, setComments] = useState(props.comments);
 
-  const addComment = (newComments) => {
-    setComments(newComments);
+  const addComment = async (newComments) => {
+    setComments([...comments, newComments]);
   };
 
   const deleteComment = (commentId) => {
@@ -44,8 +44,7 @@ export const Comments = (props) => {
           );
         })}
       </div>
-
-      {props.userId && (
+      {props.userId !== "null" && (
         <CommentReply postId={props.postId} addComment={addComment} />
       )}
     </>
