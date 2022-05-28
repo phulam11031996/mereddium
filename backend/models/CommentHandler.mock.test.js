@@ -222,7 +222,7 @@ test("Updating comment by id -- success", async () => {
   expect(commentModel.findOneAndUpdate).toHaveBeenCalledWith(
     { _id: comment._id },
     { $set: commentUpdate },
-    { returnNewDocument: true }
+    { new: true }
   );
 
   expect(PostHandler.updateCommentByPostId.mock.calls.length).toBe(1);
@@ -268,7 +268,7 @@ test("Updating comment by id -- success", async () => {
   expect(commentModel.findOneAndUpdate).toHaveBeenCalledWith(
     { _id: comment._id },
     { $set: commentUpdate },
-    { returnNewDocument: true }
+    { new: true }
   );
 
   expect(PostHandler.updateCommentByPostId.mock.calls.length).toBe(1);
@@ -316,7 +316,7 @@ test("Updating comment by id -- comment id not found", async () => {
   expect(commentModel.findOneAndUpdate).toHaveBeenCalledWith(
     { _id: commentId },
     { $set: commentUpdate },
-    { returnNewDocument: true }
+    { new: true }
   );
 });
 
@@ -359,7 +359,7 @@ test("Updating comment by id -- comment not found in post", async () => {
   expect(commentModel.findOneAndUpdate).toHaveBeenCalledWith(
     { _id: comment._id },
     { $set: commentUpdate },
-    { returnNewDocument: true }
+    { new: true }
   );
 
   expect(PostHandler.updateCommentByPostId.mock.calls.length).toBe(1);

@@ -50,7 +50,7 @@ export const Comment = (props) => {
       })
       .then((res) => {
         console.log(res.data.data.result.modifiedCount);
-        if (res.data.data.result.modifiedCount == 1) {
+        if (res.data.data.result.modifiedCount === 1) {
           props.deleteComment(comment._id);
         }
       })

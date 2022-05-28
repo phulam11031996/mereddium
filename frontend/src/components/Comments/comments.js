@@ -44,7 +44,7 @@ export const Comments = (props) => {
           );
         })}
       </div>
-      {props.userId != "null" && (
+      {props.userId !== "null" && (
         <CommentReply postId={props.postId} addComment={addComment} />
       )}
     </>
