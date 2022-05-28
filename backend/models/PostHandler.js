@@ -72,12 +72,12 @@ async function addCommentByPostId(id, newComment) {
 }
 
 // UPDATE /post/comment/{id}
-async function updateCommentByPostId(commentId, postId, commentUpdate) {
+async function updateCommentByPostId(comment) {
   const postModel = mongoose.model("Post", PostSchema);
 
   const result = await postModel.updateOne(
-    { _id: postId, comments: { $elemMatch: { _id: commentId } } },
-    { $set: commentUpdate }
+    { "comments._id": comment._id },
+    { "comments.$": comment }
   );
 
   if (result.modifiedCount === 1 && result.matchedCount === 1) {

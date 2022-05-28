@@ -81,7 +81,6 @@ export const Dashboard = (props) => {
           setDelToken(info.info.delete_token);
           setPath(info.info.path);
           setFileName(info.info.original_filename);
-          console.log(info);
         }
       }
     );
