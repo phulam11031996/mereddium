@@ -9,7 +9,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 
 import { Logo } from "../../images/Logo";
-import { CreatePost, CreatePostEditor } from "../index";
+import { CreatePost } from "../index";
 import { Dashboard } from "../Dashboard";
 
 import WhatshotIcon from "@mui/icons-material/Whatshot";
