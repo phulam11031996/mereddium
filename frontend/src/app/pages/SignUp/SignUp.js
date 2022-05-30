@@ -15,6 +15,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { makeSignUpCall } from "../../../utils";
+import { ButtonBase } from "@mui/material";
 const theme = createTheme();
 
 function Copyright(props) {
@@ -91,16 +92,19 @@ export const SignUp = () => {
             alignItems: "center",
           }}
         >
-          <Avatar
-            style={{
-              background: "white",
-              borderRadius: "0px",
-              width: "45px",
-              height: "45px",
-            }}
-          >
-            <Logo />
-          </Avatar>
+          <Link href="/" variant="body2">
+            <Avatar
+              style={{
+                background: "white",
+                borderRadius: "0px",
+                width: "45px",
+                height: "45px",
+              }}
+            >
+              <Logo />
+            </Avatar>
+          </Link>
+
           <Typography
             component="h1"
             variant="h5"
@@ -224,7 +228,7 @@ export const SignUp = () => {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="/auth/login" variant="body2">
+                <Link href="/login" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>

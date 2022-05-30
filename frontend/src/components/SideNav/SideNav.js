@@ -110,9 +110,9 @@ export const SideNav = (props) => {
 
           {login && <CreatePost userId={userId} addPost={props.addPost} />}
 
-          {login && (
+          {/* {login && (
             <CreatePostEditor userId={userId} handleSubmit={props.updateList} />
-          )}
+          )} */}
 
           <Divider style={{ marginTop: "10px", marginBottom: "10px" }} />
 

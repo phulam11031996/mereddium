@@ -64,16 +64,19 @@ export const LogIn = () => {
             alignItems: "center",
           }}
         >
-          <Avatar
-            style={{
-              background: "white",
-              borderRadius: "0px",
-              width: "45px",
-              height: "45px",
-            }}
-          >
-            <Logo />
-          </Avatar>
+          <Link href="/" variant="body2">
+            <Avatar
+              style={{
+                background: "white",
+                borderRadius: "0px",
+                width: "45px",
+                height: "45px",
+              }}
+            >
+              <Logo />
+            </Avatar>
+          </Link>
+
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
