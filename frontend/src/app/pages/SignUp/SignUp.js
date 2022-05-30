@@ -214,6 +214,7 @@ export const SignUp = () => {
             <Button
               disabled={!(formik.isValid && formik.dirty)}
               onClick={formik.handleSubmit}
+              name="submit"
               type="submit"
               fullWidth
               variant="contained"
@@ -230,7 +231,12 @@ export const SignUp = () => {
             </Grid>
           </Box>
         </Box>
-        <Typography variant="body2" style={{ color: "red" }} align="center">
+        <Typography
+          name="error_message"
+          variant="body2"
+          style={{ color: "red" }}
+          align="center"
+        >
           {error}
         </Typography>
         <Copyright sx={{ mt: 5 }} />
