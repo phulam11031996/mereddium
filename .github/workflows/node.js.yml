@@ -5,7 +5,7 @@ name: Node.js CI
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   build-backend:
@@ -40,22 +40,22 @@ jobs:
           appdir: "backend/"
 
   build-frontend:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./frontend
+      runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: ./frontend
 
-    strategy:
-      matrix:
-        node-version: [14.x]
+      strategy:
+        matrix:
+          node-version: [14.x]
 
-    steps:
+      steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
+          cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
       - run: npm run prettier
