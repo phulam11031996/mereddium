@@ -32,10 +32,10 @@ exports.getPostById = catchAsync(async (req, res) => {
 
 // UPDATE /post/{id}
 exports.updatePostById = catchAsync(async (req, res) => {
-  const post = await PostHandler.updatePostById(req.params.id, req.body);
+  const result = await PostHandler.updatePostById(req.params.id, req.body);
   res.status(200).json({
     status: "success",
-    data: { post },
+    data: { result },
   });
 });
 
