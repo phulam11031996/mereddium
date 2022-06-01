@@ -12,6 +12,7 @@ import Slide from "@mui/material/Slide";
 import TextField from "@mui/material/TextField";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import PostAddOutlinedIcon from "@mui/icons-material/PostAddOutlined";
+import Tooltip from "@mui/material/Tooltip";
 
 import { makePostCall } from "../../utils";
 
@@ -65,11 +66,13 @@ export const CreatePost = (props) => {
 
   return (
     <div>
-      <ListItem onClick={handleClickOpen} button key="Key">
-        <ListItemIcon style={{ marginLeft: "20px" }}>
-          <PostAddOutlinedIcon color="secondary" />
-        </ListItemIcon>
-      </ListItem>
+      <Tooltip title="Create Post" placement="right" arrow>
+        <ListItem onClick={handleClickOpen} button key="Key">
+          <ListItemIcon style={{ marginLeft: "20px" }}>
+            <PostAddOutlinedIcon color="secondary" />
+          </ListItemIcon>
+        </ListItem>
+      </Tooltip>
       <Dialog
         fullScreen
         open={open}

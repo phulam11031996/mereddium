@@ -15,6 +15,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import ClearIcon from "@mui/icons-material/Clear";
+import Tooltip from "@mui/material/Tooltip";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -88,17 +89,19 @@ export const Dashboard = (props) => {
 
   return (
     <div>
-      <ListItem
-        onClick={() => {
-          setIsOpen(true);
-        }}
-        button
-        key="Key"
-      >
-        <ListItemIcon style={{ marginLeft: "20px" }}>
-          <ManageAccountsIcon color="secondary" style={{ color: "0077b6" }} />
-        </ListItemIcon>
-      </ListItem>
+      <Tooltip title="Dashboard" placement="right" arrow>
+        <ListItem
+          onClick={() => {
+            setIsOpen(true);
+          }}
+          button
+          key="Key"
+        >
+          <ListItemIcon style={{ marginLeft: "20px" }}>
+            <ManageAccountsIcon color="secondary" style={{ color: "0077b6" }} />
+          </ListItemIcon>
+        </ListItem>
+      </Tooltip>
       <Dialog
         fullScreen
         open={isOpen}

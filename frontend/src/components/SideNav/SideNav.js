@@ -7,6 +7,7 @@ import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
+import Tooltip from "@mui/material/Tooltip";
 
 import { Logo } from "../../images/Logo";
 import { CreatePost } from "../index";
@@ -54,85 +55,94 @@ export const SideNav = (props) => {
           <Logo />
         </DrawerHeader>
         <List style={{ marginTop: 10 }}>
-          <ListItem
-            button
-            key="Popular"
-            onClick={(e) => {
-              props.sortBy("Popular");
-            }}
-          >
-            <ListItemIcon style={{ marginLeft: "20px" }}>
-              <WhatshotIcon color="primary" />
-            </ListItemIcon>
-          </ListItem>
+          <Tooltip title="Popular" placement="right" arrow>
+            <ListItem
+              button
+              key="Popular"
+              onClick={(e) => {
+                props.sortBy("Popular");
+              }}
+              className="tooltip"
+            >
+              <ListItemIcon style={{ marginLeft: "20px" }}>
+                <WhatshotIcon color="primary" />
+              </ListItemIcon>
+            </ListItem>
+          </Tooltip>
 
-          <ListItem
-            button
-            key="Recent"
-            onClick={(e) => {
-              props.sortBy("Recent");
-            }}
-          >
-            <ListItemIcon style={{ marginLeft: "20px" }}>
-              <AccessTimeOutlinedIcon color="secondary" />
-            </ListItemIcon>
-          </ListItem>
+          <Tooltip title="Recent" placement="right" arrow>
+            <ListItem
+              button
+              key="Recent"
+              onClick={(e) => {
+                props.sortBy("Recent");
+              }}
+            >
+              <ListItemIcon style={{ marginLeft: "20px" }}>
+                <AccessTimeOutlinedIcon color="secondary" />
+              </ListItemIcon>
+            </ListItem>
+          </Tooltip>
 
-          <ListItem
-            button
-            key="Trending"
-            onClick={(e) => {
-              props.sortBy("Trending");
-            }}
-          >
-            <ListItemIcon style={{ marginLeft: "20px" }}>
-              <TrendingUpOutlinedIcon color="secondary" />
-            </ListItemIcon>
-          </ListItem>
+          <Tooltip title="Trending" placement="right" arrow>
+            <ListItem
+              button
+              key="Trending"
+              onClick={(e) => {
+                props.sortBy("Trending");
+              }}
+            >
+              <ListItemIcon style={{ marginLeft: "20px" }}>
+                <TrendingUpOutlinedIcon color="secondary" />
+              </ListItemIcon>
+            </ListItem>
+          </Tooltip>
 
           {login && (
             <Divider style={{ marginTop: "10px", marginBottom: "10px" }} />
           )}
 
           {login && (
-            <ListItem
-              button
-              key="Saved"
-              onClick={() => props.savedPosts(userId)}
-            >
-              <ListItemIcon style={{ marginLeft: "20px" }}>
-                <Badge color="primary" variant="dot">
-                  <BookmarkBorderOutlinedIcon style={{ color: "orange" }} />
-                </Badge>
-              </ListItemIcon>
-            </ListItem>
+            <Tooltip title="Saved" placement="right" arrow>
+              <ListItem
+                button
+                key="Saved"
+                onClick={() => props.savedPosts(userId)}
+              >
+                <ListItemIcon style={{ marginLeft: "20px" }}>
+                  <Badge color="primary" variant="dot">
+                    <BookmarkBorderOutlinedIcon style={{ color: "orange" }} />
+                  </Badge>
+                </ListItemIcon>
+              </ListItem>
+            </Tooltip>
           )}
 
           {login && <CreatePost userId={userId} addPost={props.addPost} />}
 
-          {/* {login && (
-            <CreatePostEditor userId={userId} handleSubmit={props.updateList} />
-          )} */}
-
           <Divider style={{ marginTop: "10px", marginBottom: "10px" }} />
 
           {!login && (
-            <ListItem
-              button
-              key="login"
-              onClick={() => {
-                window.location.href = "/login";
-              }}
-            >
-              <ListItemIcon style={{ marginLeft: "20px" }}>
-                <LoginOutlinedIcon
-                  color="secondary"
-                  style={{ color: "blue" }}
-                />
-              </ListItemIcon>
-            </ListItem>
+            <Tooltip title="Login" placement="right" arrow>
+              <ListItem
+                button
+                key="login"
+                onClick={() => {
+                  window.location.href = "/login";
+                }}
+              >
+                <ListItemIcon style={{ marginLeft: "20px" }}>
+                  <LoginOutlinedIcon
+                    color="secondary"
+                    style={{ color: "blue" }}
+                  />
+                </ListItemIcon>
+              </ListItem>
+            </Tooltip>
           )}
+
           {login && <Dashboard userId={userId} addPost={props.addPost} />}
+
           {login && <LogOut />}
         </List>
       </Drawer>

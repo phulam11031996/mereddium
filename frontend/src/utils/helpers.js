@@ -168,7 +168,10 @@ export const handleSearch = async (searchKey) => {
     );
     let result = response.data.data;
     let filtered = result.filter((post) => {
-      return post.title.toLowerCase().match(searchKey.toLowerCase());
+      return (
+        post.title.toLowerCase().match(searchKey.toLowerCase()) ||
+        post.mesage.toLowerCase().match(searchKey.toLowerCase())
+      );
     });
 
     return filtered;
