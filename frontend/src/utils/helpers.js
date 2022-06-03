@@ -170,7 +170,7 @@ export const handleSearch = async (searchKey) => {
     let filtered = result.filter((post) => {
       return (
         post.title.toLowerCase().match(searchKey.toLowerCase()) ||
-        post.mesage.toLowerCase().match(searchKey.toLowerCase())
+        post.message.toLowerCase().match(searchKey.toLowerCase())
       );
     });
 
