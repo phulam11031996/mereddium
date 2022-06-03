@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import axios from "axios";
 
 import Button from "@mui/material/Button";
@@ -16,16 +18,56 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import ClearIcon from "@mui/icons-material/Clear";
 import Tooltip from "@mui/material/Tooltip";
+import PropTypes from 'prop-types';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
+import TextField from "@mui/material/TextField";
+import Grid from "@mui/material/Grid";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 2 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
 
 export const Dashboard = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [fileName, setFileName] = useState(null);
   const [path, setPath] = useState(null);
   const [delToken, setDelToken] = useState(null);
+  const [firstName, setFirstName] = useState(null);
 
   const handleOnSubmit = async () => {
     await axios
@@ -40,6 +82,10 @@ export const Dashboard = (props) => {
         console.error(err);
       });
   };
+
+  const handleUpdateUser = async () => {
+    console.log(firstName)
+  }
 
   const handleDeleteImage = async () => {
     await axios
@@ -86,6 +132,44 @@ export const Dashboard = (props) => {
       }
     );
   };
+
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+    const [error, setError] = useState("");
+  
+    const formik = useFormik({
+      initialValues: {
+        firstName: "",
+        lastName: "",
+      },
+      validationSchema: Yup.object({
+        firstName: Yup.string()
+          .matches(/^[A-Za-z ]*$/, "Please enter valid name")
+          .max(40)
+          .required("First Name is required"),
+        lastName: Yup.string()
+          .matches(/^[A-Za-z ]*$/, "Please enter valid name")
+          .max(40)
+          .required("Last Name is required")
+      }),
+      onSubmit: async (values) => {
+        await axios
+        .patch(`${process.env.REACT_APP_BACKEND_URL}/user/${props.userId}`, {
+          firstName: values.firstName,
+          lastName: values.lastName, 
+        })
+        .then((res) => {
+          window.location="/";
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      },
+    });
 
   return (
     <div>
@@ -139,36 +223,97 @@ export const Dashboard = (props) => {
                 color: "white",
               }}
             >
-              Submit
+              Submit Image
             </Button>
           </Toolbar>
         </AppBar>
-        <List>
-          <ListItem>
+        <Box sx={{ width: '100%' }}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs value={value} onChange={handleChange} centered aria-label="basic tabs example">
+              <Tab label="Account Settings" {...a11yProps(0)} />
+            </Tabs>
+          </Box>
+          <TabPanel value={value} index={0}>
+          <Box component="form" noValidate sx={{ mt: 3 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  error={Boolean(
+                    formik.touched.firstName && formik.errors.firstName
+                  )}
+                  helperText={
+                    formik.touched.firstName && formik.errors.firstName
+                  }
+                  value={formik.values.firstName}
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  autoComplete="given-name"
+                  name="firstName"
+                  required
+                  fullWidth
+                  id="firstName"
+                  label="First Name"
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  error={Boolean(
+                    formik.touched.lastName && formik.errors.lastName
+                  )}
+                  helperText={formik.touched.lastName && formik.errors.lastName}
+                  value={formik.values.lastName}
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  required
+                  fullWidth
+                  id="lastName"
+                  label="Last Name"
+                  name="lastName"
+                  autoComplete="family-name"
+                />
+              </Grid>
+            </Grid>
             <Button
-              onClick={handleOpenWidget}
-              size="small"
-              style={{
-                border: "2px solid black",
-                color: "black",
-              }}
+              disabled={!(formik.isValid && formik.dirty)}
+              onClick={formik.handleSubmit}
+              name="submit"
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
             >
-              <UploadFileIcon />
-              {fileName ? `${fileName}` : `Upload Image`}
+              Submit
             </Button>
-            {fileName && (
-              <Button
-                onClick={handleDeleteImage}
-                size="small"
-                style={{
-                  color: "black",
-                }}
-              >
-                <ClearIcon />
-              </Button>
-            )}
-          </ListItem>
-        </List>
+          </Box>
+            <List>
+              <ListItem style={{display:'flex', justifyContent:'flex-end'}}>
+                <Button
+                  onClick={handleOpenWidget}
+                  size="small"
+                  style={{
+                    border: "2px solid black",
+                    color: "black",
+                  }}
+                >
+                  <UploadFileIcon />
+                  {fileName ? `${fileName}` : `Upload Image`}
+                </Button>
+                {fileName && (
+                  <Button
+                    onClick={handleDeleteImage}
+                    size="small"
+                    style={{
+                      color: "black",
+                    }}
+                  >
+                    <ClearIcon />
+                  </Button>
+                )}
+              </ListItem>
+            </List>
+          </TabPanel>
+        </Box>
       </Dialog>
     </div>
   );
