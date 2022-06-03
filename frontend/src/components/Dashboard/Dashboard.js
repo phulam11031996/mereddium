@@ -18,10 +18,10 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import ClearIcon from "@mui/icons-material/Clear";
 import Tooltip from "@mui/material/Tooltip";
-import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Box from '@mui/material/Box';
+import PropTypes from "prop-types";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 
@@ -38,7 +38,7 @@ TabPanel.propTypes = {
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
   };
 }
 
@@ -67,7 +67,6 @@ export const Dashboard = (props) => {
   const [fileName, setFileName] = useState(null);
   const [path, setPath] = useState(null);
   const [delToken, setDelToken] = useState(null);
-  const [firstName, setFirstName] = useState(null);
 
   const handleOnSubmit = async () => {
     await axios
@@ -82,10 +81,6 @@ export const Dashboard = (props) => {
         console.error(err);
       });
   };
-
-  const handleUpdateUser = async () => {
-    console.log(firstName)
-  }
 
   const handleDeleteImage = async () => {
     await axios
@@ -139,37 +134,35 @@ export const Dashboard = (props) => {
     setValue(newValue);
   };
 
-    const [error, setError] = useState("");
-  
-    const formik = useFormik({
-      initialValues: {
-        firstName: "",
-        lastName: "",
-      },
-      validationSchema: Yup.object({
-        firstName: Yup.string()
-          .matches(/^[A-Za-z ]*$/, "Please enter valid name")
-          .max(40)
-          .required("First Name is required"),
-        lastName: Yup.string()
-          .matches(/^[A-Za-z ]*$/, "Please enter valid name")
-          .max(40)
-          .required("Last Name is required")
-      }),
-      onSubmit: async (values) => {
-        await axios
+  const formik = useFormik({
+    initialValues: {
+      firstName: "",
+      lastName: "",
+    },
+    validationSchema: Yup.object({
+      firstName: Yup.string()
+        .matches(/^[A-Za-z ]*$/, "Please enter valid name")
+        .max(40)
+        .required("First Name is required"),
+      lastName: Yup.string()
+        .matches(/^[A-Za-z ]*$/, "Please enter valid name")
+        .max(40)
+        .required("Last Name is required"),
+    }),
+    onSubmit: async (values) => {
+      await axios
         .patch(`${process.env.REACT_APP_BACKEND_URL}/user/${props.userId}`, {
           firstName: values.firstName,
-          lastName: values.lastName, 
+          lastName: values.lastName,
         })
         .then((res) => {
-          window.location="/";
+          window.location = "/";
         })
         .catch((err) => {
           console.error(err);
         });
-      },
-    });
+    },
+  });
 
   return (
     <div>
@@ -227,67 +220,74 @@ export const Dashboard = (props) => {
             </Button>
           </Toolbar>
         </AppBar>
-        <Box sx={{ width: '100%' }}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs value={value} onChange={handleChange} centered aria-label="basic tabs example">
+        <Box sx={{ width: "100%" }}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              centered
+              aria-label="basic tabs example"
+            >
               <Tab label="Account Settings" {...a11yProps(0)} />
             </Tabs>
           </Box>
           <TabPanel value={value} index={0}>
-          <Box component="form" noValidate sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  error={Boolean(
-                    formik.touched.firstName && formik.errors.firstName
-                  )}
-                  helperText={
-                    formik.touched.firstName && formik.errors.firstName
-                  }
-                  value={formik.values.firstName}
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                />
+            <Box component="form" noValidate sx={{ mt: 3 }}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    error={Boolean(
+                      formik.touched.firstName && formik.errors.firstName
+                    )}
+                    helperText={
+                      formik.touched.firstName && formik.errors.firstName
+                    }
+                    value={formik.values.firstName}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    autoComplete="given-name"
+                    name="firstName"
+                    required
+                    fullWidth
+                    id="firstName"
+                    label="First Name"
+                    autoFocus
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    error={Boolean(
+                      formik.touched.lastName && formik.errors.lastName
+                    )}
+                    helperText={
+                      formik.touched.lastName && formik.errors.lastName
+                    }
+                    value={formik.values.lastName}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    required
+                    fullWidth
+                    id="lastName"
+                    label="Last Name"
+                    name="lastName"
+                    autoComplete="family-name"
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  error={Boolean(
-                    formik.touched.lastName && formik.errors.lastName
-                  )}
-                  helperText={formik.touched.lastName && formik.errors.lastName}
-                  value={formik.values.lastName}
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
-              </Grid>
-            </Grid>
-            <Button
-              disabled={!(formik.isValid && formik.dirty)}
-              onClick={formik.handleSubmit}
-              name="submit"
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Submit
-            </Button>
-          </Box>
+              <Button
+                disabled={!(formik.isValid && formik.dirty)}
+                onClick={formik.handleSubmit}
+                name="submit"
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Submit
+              </Button>
+            </Box>
             <List>
-              <ListItem style={{display:'flex', justifyContent:'flex-end'}}>
+              <ListItem style={{ display: "flex", justifyContent: "flex-end" }}>
                 <Button
                   onClick={handleOpenWidget}
                   size="small"
