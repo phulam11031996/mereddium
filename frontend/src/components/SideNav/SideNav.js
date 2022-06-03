@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import Badge from "@mui/material/Badge";
 import MuiDrawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
@@ -111,9 +110,6 @@ export const SideNav = (props) => {
               >
                 <ListItemIcon style={{ marginLeft: "25px" }}>
                   <BookmarkBorderOutlinedIcon style={{ color: "orange" }} />
-                  {/* <Badge color="primary" variant="dot">
-                    
-                  </Badge> */}
                 </ListItemIcon>
               </ListItem>
             </Tooltip>

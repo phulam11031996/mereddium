@@ -85,7 +85,7 @@ export const Dashboard = (props) => {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleOnSubmit = async () => {
     await axios
