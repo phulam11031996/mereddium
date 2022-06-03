@@ -68,7 +68,7 @@ export const CreatePost = (props) => {
     <div>
       <Tooltip title="Create Post" placement="right" arrow>
         <ListItem onClick={handleClickOpen} button key="Key">
-          <ListItemIcon style={{ marginLeft: "20px" }}>
+          <ListItemIcon style={{ marginLeft: "25px" }}>
             <PostAddOutlinedIcon color="secondary" />
           </ListItemIcon>
         </ListItem>

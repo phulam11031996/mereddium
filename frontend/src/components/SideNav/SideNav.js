@@ -51,10 +51,10 @@ export const SideNav = (props) => {
   return (
     <Box>
       <Drawer variant="permanent">
-        <DrawerHeader>
+        <DrawerHeader style={{ width: "50px" }}>
           <Logo />
         </DrawerHeader>
-        <List style={{ marginTop: 10 }}>
+        <List style={{ marginTop: "15px" }}>
           <Tooltip title="Popular" placement="right" arrow>
             <ListItem
               button
@@ -64,7 +64,7 @@ export const SideNav = (props) => {
               }}
               className="tooltip"
             >
-              <ListItemIcon style={{ marginLeft: "20px" }}>
+              <ListItemIcon style={{ marginLeft: "25px" }}>
                 <WhatshotIcon color="primary" />
               </ListItemIcon>
             </ListItem>
@@ -78,7 +78,7 @@ export const SideNav = (props) => {
                 props.sortBy("Recent");
               }}
             >
-              <ListItemIcon style={{ marginLeft: "20px" }}>
+              <ListItemIcon style={{ marginLeft: "25px" }}>
                 <AccessTimeOutlinedIcon color="secondary" />
               </ListItemIcon>
             </ListItem>
@@ -92,7 +92,7 @@ export const SideNav = (props) => {
                 props.sortBy("Trending");
               }}
             >
-              <ListItemIcon style={{ marginLeft: "20px" }}>
+              <ListItemIcon style={{ marginLeft: "25px" }}>
                 <TrendingUpOutlinedIcon color="secondary" />
               </ListItemIcon>
             </ListItem>
@@ -103,16 +103,17 @@ export const SideNav = (props) => {
           )}
 
           {login && (
-            <Tooltip title="Saved" placement="right" arrow>
+            <Tooltip title="Saved Posts" placement="right" arrow>
               <ListItem
                 button
                 key="Saved"
                 onClick={() => props.savedPosts(userId)}
               >
-                <ListItemIcon style={{ marginLeft: "20px" }}>
-                  <Badge color="primary" variant="dot">
-                    <BookmarkBorderOutlinedIcon style={{ color: "orange" }} />
-                  </Badge>
+                <ListItemIcon style={{ marginLeft: "25px" }}>
+                  <BookmarkBorderOutlinedIcon style={{ color: "orange" }} />
+                  {/* <Badge color="primary" variant="dot">
+                    
+                  </Badge> */}
                 </ListItemIcon>
               </ListItem>
             </Tooltip>
@@ -131,7 +132,7 @@ export const SideNav = (props) => {
                   window.location.href = "/login";
                 }}
               >
-                <ListItemIcon style={{ marginLeft: "20px" }}>
+                <ListItemIcon style={{ marginLeft: "25px" }}>
                   <LoginOutlinedIcon
                     color="secondary"
                     style={{ color: "blue" }}

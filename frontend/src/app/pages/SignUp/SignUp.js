@@ -58,11 +58,11 @@ export const SignUp = () => {
         .min(5)
         .max(255)
         .required("Email is required"),
-      password: Yup.string().min(8).max(12).required("Password is required"),
+      password: Yup.string().min(8).max(20).required("Password is required"),
       password_confirm: Yup.string()
         .oneOf([Yup.ref("password"), null], "Passwords must match")
         .min(8)
-        .max(12)
+        .max(20)
         .required("Confirmation is required"),
     }),
     onSubmit: (values) => {

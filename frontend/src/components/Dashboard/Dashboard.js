@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -55,7 +55,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 2 }}>
-          <Typography>{children}</Typography>
+          <Typography component={"span"}>{children}</Typography>
         </Box>
       )}
     </div>
@@ -67,6 +67,25 @@ export const Dashboard = (props) => {
   const [fileName, setFileName] = useState(null);
   const [path, setPath] = useState(null);
   const [delToken, setDelToken] = useState(null);
+  const [value, setValue] = React.useState(0);
+  const [userFirstName, setUserFirstName] = useState("");
+  const [userLastName, setUserLastName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [userPasswordLength, setUserPasswordLength] = useState(0);
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/user/${props.userId}`)
+      .then((user) => {
+        setUserFirstName(user.data.data.user.firstName);
+        setUserLastName(user.data.data.user.lastName);
+        setUserEmail(user.data.data.user.email);
+        setUserPasswordLength(user.data.data.user.password.length);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   const handleOnSubmit = async () => {
     await axios
@@ -128,32 +147,42 @@ export const Dashboard = (props) => {
     );
   };
 
-  const [value, setValue] = React.useState(0);
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
+      firstName: userFirstName,
+      lastName: userLastName,
+      email: userEmail,
+      password: "",
+      password_confirm: "",
     },
     validationSchema: Yup.object({
       firstName: Yup.string()
         .matches(/^[A-Za-z ]*$/, "Please enter valid name")
-        .max(40)
-        .required("First Name is required"),
+        .max(40),
       lastName: Yup.string()
         .matches(/^[A-Za-z ]*$/, "Please enter valid name")
-        .max(40)
-        .required("Last Name is required"),
+        .max(40),
+      email: Yup.string().email("Must be a valid email").min(5).max(255),
+      password: Yup.string().min(8).max(20),
+      password_confirm: Yup.string()
+        .oneOf([Yup.ref("password"), null], "Passwords must match")
+        .when("password", {
+          is: (password) => password.length > 0,
+          then: Yup.string().required("Field is required"),
+        }),
     }),
     onSubmit: async (values) => {
       await axios
         .patch(`${process.env.REACT_APP_BACKEND_URL}/user/${props.userId}`, {
           firstName: values.firstName,
           lastName: values.lastName,
+          email: values.email,
+          password: values.password,
+          password_confirm: values.password_confirm,
         })
         .then((res) => {
           window.location = "/";
@@ -174,7 +203,7 @@ export const Dashboard = (props) => {
           button
           key="Key"
         >
-          <ListItemIcon style={{ marginLeft: "20px" }}>
+          <ListItemIcon style={{ marginLeft: "25px" }}>
             <ManageAccountsIcon color="secondary" style={{ color: "0077b6" }} />
           </ListItemIcon>
         </ListItem>
@@ -220,6 +249,32 @@ export const Dashboard = (props) => {
             </Button>
           </Toolbar>
         </AppBar>
+        <List>
+          <ListItem style={{ display: "flex", justifyContent: "flex-end" }}>
+            <Button
+              onClick={handleOpenWidget}
+              size="small"
+              style={{
+                border: "2px solid black",
+                color: "black",
+              }}
+            >
+              <UploadFileIcon />
+              {fileName ? `${fileName}` : `Upload Image`}
+            </Button>
+            {fileName && (
+              <Button
+                onClick={handleDeleteImage}
+                size="small"
+                style={{
+                  color: "black",
+                }}
+              >
+                <ClearIcon />
+              </Button>
+            )}
+          </ListItem>
+        </List>
         <Box sx={{ width: "100%" }}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs
@@ -233,8 +288,24 @@ export const Dashboard = (props) => {
           </Box>
           <TabPanel value={value} index={0}>
             <Box component="form" noValidate sx={{ mt: 3 }}>
+              <Typography style={{ marginBottom: "6px" }}>Email</Typography>
+              <TextField
+                error={Boolean(formik.touched.email && formik.errors.email)}
+                helperText={formik.touched.email && formik.errors.email}
+                value={formik.values.email}
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                fullWidth
+                id="email"
+                label={userEmail}
+                name="email"
+                autoComplete="family-name"
+              />
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
+                  <Typography style={{ marginBottom: "6px", marginTop: "9px" }}>
+                    First Name
+                  </Typography>
                   <TextField
                     error={Boolean(
                       formik.touched.firstName && formik.errors.firstName
@@ -247,14 +318,36 @@ export const Dashboard = (props) => {
                     onChange={formik.handleChange}
                     autoComplete="given-name"
                     name="firstName"
-                    required
                     fullWidth
                     id="firstName"
-                    label="First Name"
+                    label={userFirstName}
                     autoFocus
+                  />
+                  <Typography style={{ marginBottom: "6px", marginTop: "9px" }}>
+                    Password
+                  </Typography>
+                  <TextField
+                    error={Boolean(
+                      formik.touched.password && formik.errors.password
+                    )}
+                    helperText={
+                      formik.touched.password && formik.errors.password
+                    }
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    value={formik.values.password}
+                    fullWidth
+                    name="password"
+                    label={"*".repeat(userPasswordLength)}
+                    type="password"
+                    id="password"
+                    autoComplete="new-password"
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
+                  <Typography style={{ marginBottom: "6px", marginTop: "9px" }}>
+                    Last Name
+                  </Typography>
                   <TextField
                     error={Boolean(
                       formik.touched.lastName && formik.errors.lastName
@@ -265,12 +358,33 @@ export const Dashboard = (props) => {
                     value={formik.values.lastName}
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
-                    required
                     fullWidth
                     id="lastName"
-                    label="Last Name"
+                    label={userLastName}
                     name="lastName"
                     autoComplete="family-name"
+                  />
+                  <Typography style={{ marginBottom: "6px", marginTop: "9px" }}>
+                    Password Confirm
+                  </Typography>
+                  <TextField
+                    error={Boolean(
+                      formik.touched.password_confirm &&
+                        formik.errors.password_confirm
+                    )}
+                    helperText={
+                      formik.touched.password_confirm &&
+                      formik.errors.password_confirm
+                    }
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    value={formik.values.password_confirm}
+                    fullWidth
+                    name="password_confirm"
+                    label={"*".repeat(userPasswordLength)}
+                    type="password"
+                    id="password_confirm"
+                    autoComplete="new-password"
                   />
                 </Grid>
               </Grid>
@@ -286,32 +400,6 @@ export const Dashboard = (props) => {
                 Submit
               </Button>
             </Box>
-            <List>
-              <ListItem style={{ display: "flex", justifyContent: "flex-end" }}>
-                <Button
-                  onClick={handleOpenWidget}
-                  size="small"
-                  style={{
-                    border: "2px solid black",
-                    color: "black",
-                  }}
-                >
-                  <UploadFileIcon />
-                  {fileName ? `${fileName}` : `Upload Image`}
-                </Button>
-                {fileName && (
-                  <Button
-                    onClick={handleDeleteImage}
-                    size="small"
-                    style={{
-                      color: "black",
-                    }}
-                  >
-                    <ClearIcon />
-                  </Button>
-                )}
-              </ListItem>
-            </List>
           </TabPanel>
         </Box>
       </Dialog>

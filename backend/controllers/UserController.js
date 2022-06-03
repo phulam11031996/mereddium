@@ -43,10 +43,22 @@ exports.getUserById = catchAsync(async (req, res) => {
 exports.updateUserById = catchAsync(async (req, res) => {
   const result = await UserHandler.updateUserById(req.params.id, req.body);
 
-  res.status(200).json({
-    status: "success",
-    data: { result },
-  });
+  if (result.modifiedCount === 1) {
+    res.status(200).json({
+      status: "success",
+      data: { result },
+    });
+  } else if (result.modifiedCount === 0) {
+    res.status(200).json({
+      status: "failure, nothing to update",
+      data: { result },
+    });
+  } else {
+    res.status(404).json({
+      status: "failed to update user",
+      data: { result },
+    });
+  }
 });
 
 // DELETE /user/{id}

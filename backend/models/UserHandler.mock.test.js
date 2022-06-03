@@ -426,6 +426,48 @@ test("Updating user by id", async () => {
   );
 });
 
+test("Updating user by id -- new password", async () => {
+  const user = {
+    _id: "abc123",
+    firstName: "Marco",
+    lastName: "Polo",
+    email: "marco@polo.com",
+    role: "admin",
+    photo: "v1650339103/default_ogjbtr.png",
+    password: "password",
+    password_confirm: "password",
+    password_bcrypt: "password",
+    passwordChangedAt: Date.now(),
+    reset_token: uniqueID(),
+    reset_token_ext: Date.now() + 60 * 60 * 1000, // 60 minutes
+    blocked: false,
+    interestedIn: [],
+    savedPosts: [{ postId: "def456" }, { postId: "ghi789" }],
+  };
+  const userUpdate = {
+    password: "newPassword",
+    password_confirm: "newPassword",
+  };
+
+  userModel.updateOne = jest.fn().mockResolvedValue({
+    acknowledged: true,
+    modifiedCount: 1,
+    upsertedId: null,
+    upsertedCount: 0,
+    matchedCount: 1,
+  });
+
+  const result = await UserHandler.updateUserById(user._id, userUpdate);
+  expect(result).toBeDefined();
+  expect(result.modifiedCount).toBe(1); // one document was updated
+
+  expect(userModel.updateOne.mock.calls.length).toBe(1);
+  expect(userModel.updateOne).toHaveBeenCalledWith(
+    { _id: user._id },
+    { $set: userUpdate }
+  );
+});
+
 test("Deleting user by id", async () => {
   const user = {
     _id: "abc123",

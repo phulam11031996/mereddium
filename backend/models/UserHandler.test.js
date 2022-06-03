@@ -3,8 +3,9 @@ const { MongoMemoryServer } = require("mongodb-memory-server");
 const UserSchema = require("./UserSchema");
 const UserHandler = require("./UserHandler");
 
-const { v4: uuidv4 } = require("uuid");
+const bcrypt = require("bcryptjs");
 const HttpError = require("../utils/http-error");
+const { v4: uuidv4 } = require("uuid");
 
 const uniqueID = () => {
   return uuidv4();
@@ -109,13 +110,41 @@ test("Deleting user by id", async () => {
 
 test("Updating user by id", async () => {
   const id = "abc123";
-  const user = {
+  const userUpdate = {
+    firstName: "",
+    lastName: "",
     email: "abc@email.com",
+    password: "",
+    password_confirm: "",
   };
 
-  const result = await UserHandler.updateUserById(id, user);
+  const result = await UserHandler.updateUserById(id, userUpdate);
   expect(result).toBeDefined();
   expect(result.modifiedCount).toBe(1); // one document was updated
+
+  const user = await userModel.findOne({ _id: id });
+  expect(user).toBeDefined();
+  expect(user.firstName).not.toBe(userUpdate.firstName);
+  expect(user.lastName).not.toBe(userUpdate.lastName);
+  expect(user.email).toBe(userUpdate.email);
+  expect(user.password).not.toBe(userUpdate.password);
+});
+
+test("Updating user by id -- new password", async () => {
+  const id = "abc123";
+  const userUpdate = {
+    email: "",
+    password: "newPassword",
+    password_confirm: "newPassword",
+  };
+
+  const result = await UserHandler.updateUserById(id, userUpdate);
+  expect(result).toBeDefined();
+  expect(result.modifiedCount).toBe(1); // one document was updated
+
+  const user = await userModel.findOne({ _id: id });
+  expect(user).toBeDefined();
+  expect(user.password).toBe(userUpdate.password);
 });
 
 test("Adding user", async () => {

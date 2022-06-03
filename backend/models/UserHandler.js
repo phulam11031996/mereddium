@@ -115,6 +115,27 @@ async function getUserById(id) {
 async function updateUserById(id, newUser) {
   const userModel = mongoose.model("User", UserSchema);
 
+  // check if firstName, lastName, and email are empty and shouldn't be updated
+  if (newUser.firstName === null || newUser.firstName === "") {
+    delete newUser.firstName;
+  }
+  if (newUser.lastName === null || newUser.lastName === "") {
+    delete newUser.lastName;
+  }
+  if (newUser.email === null || newUser.email === "") {
+    delete newUser.email;
+  }
+
+  if (newUser.password && newUser.password !== "") {
+    // if user is updating password, hash the new password
+    const hashedPassword = await bcrypt.hash(newUser.password, 12);
+    newUser.password_bcrypt = hashedPassword;
+    newUser.passwordChangedAt = Date.now();
+  } else {
+    delete newUser.password;
+    delete newUser.password_confirm;
+  }
+
   const result = await userModel.updateOne({ _id: id }, { $set: newUser });
   return result;
 }
