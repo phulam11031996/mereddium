@@ -27,7 +27,6 @@ CI & CD requirement run with:
             + npm test (this includes prettier)
 
 Backend Testing Coverage Report:
---------------------|---------|----------|---------|---------|-------------------
 File                | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
 --------------------|---------|----------|---------|---------|-------------------
 All files           |     100 |      100 |     100 |     100 |
@@ -42,7 +41,6 @@ All files           |     100 |      100 |     100 |     100 |
   UserSchema.js     |     100 |      100 |     100 |     100 |
  utils              |     100 |      100 |     100 |     100 |
   http-error.js     |     100 |      100 |     100 |     100 |
---------------------|---------|----------|---------|---------|-------------------
 
 Mockup URL: https://www.figma.com/exit?url=https%3A%2F%2Fwww.figma.com%2Fproto%2Fkj3cs8pg3kmDcrNahTSwHX%2FBlogSite%3Fnode-id%3D12%253A657%26scaling%3Dcontain%26page-id%3D0%253A1%26starting-point-node-id%3D12%253A657
 
