@@ -25,7 +25,7 @@ export const LogIn = () => {
         `${process.env.REACT_APP_BACKEND_URL}/auth/login`,
         user
       );
-
+      console.log(response)
       return response;
     } catch (error) {
       return error;
