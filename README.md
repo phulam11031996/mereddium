@@ -40,9 +40,9 @@ Inside the root directory.<br />
 `cd backend`<br />
 `npm test`<br />
 
-
+#### Some Pictures from the App:
 * ![Alt text 1](https://res.cloudinary.com/dak2sbffy/image/upload/v1687237658/Screen_Shot_2023-06-19_at_9.58.38_PM_wzq6yy.png)
 * ![Alt text 2](https://res.cloudinary.com/dak2sbffy/image/upload/v1687237656/Screen_Shot_2023-06-19_at_9.59.32_PM_m4qrfn.png)
 * ![Alt text 3](https://res.cloudinary.com/dak2sbffy/image/upload/v1687237657/Screen_Shot_2023-06-19_at_9.59.19_PM_yfawdl.png)
 * ![Alt text 3](https://res.cloudinary.com/dak2sbffy/image/upload/v1687237656/Screen_Shot_2023-06-19_at_9.59.48_PM_hugg05.png)
-* ![Alt text 3]([https://res.cloudinary.com/dak2sbffy/image/upload/v1687237657/Screen_Shot_2023-06-19_at_9.59.19_PM_yfawdl.png)
+* ![Alt text 3](https://res.cloudinary.com/dak2sbffy/image/upload/v1687237657/Screen_Shot_2023-06-19_at_9.59.19_PM_yfawdl.png)
