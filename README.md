@@ -17,7 +17,7 @@ Clone the project using this command:
 2) Node.js
 
 #### Back-end libraries installation:
-Inside the root directory
+Inside the root directory<br />
 `cd backend` <br />
 `npm install` <br />
 `npm run dev` <br />
@@ -31,11 +31,12 @@ Open another terminal and type the following commands (make sure you are in the 
 That should start the front-end server, and the landing page will be http://localhost:3000/
 
 #### Run API and E2E tests:
-Both backend and frontend needs to run for running the tests. Inside the root directory
+Both backend and frontend needs to run for running the tests. Inside the root directory<br />
 `cd frontend`<br />
 `npm run cypress:open`<br />
 
 #### Run JUnit and Mock tests:
-Inside the root directory.
+Inside the root directory.<br />
+`cd backend`
 `cd backend`<br />
 `npm test`<br />
