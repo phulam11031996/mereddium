@@ -1,49 +1,41 @@
 # MEREDDIUM
+Author: Authors: Phu Lam, Nickzad Bayati, Mohammed Sultanov, Ryan Frank
+Mereddium is a blog/discussion/informational website where users can go to and register an account. They can view, read, and comment on other people's posts. Posts can typically be displayed in filters that are relevant to viewers. The website can be used as a personal blog, where an individual creates an ongoing online diary or commentary about what they are interested in. It can also be a discussion on different topics such as politics, technology, or advocacy, etc.
+ 
+Note: This app is depoyed to heroku. But Heroku no longer offer a free tier on November 28, 2022.
+So we only let the app locally. .env files are left in the repo on purpose. Follow the step below to do so. 
 
-CSC 309 Project  
-Authors: Nickzad Bayati, Phu Lam, Mohammed Sultanov, Ryan Frank
+## Technologies
+MERN stack
 
-How to run development mode:
-    - change directory to frontend then run 'npm run dev'
-    - change directory to backend then run 'npm run dev'
+Clone the project using this command:
+`https://github.com/phulam11031996/blog-website.git`
 
-How to run API & E2E testing:
-    - change directory to frontend then run 'npm run dev'
-    - change directory to backend then run 'npm run dev'
-    - after both frontend and backend are running, change directory to frontend then run 'npm run cypress:open'
+## Installation Guide
+### Softwares Requirements:
+1) npm
+2) Node.js
 
+#### Back-end libraries installation:
+Inside the root directory
+`cd backend` <br />
+`npm install` <br />
+`npm run dev` <br />
+That should start the back-end server. Note: the default port will be 3030
 
-How to run JUnit test and Mock test:
-    - change directory to backend then run 'npm test'
+#### Front-end libraries installation:
+Open another terminal and type the following commands (make sure you are in the root folder):<br />
+`cd frontend`<br />
+`npm install`<br />
+`npm run dev`<br />
+That should start the front-end server, and the landing page will be http://localhost:3000/
 
-CI & CD requirement run with:
-      - backend:
-            + npm ci
-            + npm run build --if-present
-            + npm test (this includes prettier, JUnit tests, and Mock tests)
-    - frontend:
-            + npm ci
-            + npm run build --if-present
-            + npm test (this includes prettier)
+#### Run API and E2E tests:
+Both backend and frontend needs to run for running the tests. Inside the root directory
+`cd frontend`<br />
+`npm run cypress:open`<br />
 
-Backend Testing Coverage Report:
-File                | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
---------------------|---------|----------|---------|---------|-------------------
-All files           |     100 |      100 |     100 |     100 |
- models             |     100 |      100 |     100 |     100 |
-  CommentHandler.js |     100 |      100 |     100 |     100 |
-  CommentSchema.js  |     100 |      100 |     100 |     100 |
-  PostHandler.js    |     100 |      100 |     100 |     100 |
-  PostSchema.js     |     100 |      100 |     100 |     100 |
-  TagHandler.js     |     100 |      100 |     100 |     100 |
-  TagSchema.js      |     100 |      100 |     100 |     100 |
-  UserHandler.js    |     100 |      100 |     100 |     100 |
-  UserSchema.js     |     100 |      100 |     100 |     100 |
- utils              |     100 |      100 |     100 |     100 |
-  http-error.js     |     100 |      100 |     100 |     100 |
-
-Mockup URL: https://www.figma.com/exit?url=https%3A%2F%2Fwww.figma.com%2Fproto%2Fkj3cs8pg3kmDcrNahTSwHX%2FBlogSite%3Fnode-id%3D12%253A657%26scaling%3Dcontain%26page-id%3D0%253A1%26starting-point-node-id%3D12%253A657
-
-Project Specs Doc: https://docs.google.com/document/d/1s4cOeRCfrJMtJSfYuEES8qef-e5iDFaK_OYWxrlwdcM/edit?usp=sharing
-
-
+#### Run JUnit and Mock tests:
+Inside the root directory.
+`cd backend`<br />
+`npm test`<br />
