@@ -39,3 +39,6 @@ Both backend and frontend needs to run for running the tests. Inside the root di
 Inside the root directory.<br />
 `cd backend`<br />
 `npm test`<br />
+
+
+![Alt text] (https://res.cloudinary.com/dak2sbffy/image/upload/v1687237658/Screen_Shot_2023-06-19_at_9.58.38_PM_wzq6yy.png)
