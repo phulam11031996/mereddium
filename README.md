@@ -37,6 +37,5 @@ Both backend and frontend needs to run for running the tests. Inside the root di
 
 #### Run JUnit and Mock tests:
 Inside the root directory.<br />
-`cd backend`
 `cd backend`<br />
 `npm test`<br />
